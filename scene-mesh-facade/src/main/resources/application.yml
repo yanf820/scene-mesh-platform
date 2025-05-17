@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: scene-mesh-facade
+
+# MQTT Server
+mqtt:
+  server:
+    host: 127.0.0.1
+    port: 1883
+    allowAnonymous: true
+    messageSize: 262144 # 256KB
+
+redis:
+  connection:
+    host: 127.0.0.1
+    port: 6379
+
+logging:
+  level:
+    root: INFO
+    com.scene.mesh: INFO
+    org.apache.flink: INFO
+    org.hibernate: INFO
+    org.springframework: INFO
