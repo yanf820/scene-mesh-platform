@@ -2,7 +2,7 @@ spring:
   application:
     name: scene-mesh-facade
 
-# MQTT Server
+# MQTT Server 配置（嵌入式启动,无需远端独立服务）
 mqtt:
   server:
     host: 127.0.0.1
@@ -10,6 +10,7 @@ mqtt:
     allowAnonymous: true
     messageSize: 262144 # 256KB
 
+# redis 配置，用于接收事件消息
 redis:
   connection:
     host: 127.0.0.1
