@@ -4,6 +4,7 @@ import com.scene.mesh.facade.api.inboud.InboundMessageHandler;
 import com.scene.mesh.facade.api.inboud.InboundMessageInterceptor;
 import com.scene.mesh.facade.api.hub.IEventListener;
 import com.scene.mesh.model.event.Event;
+import com.scene.mesh.model.event.OutputEventType;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class DefaultInboundMessageHandler implements InboundMessageHandler{
 
         //拦截处理结果false 的情况，交给事件监听器进行 error 处理
         if (!response.isSuccess()) {
-            Event errorEvent = new Event("error");
+            Event errorEvent = new Event(OutputEventType.ERROR.getName());
             errorEvent.addPayloadEntry("success",false);
             errorEvent.addPayloadEntry("opinion",response.getOpinion());
             errorEvent.addPayloadEntry("clientId",request.getClientId());

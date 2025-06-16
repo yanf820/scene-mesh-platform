@@ -27,6 +27,11 @@ public class SimpleObjectHelper {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
     }
 
+    public static Map<String,Object> obj2Map(Object obj) {
+        Map<String,Object> mappedObject = objectMapper.convertValue(obj, Map.class);
+        return mappedObject;
+    }
+
     public static String map2json(Map<String, Object> map) {
         try {
             return objectMapper.writeValueAsString(map);

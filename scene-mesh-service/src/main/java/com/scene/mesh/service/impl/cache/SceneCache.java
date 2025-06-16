@@ -4,6 +4,7 @@ import com.scene.mesh.foundation.api.cache.ICache;
 import com.scene.mesh.model.scene.Scene;
 import com.scene.mesh.service.api.cache.IDisposed;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -19,6 +20,11 @@ public class SceneCache implements IDisposed {
 
     public Scene findById(String id) {
         return cache.get("scene_"+id);
+    }
+
+    public LinkedList<Scene> findParentScenesById(String id) {
+        // TODO 根据最终 Scene 结构定义
+        return new LinkedList<>();
     }
 
     @Override

@@ -1,0 +1,43 @@
+{
+  "nodes": [
+    {
+      "name": "start",
+      "quantifier": {
+        "consumingStrategy": "STRICT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "nestedConditions": [
+          {
+            "expression": "metaEventId == 'shark' && 'sharkVal' == 5",
+            "type": "AVIATOR"
+          },
+          {
+            "expression": "metaEventId == 'voice' && string.contains(text, '啊')",
+            "type": "AVIATOR"
+          }
+        ],
+        "type": "CLASS",
+        "className": "org.apache.flink.cep.pattern.conditions.RichOrCondition"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": {
+        "type": "FIRST_AND_LAST",
+        "time": {
+          "unit": "SECONDS",
+          "size": 10
+        }
+      },
+      "afterMatchSkipStrategy": {
+        "type": "SKIP_PAST_LAST_EVENT",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    }
+  ],
+  "edges": []
+}

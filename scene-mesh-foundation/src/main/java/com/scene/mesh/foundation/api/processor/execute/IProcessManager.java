@@ -11,7 +11,7 @@ public interface IProcessManager {
 
     IProcessExecutor getExecutor();
 
-    void executeAllProcesses() throws Exception;
+    void executeAllProcesses(String... args) throws Exception;
 
     void executeProcesses(String processId, String... args) throws Exception;
 

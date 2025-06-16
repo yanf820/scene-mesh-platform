@@ -1,6 +1,9 @@
 
 package com.scene.mesh.foundation.api.processor.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,11 @@ public class ProcessorGraph implements Serializable {
     private String graphId;
     private List<ProcessorNode> nodes;
     private List<ProcessorLinker> linkers;
+
+    @Getter
+    @Setter
+    // cep mode 描述
+    private CepModeDescriptor cepModeDescriptor;
 
     public String getGraphId() {
         return graphId;
@@ -59,6 +67,10 @@ public class ProcessorGraph implements Serializable {
             }
         }
         return true;
+    }
+
+    public boolean isEnableCepMode(){
+        return this.cepModeDescriptor!=null && this.cepModeDescriptor.isEnabled();
     }
 
     public List<ProcessorNode> getProducerNodes() {

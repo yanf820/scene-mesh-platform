@@ -7,10 +7,7 @@ import com.scene.mesh.foundation.api.processor.config.ProcessorNode;
 import com.scene.mesh.foundation.impl.processor.ProcessActivateContext;
 import com.scene.mesh.foundation.impl.processor.ProcessInput;
 import com.scene.mesh.foundation.impl.processor.ProcessOutput;
-import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
-import org.apache.flink.api.common.functions.WithConfigurationOpenContext;
-import org.apache.flink.cep.CEP;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 
@@ -55,12 +52,16 @@ public class FlinkProcessConsumer extends RichFlatMapFunction implements IFlinkP
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
-        OpenContext context = new WithConfigurationOpenContext(parameters);
-        super.open(context);
+    public void open() throws Exception {
         this.processor = (IProcessor) this.componentProvider.getComponent(this.processorNode.getComponentId());
         ProcessActivateContext activateContext = new ProcessActivateContext();
         this.processor.activate(activateContext);
+    }
+
+    @Override
+    public void open(Configuration parameters) throws Exception {
+        super.open(parameters);
+        this.open();
     }
 
     @Override

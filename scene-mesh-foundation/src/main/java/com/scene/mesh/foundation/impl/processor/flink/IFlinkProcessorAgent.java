@@ -6,13 +6,13 @@ import org.apache.flink.configuration.Configuration;
 
 /**
  */
-public interface IFlinkProcessorAgent {
+public interface IFlinkProcessorAgent<T> {
 
     boolean isAsProducer();
 
     ProcessorNode getProcessorNode();
 
-    Class getOutputType();
+    Class<T> getOutputType();
 
-    void open(Configuration parameters) throws Exception;
+    void open() throws Exception;
 }

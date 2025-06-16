@@ -31,10 +31,9 @@ public class MessageToEventConvertor extends BaseInboundMessageInterceptor {
         String productId = "supply chain";
 
         Event event = new Event(metaEventId);
-        event.setTenantId(tenantId);
         event.setProductId(productId);
         event.setTerminalId(clientId);
-        event.setProtocolSessionId(request.getProtocolSessionId());
+//        event.setProtocolSessionId(request.getProtocolSessionId());
         //把json 加入 event
         event.setPayload(metaParameters.getParameterMap());
 

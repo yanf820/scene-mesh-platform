@@ -41,7 +41,7 @@ public class DefaultEventListener implements IEventListener {
     public void onInboundEvent(Event event) {
         log.info("onInboundEvent: {}", SimpleObjectHelper.objectData2json(event));
         try {
-            String topicName = event.getProductId()+"_inbound_events";
+            String topicName = "inbound_events";
             this.messageProducer.send(new MessageTopic(topicName),event);
         } catch (Exception e) {
             throw new RuntimeException(e);

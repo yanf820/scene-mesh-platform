@@ -2,20 +2,27 @@ package com.scene.mesh.foundation.impl.processor.flink;
 
 import com.scene.mesh.foundation.api.component.IComponentProvider;
 import com.scene.mesh.foundation.api.processor.IProcessActuator;
+import com.scene.mesh.foundation.api.processor.config.CepModeDescriptor;
 import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
 import com.scene.mesh.foundation.api.processor.config.ProcessorLinker;
 import com.scene.mesh.foundation.api.processor.config.ProcessorNode;
+import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
+import com.scene.mesh.foundation.impl.processor.flink.cep.discover.JdbcPeriodicRuleDiscovererFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.cep.CEPUtils;
+import org.apache.flink.cep.TimeBehaviour;
+import org.apache.flink.configuration.*;
+import org.apache.flink.connector.jdbc.internal.options.JdbcConnectorOptions;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-
-/**
- */
+@Slf4j
 public class FlinkProcessActuator implements IProcessActuator {
 
     private ProcessorGraph processorGraph;
@@ -23,10 +30,12 @@ public class FlinkProcessActuator implements IProcessActuator {
     private boolean launched;
     private Map<String, FlinkProcessorChainNode> chainNodeMap;
     private IComponentProvider componentProvider;
+    private Configuration configuration;
 
-    public FlinkProcessActuator(IComponentProvider componentProvider) {
+    public FlinkProcessActuator(IComponentProvider componentProvider, Configuration configuration) {
         this.componentProvider = componentProvider;
-        this.chainNodeMap = new HashMap<String, FlinkProcessorChainNode>();
+        this.chainNodeMap = new HashMap<>();
+        this.configuration = configuration;
     }
 
     @Override
@@ -39,26 +48,29 @@ public class FlinkProcessActuator implements IProcessActuator {
     @Override
     public void launch() throws Exception {
         this.launched = false;
-        if(this.processorGraph == null) return;
+        if (this.processorGraph == null) return;
+
+
 
         List<ProcessorNode> producerNodes = this.processorGraph.getProducerNodes();
-        if(producerNodes==null || producerNodes.size()==0) return;
+        if (producerNodes == null || producerNodes.isEmpty()) return;
 
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
+        env.disableOperatorChaining();
 
-        for(ProcessorNode pn : this.processorGraph.getNodes()) {
-            if(this.processorGraph.isProducerNode(pn.getId())){
+        for (ProcessorNode pn : this.processorGraph.getNodes()) {
+            if (this.processorGraph.isProducerNode(pn.getId())) {
                 FlinkProcessProducer producer = new FlinkProcessProducer(pn, this.componentProvider);
                 FlinkProcessorChainNode chainNode = new FlinkProcessorChainNode(producer);
                 this.chainNodeMap.put(pn.getId(), chainNode);
-            }else{
+            } else {
                 FlinkProcessConsumer consumer = new FlinkProcessConsumer(pn, this.componentProvider);
                 FlinkProcessorChainNode chainNode = new FlinkProcessorChainNode(consumer);
                 this.chainNodeMap.put(pn.getId(), chainNode);
             }
         }
 
-        for(String chainNodeId : this.chainNodeMap.keySet()){
+        for (String chainNodeId : this.chainNodeMap.keySet()) {
             this.setupChainObjectNode(chainNodeId, env);
         }
 
@@ -69,38 +81,103 @@ public class FlinkProcessActuator implements IProcessActuator {
 
     private DataStream setupChainObjectNode(String nodeId, StreamExecutionEnvironment env) {
         FlinkProcessorChainNode chainNode = this.chainNodeMap.get(nodeId);
-        if(chainNode == null) return null;
+        if (chainNode == null) return null;
 
-        if(chainNode.getChainObject()!=null){
-            return (DataStream) chainNode.getChainObject();
+        if (chainNode.getChainObject() != null) {
+            return chainNode.getChainObject();
         }
 
         List<ProcessorLinker> linkers = this.processorGraph.findLinkersByNodeId(nodeId, false); //find upstreams
-        if(linkers.size() == 0 && processorGraph.isProducerNode(nodeId)){
-            DataStream dataStreamSource = env.addSource((FlinkProcessProducer)chainNode.getAgent()).returns(chainNode.getAgent().getOutputType()).name(nodeId).shuffle();
-            chainNode.setChainObject(dataStreamSource);
-            return dataStreamSource;
-        }else if(linkers.size()>0 && !processorGraph.isProducerNode(nodeId)){
-            List<DataStream> streams = new ArrayList<DataStream>();
+        if (linkers.size() == 0 && processorGraph.isProducerNode(nodeId)) {
+            DataStream dataStreamSource = env
+                    .addSource((FlinkProcessProducer) chainNode.getAgent())
+                    .returns(chainNode.getAgent().getOutputType())
+                    .name(nodeId)
+                    .setParallelism(chainNode.getAgent().getProcessorNode().getParallelism())
+                    .shuffle();
+            //如果有 cep 处理，在 source 后添加 cep table
+            if (this.processorGraph.isEnableCepMode()) {
+                CepModeDescriptor descriptor = this.processorGraph.getCepModeDescriptor();
+
+                //校验 cep 分区键
+                if (descriptor.getKeyed() == null || descriptor.getKeyed().length != 2) {
+                    throw new RuntimeException("Cep 模式 - keyed 设置无效.");
+                }
+
+                // source stream 分区处理
+                KeyedStream keyedStream = dataStreamSource.keyBy(new KeySelector<Object, Tuple2<String, String>>()  {
+                    @Override
+                    public Tuple2<String, String> getKey(Object obj) throws Exception {
+                        Map<String, Object> objectMap = SimpleObjectHelper.obj2Map(obj);
+                        String[] keyeds = descriptor.getKeyed();
+
+                        Tuple2<String, String> tuple2 = new Tuple2<>();
+                        tuple2.f0 = objectMap.get(keyeds[0]).toString();
+                        tuple2.f1 = objectMap.get(keyeds[1]).toString();
+
+                        return tuple2;
+                    }
+                });
+
+
+                //设置定时 cep 规则
+                SingleOutputStreamOperator<Object> cepResultStream = CEPUtils.dynamicCepRules(keyedStream,
+                        new JdbcPeriodicRuleDiscovererFactory(
+                                JdbcConnectorOptions.builder()
+                                        .setTableName(descriptor.getRuleSource())
+                                        .setDriverName(descriptor.getDriverName())
+                                        .setDBUrl(descriptor.getDatabaseUrl())
+                                        .setUsername(descriptor.getUsername())
+                                        .setPassword(descriptor.getPassword())
+                                        .build(),
+                                3,
+                                "cep",
+                                Collections.emptyList(),
+                                descriptor.getPeriod().toMillis()),
+                        TimeBehaviour.ProcessingTime,
+                        descriptor.getCepMatchedResultType(),
+                        "event-cep",
+                        "/",
+                        descriptor.getParallelism(),
+                        false
+                );
+
+                chainNode.setChainObject(cepResultStream);
+                return cepResultStream;
+            } else {
+                chainNode.setChainObject(dataStreamSource);
+                return dataStreamSource;
+            }
+        } else if (linkers.size() > 0 && !processorGraph.isProducerNode(nodeId)) {
+            List<DataStream> streams = new ArrayList<>();
             for (ProcessorLinker linker : linkers) {
                 DataStream dataStream = this.setupChainObjectNode(linker.getFromNodeId(), env);
-                if(dataStream!=null) {
+                if (dataStream != null) {
                     streams.add(dataStream);
                 }
             }
-            if(streams.size() == 1){
-                DataStream ds = streams.get(0).flatMap((FlinkProcessConsumer) chainNode.getAgent()).returns(chainNode.getAgent().getOutputType()).name(nodeId);
+            if (streams.size() == 1) {
+                DataStream ds = streams.get(0)
+                        .flatMap((FlinkProcessConsumer) chainNode.getAgent())
+                        .returns(chainNode.getAgent().getOutputType())
+                        .setParallelism(chainNode.getAgent().getProcessorNode().getParallelism())
+                        .name(nodeId);
                 chainNode.setChainObject(ds);
                 return ds;
-            }else if(streams.size()>1){
-                DataStream ds = streams.get(0).union(streams.subList(1, streams.size()).toArray(new DataStream[streams.size() - 1])).flatMap((FlinkProcessConsumer) chainNode.getAgent()).returns(chainNode.getAgent().getOutputType()).name(nodeId);
+            } else if (streams.size() > 1) {
+                DataStream ds = streams.get(0)
+                        .union(streams.subList(1, streams.size()).toArray(new DataStream[streams.size() - 1]))
+                        .flatMap((FlinkProcessConsumer) chainNode.getAgent())
+                        .returns(chainNode.getAgent().getOutputType())
+                        .setParallelism(chainNode.getAgent().getProcessorNode().getParallelism())
+                        .name(nodeId);
                 chainNode.setChainObject(ds);
                 return ds;
-            }else{
+            } else {
                 return null;
             }
 
-        }else{
+        } else {
             return null;
         }
 
@@ -116,10 +193,10 @@ public class FlinkProcessActuator implements IProcessActuator {
         return this.launched;
     }
 
-    public class FlinkProcessorChainNode{
+    public class FlinkProcessorChainNode {
 
-        private IFlinkProcessorAgent agent;
-        private Object chainObject;
+        private final IFlinkProcessorAgent agent;
+        private DataStream chainObject;
 
         public FlinkProcessorChainNode(IFlinkProcessorAgent agent) {
             this.agent = agent;
@@ -129,11 +206,11 @@ public class FlinkProcessActuator implements IProcessActuator {
             return agent;
         }
 
-        public Object getChainObject() {
+        public DataStream getChainObject() {
             return chainObject;
         }
 
-        public void setChainObject(Object chainObject) {
+        public void setChainObject(DataStream chainObject) {
             this.chainObject = chainObject;
         }
     }

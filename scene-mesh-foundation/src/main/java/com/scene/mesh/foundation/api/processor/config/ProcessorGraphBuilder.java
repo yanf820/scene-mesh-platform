@@ -18,7 +18,7 @@ public class ProcessorGraphBuilder {
     public ProcessorGraphBuilder(String graphId) {
         this.graph = new ProcessorGraph();
         this.graph.setGraphId(graphId);
-        this.nodeBuilders = new ArrayList<ProcessorNodeBuilder>();
+        this.nodeBuilders = new ArrayList<>();
     }
 
     public ProcessorGraphBuilder addNode(ProcessorNodeBuilder nodeBuilder) {
@@ -26,11 +26,15 @@ public class ProcessorGraphBuilder {
         return this;
     }
 
-    public ProcessorGraph build() {
-        ProcessorGraph g = new ProcessorGraph();
+    public ProcessorGraphBuilder enableCepMode(CepModeDescriptor.CepModeDescriptorBuilder cepModeBuilder) {
+        this.graph.setCepModeDescriptor(cepModeBuilder.build());
+        return this;
+    }
 
-        List<ProcessorNode> nodes = new ArrayList<ProcessorNode>();
-        List<ProcessorLinker> linkers = new ArrayList<ProcessorLinker>();
+    public ProcessorGraph build() {
+
+        List<ProcessorNode> nodes = new ArrayList<>();
+        List<ProcessorLinker> linkers = new ArrayList<>();
         for(ProcessorNodeBuilder nb : this.nodeBuilders) {
             ProcessorNode node = nb.getProcessorNode();
             List<ProcessorLinker> ls = nb.getProcessorLinkers();
@@ -39,10 +43,10 @@ public class ProcessorGraphBuilder {
                 if(!linkers.contains(pl)) linkers.add(pl);
             }
         }
-        g.setGraphId(this.graph.getGraphId());
-        g.setLinkers(linkers);
-        g.setNodes(nodes);
-        return g;
+
+        this.graph.setLinkers(linkers);
+        this.graph.setNodes(nodes);
+        return this.graph;
     }
 
     public static void main(String[] args) {

@@ -39,16 +39,14 @@ public class RedisMessageProducer implements IMessageProducer {
     private RedisTemplate<String, Object> redisTemplate;
     private StreamOperations<String, Object, Object> streamOperations;
 
-    public RedisMessageProducer(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public void __init__(){
         // 创建Redis连接工厂
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
         this.connectionFactory = new LettuceConnectionFactory(config);
         ((LettuceConnectionFactory) this.connectionFactory).afterPropertiesSet();
-        
+
         // 创建RedisTemplate
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(connectionFactory);
@@ -65,9 +63,12 @@ public class RedisMessageProducer implements IMessageProducer {
 
         // 初始化 RedisTemplate
         redisTemplate.afterPropertiesSet();
-        
+
         // 获取StreamOperations
         this.streamOperations = this.redisTemplate.opsForStream();
+    }
+
+    public RedisMessageProducer() {
     }
 
     /**

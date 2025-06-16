@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "name": "followed",
+      "quantifier": {
+        "consumingStrategy": "SKIP_TILL_NEXT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "expression": "metaEventId == 'wakeup_word'",
+        "type": "AVIATOR"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": null,
+      "afterMatchSkipStrategy": {
+        "type": "SKIP_PAST_LAST_EVENT",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    },
+    {
+      "name": "start",
+      "quantifier": {
+        "consumingStrategy": "STRICT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "expression": "metaEventId == 'wakeup_word'",
+        "type": "AVIATOR"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": null,
+      "afterMatchSkipStrategy": {
+        "type": "SKIP_PAST_LAST_EVENT",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    }
+  ],
+  "edges": [
+    {
+      "source": "start",
+      "target": "followed",
+      "type": "SKIP_TILL_NEXT"
+    }
+  ]
+}

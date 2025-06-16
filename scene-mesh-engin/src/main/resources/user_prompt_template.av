@@ -1,0 +1,62 @@
+## AviatorScript Prompt Template: 智能终端事件到行为的决策
+##
+## 该脚本将 Java 对象（events, metaActions）动态格式化为给 LLM 的清晰指令。
+## @author Gemini - 为您量身定制
+
+## 1. 初始化 Prompt 构建器
+let prompt = "你的核心职责是实时分析传感器和系统上报的一系列事件(events)，并基于你对当前世界状态的理解，选择并组合一套最合适的行为(actions)来做出响应。\n\n";
+
+## 2. 动态构建【输入事件】部分
+prompt = prompt + "--- 当前输入事件序列 (Events) ---\n";
+prompt = prompt + "这是按照时间顺序捕获到的事件，请分析它们的内在联系和潜在意图。\n";
+
+if (count(events) > 0) {
+  for event in events {
+    ## 访问 Event 对象的属性
+    prompt = prompt + "- 事件类型: `#{event.metaEventId}`, 负载信息: #{event.payload}\n";
+  }
+} else {
+  prompt = prompt + "(当前无任何输入事件)\n";
+}
+prompt = prompt + "\n";
+
+## 3. 动态构建【可用行为库】(Action Schema)
+prompt = prompt + "--- 可用行为库 (Action Definitions) ---\n";
+prompt = prompt + "你必须从以下行为库中选择行为，并严格按照其定义的 `actionId` 和 `payload` 结构来生成指令。你的最终输出必须是一个纯净的、不含任何额外文本的JSON数组。\n\n";
+
+if (count(metaActions) > 0) {
+  for actionDef in metaActions {
+    ## 访问 DefaultMetaAction 对象的属性
+    prompt = prompt + "### 行为ID: `#{actionDef.uuid}`\n";
+    prompt = prompt + "   - 名称: #{actionDef.name}\n";
+    prompt = prompt + "   - 描述: #{actionDef.description}\n";
+    prompt = prompt + "   - `payload` 参数详情:\n";
+
+    ## 访问内嵌的 MetaParameterDescriptorCollection
+    let params = actionDef.parameterCollection;
+    if (params != nil && count(params.parameterDescriptors) > 0) {
+      ## 循环遍历每一个参数定义
+      for param in params.parameterDescriptors {
+        let required_text = "";
+        ## 访问 MetaParameterDescriptor 的属性，并根据布尔值添加文本
+        if (param.required) {
+          required_text = " (必填)";
+        }
+        ## 假设 dataType 对象有合理的 toString() 实现，例如返回 "String"
+        prompt = prompt + "     - `#{param.name}` (#{param.dataType.dataType})#{required_text}: #{param.description}\n";
+      }
+    } else {
+      prompt = prompt + "     - 此行为无需 `payload` 参数。\n";
+    }
+    prompt = prompt + "\n";
+  }
+} else {
+   prompt = prompt + "警告：未定义任何可用的输出行为！\n\n";
+}
+
+## 4. 给出最终的【任务指令】
+prompt = prompt + "--- 任务指令 ---\n";
+prompt = prompt + "请综合分析上述所有输入事件，进行意图识别、状态推理，并生成一个包含一个或多个行为(Action)的JSON数组作为响应。你的决策应合乎逻辑、富有常识，并旨在最高效地完成任务或与用户互动。\n";
+
+## 5. 返回最终构建的 Prompt 字符串
+return prompt;

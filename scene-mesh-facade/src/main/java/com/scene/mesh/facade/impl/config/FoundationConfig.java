@@ -45,8 +45,11 @@ public class FoundationConfig {
 
     @Bean
     public IMessageProducer messageProducer(){
-        IMessageProducer messageProducer = new RedisMessageProducer(redisHost,redisPort);
+        RedisMessageProducer messageProducer = new RedisMessageProducer();
+        messageProducer.setHost(redisHost);
+        messageProducer.setPort(redisPort);
         messageProducer.setSerializer(new JsonMessageSerializer());
+        messageProducer.__init__();
         return messageProducer;
     }
 

@@ -4,7 +4,7 @@ package com.scene.mesh.foundation.api.processor.config;
 import java.io.Serializable;
 
 
-public class ProcessorNode implements Serializable{
+public class ProcessorNode implements Serializable {
 
     private static final long serialVersionUID = -6680701868251850100L;
     private String id;

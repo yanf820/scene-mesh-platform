@@ -1,48 +1,42 @@
 package com.scene.mesh.engin;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
+import com.scene.mesh.engin.model.OperationRequest;
+import com.scene.mesh.engin.model.OperationResponse;
+import com.scene.mesh.engin.model.SceneMatchedResult;
+import com.scene.mesh.foundation.api.processor.config.CepModeDescriptor;
 import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
 import com.scene.mesh.foundation.api.processor.config.ProcessorGraphBuilder;
 import com.scene.mesh.foundation.api.processor.config.ProcessorNodeBuilder;
 import com.scene.mesh.foundation.api.processor.execute.IProcessManager;
 import com.scene.mesh.foundation.impl.component.SpringApplicationContextUtils;
-import com.scene.mesh.foundation.impl.component.SpringComponentProvider;
-import com.scene.mesh.foundation.impl.processor.execute.DefaultProcessManager;
-import com.scene.mesh.foundation.impl.processor.flink.FlinkProcessExecutor;
-import com.scene.mesh.foundation.impl.processor.standalone.StandaloneProcessExecutor;
 import com.scene.mesh.model.event.Event;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.java.typeutils.GenericTypeInfo;
+
+import java.time.Duration;
 
 @Slf4j
 public class SceneMeshEnginApplication {
 
     public static void main(String[] args) {
 
-        String executorType = System.getProperty("mx.processor.executorType", "");
-
         SpringApplicationContextUtils.setContextId("engin.xml");
 
-        log.info("执行引擎启动... 执行类型:{}, 执行文件:{}", executorType, "engin.xml");
+        log.info("执行引擎启动...  执行文件:{}", "engin.xml");
 
-        IComponentProvider componentProvider = new SpringComponentProvider();
+        IProcessManager processManager = SpringApplicationContextUtils
+                .getApplicationContext()
+                .getBean(IProcessManager.class);
 
-        StandaloneProcessExecutor standaloneProcessExecutor = new StandaloneProcessExecutor(componentProvider);
-        FlinkProcessExecutor flinkProcessExecutor = new FlinkProcessExecutor(componentProvider);
-        IProcessManager processManager = new DefaultProcessManager();
+        //注册when graph
+        ProcessorGraph whenGraph = whenGraph();
+        processManager.registerProcess(whenGraph);
+        log.info("Graph: {} 已注册， graph信息: {}", whenGraph.getGraphId(), whenGraph);
 
-        if ("flink".equals(executorType)) {
-            processManager.setExecutor(flinkProcessExecutor);
-        } else {
-            processManager.setExecutor(standaloneProcessExecutor);
-        }
-
-
-        //register graph
-        ProcessorGraph graph = makeEnginGraph();
-        processManager.registerProcess(graph);
-        log.info("Graph: {} 已注册， graph信息: {}", graph.getGraphId(), graph.toString());
-
-
+        //注册 then graph
+//        ProcessorGraph thenGraph = thenGraph();
+//        processManager.registerProcess(thenGraph);
+//        log.info("Graph: {} 已注册， graph信息: {}", thenGraph.getGraphId(), thenGraph);
         //startup
         try {
             processManager.executeAllProcesses();
@@ -51,18 +45,57 @@ public class SceneMeshEnginApplication {
         }
     }
 
-    private static ProcessorGraph makeEnginGraph() {
-        return ProcessorGraphBuilder.createWithId("event-process-graph")
-                .addNode(ProcessorNodeBuilder.createWithId("source")
-                        .withComponentId("event-producer")
+    private static ProcessorGraph whenGraph() {
+        return ProcessorGraphBuilder.createWithId("when")
+                .addNode(ProcessorNodeBuilder.createWithId("scene-event-source")
+                        .withComponentId("scene-event-producer")
+                        .withParallelism(1)
+                        .withOutputType(Event.class))
+                .enableCepMode(CepModeDescriptor.builder()
+                        .enabled(true)
+                        .databaseUrl("jdbc:postgresql://127.0.0.1:5432/postgres")
+                        .driverName("org.postgresql.Driver")
+                        .ruleSource("cep_rules")
+                        .username("postgres")
+                        .password("scene_mesh")
+                        .period(Duration.ofSeconds(10))
+                        .keyed(new String[]{"productId", "terminalId"})
+                        .parallelism(1)
+                        .cepMatchedResultType(new GenericTypeInfo<>(SceneMatchedResult.class)))
+                .addNode(ProcessorNodeBuilder.createWithId("scene-match-sink")
+                        .withComponentId("scene-match-sinker")
                         .withParallelism(1)
                         .withOutputType(Event.class)
+                        .from("scene-event-source")
                 )
-//                .addNode(ProcessorNodeBuilder.createWithId("cep-processor")
-//                        .withComponentId("")
-//                        .withParallelism(2)
-//                        .from("event-processor")
-//                )
+                .build();
+    }
+
+    private static ProcessorGraph thenGraph(){
+        return ProcessorGraphBuilder.createWithId("then")
+                .addNode(ProcessorNodeBuilder.createWithId("matched-scene-source")
+                        .withComponentId("matched-scene-producer")
+                        .withParallelism(1)
+                        .withOutputType(SceneMatchedResult.class)
+                )
+                .addNode(ProcessorNodeBuilder.createWithId("scene-handler")
+                        .withComponentId("scene-selector")
+                        .withParallelism(1)
+                        .withOutputType(OperationRequest.class)
+                        .from("matched-scene-source")
+                )
+                .addNode(ProcessorNodeBuilder.createWithId("operation-handler")
+                        .withComponentId("operation-handler")
+                        .withParallelism(1)
+                        .withOutputType(OperationResponse.class)
+                        .from("scene-handler")
+                )
+                .addNode(ProcessorNodeBuilder.createWithId("action-sinker")
+                        .withComponentId("action-sinker")
+                        .withParallelism(1)
+                        .withOutputType(Object.class)
+                        .from("operation-handler")
+                )
                 .build();
     }
 
