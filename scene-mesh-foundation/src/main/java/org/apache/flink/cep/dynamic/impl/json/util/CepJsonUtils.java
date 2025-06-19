@@ -28,6 +28,7 @@ import org.apache.flink.cep.dynamic.impl.json.spec.GraphSpec;
 import org.apache.flink.cep.dynamic.impl.json.spec.NodeSpec;
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.cep.configuration.ObjectConfiguration;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.module.SimpleModule;
@@ -61,7 +62,7 @@ public class CepJsonUtils {
 
     public static Pattern<?, ?> convertJSONStringToPattern(String jsonString) throws Exception {
         return convertJSONStringToPattern(
-                jsonString, Thread.currentThread().getContextClassLoader(), new Configuration());
+                jsonString, Thread.currentThread().getContextClassLoader(), new ObjectConfiguration());
     }
 
     public static Pattern<?, ?> convertJSONStringToPattern(

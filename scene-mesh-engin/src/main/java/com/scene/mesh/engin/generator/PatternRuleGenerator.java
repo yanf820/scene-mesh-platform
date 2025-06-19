@@ -314,7 +314,506 @@ public class PatternRuleGenerator {
     }
 
     private static void json2Pattern() throws Exception {
-        String json = "{\"nodes\":[{\"name\":\"afterSaleGroup\",\"quantifier\":{\"consumingStrategy\":\"SKIP_TILL_NEXT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"TIMES\"]},\"condition\":{\"className\":null,\"type\":\"CLASS\"},\"times\":{\"from\":1,\"to\":5,\"windowTime\":null},\"untilCondition\":null,\"window\":{\"type\":\"FIRST_AND_LAST\",\"time\":{\"unit\":\"DAYS\",\"size\":7}},\"afterMatchSkipStrategy\":{\"type\":\"NO_SKIP\",\"patternName\":null},\"type\":\"ATOMIC\"},{\"name\":\"shoppingFlowGroup\",\"quantifier\":{\"consumingStrategy\":\"STRICT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"SINGLE\"]},\"condition\":{\"className\":null,\"type\":\"CLASS\"},\"times\":null,\"untilCondition\":null,\"window\":null,\"afterMatchSkipStrategy\":{\"type\":\"NO_SKIP\",\"patternName\":null},\"type\":\"ATOMIC\"}],\"edges\":[{\"source\":\"shoppingFlowGroup\",\"target\":\"afterSaleGroup\",\"type\":\"SKIP_TILL_NEXT\"}]}\n";
+        String json = "{\n" +
+                "  \"nodes\": [\n" +
+                "    {\n" +
+                "      \"name\": \"afterSaleGroup\",\n" +
+                "      \"quantifier\": {\n" +
+                "        \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "        \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "        \"properties\": [\n" +
+                "          \"TIMES\"\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      \"condition\": null,\n" +
+                "      \"graph\": {\n" +
+                "        \"nodes\": [\n" +
+                "          {\n" +
+                "            \"name\": \"post-purchase\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\",\n" +
+                "                \"OPTIONAL\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": {\n" +
+                "              \"expression\": \"event.eventType == 'review_product' || event.eventType == 'customer_service_contact'\",\n" +
+                "              \"type\": \"AVIATOR\"\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": null,\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"ATOMIC\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"name\": \"delivery-received\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": {\n" +
+                "              \"expression\": \"event.eventType == 'delivery_confirmed'\",\n" +
+                "              \"type\": \"AVIATOR\"\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": null,\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"ATOMIC\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"name\": \"order-tracking\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"STRICT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": {\n" +
+                "              \"expression\": \"event.eventType == 'track_order'\",\n" +
+                "              \"type\": \"AVIATOR\"\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": null,\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"ATOMIC\"\n" +
+                "          }\n" +
+                "        ],\n" +
+                "        \"edges\": [\n" +
+                "          {\n" +
+                "            \"source\": \"delivery-received\",\n" +
+                "            \"target\": \"post-purchase\",\n" +
+                "            \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"source\": \"order-tracking\",\n" +
+                "            \"target\": \"delivery-received\",\n" +
+                "            \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      \"times\": {\n" +
+                "        \"from\": 1,\n" +
+                "        \"to\": 5,\n" +
+                "        \"windowTime\": null\n" +
+                "      },\n" +
+                "      \"untilCondition\": null,\n" +
+                "      \"window\": {\n" +
+                "        \"type\": \"FIRST_AND_LAST\",\n" +
+                "        \"time\": {\n" +
+                "          \"unit\": \"DAYS\",\n" +
+                "          \"size\": 7\n" +
+                "        }\n" +
+                "      },\n" +
+                "      \"afterMatchSkipStrategy\": {\n" +
+                "        \"type\": \"NO_SKIP\",\n" +
+                "        \"patternName\": null\n" +
+                "      },\n" +
+                "      \"type\": \"COMPOSITE\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"name\": \"shoppingFlowGroup\",\n" +
+                "      \"quantifier\": {\n" +
+                "        \"consumingStrategy\": \"STRICT\",\n" +
+                "        \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "        \"properties\": [\n" +
+                "          \"SINGLE\"\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      \"condition\": null,\n" +
+                "      \"graph\": {\n" +
+                "        \"nodes\": [\n" +
+                "          {\n" +
+                "            \"name\": \"checkoutGroup\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": null,\n" +
+                "            \"graph\": {\n" +
+                "              \"nodes\": [\n" +
+                "                {\n" +
+                "                  \"name\": \"order-confirmation\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'order_confirmed'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"payment-processing\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'process_payment'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"shipping-selection\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'select_shipping'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"start-checkout\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"STRICT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'start_checkout'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                }\n" +
+                "              ],\n" +
+                "              \"edges\": [\n" +
+                "                {\n" +
+                "                  \"source\": \"payment-processing\",\n" +
+                "                  \"target\": \"order-confirmation\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"source\": \"shipping-selection\",\n" +
+                "                  \"target\": \"payment-processing\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"source\": \"start-checkout\",\n" +
+                "                  \"target\": \"shipping-selection\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": {\n" +
+                "              \"type\": \"FIRST_AND_LAST\",\n" +
+                "              \"time\": {\n" +
+                "                \"unit\": \"MINUTES\",\n" +
+                "                \"size\": 15\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"COMPOSITE\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"name\": \"cartGroup\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": null,\n" +
+                "            \"graph\": {\n" +
+                "              \"nodes\": [\n" +
+                "                {\n" +
+                "                  \"name\": \"cart-review\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'view_cart'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"modify-cart\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\",\n" +
+                "                      \"OPTIONAL\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'cart_update' && (event.properties.action == 'quantity_change' || event.properties.action == 'remove_item')\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"add-items\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"STRICT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'add_to_cart'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                }\n" +
+                "              ],\n" +
+                "              \"edges\": [\n" +
+                "                {\n" +
+                "                  \"source\": \"modify-cart\",\n" +
+                "                  \"target\": \"cart-review\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"source\": \"add-items\",\n" +
+                "                  \"target\": \"modify-cart\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": null,\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"COMPOSITE\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"name\": \"browsingGroup\",\n" +
+                "            \"quantifier\": {\n" +
+                "              \"consumingStrategy\": \"STRICT\",\n" +
+                "              \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "              \"properties\": [\n" +
+                "                \"SINGLE\"\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"condition\": null,\n" +
+                "            \"graph\": {\n" +
+                "              \"nodes\": [\n" +
+                "                {\n" +
+                "                  \"name\": \"compare-products\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\",\n" +
+                "                      \"OPTIONAL\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'compare' && event.properties.productCount >= 2\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"product-view\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"LOOPING\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'view_product'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": {\n" +
+                "                    \"from\": 3,\n" +
+                "                    \"to\": 3,\n" +
+                "                    \"windowTime\": null\n" +
+                "                  },\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"name\": \"product-search\",\n" +
+                "                  \"quantifier\": {\n" +
+                "                    \"consumingStrategy\": \"STRICT\",\n" +
+                "                    \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\",\n" +
+                "                    \"properties\": [\n" +
+                "                      \"SINGLE\"\n" +
+                "                    ]\n" +
+                "                  },\n" +
+                "                  \"condition\": {\n" +
+                "                    \"expression\": \"event.eventType == 'search' && event.properties.category == 'electronics'\",\n" +
+                "                    \"type\": \"AVIATOR\"\n" +
+                "                  },\n" +
+                "                  \"times\": null,\n" +
+                "                  \"untilCondition\": null,\n" +
+                "                  \"window\": null,\n" +
+                "                  \"afterMatchSkipStrategy\": {\n" +
+                "                    \"type\": \"NO_SKIP\",\n" +
+                "                    \"patternName\": null\n" +
+                "                  },\n" +
+                "                  \"type\": \"ATOMIC\"\n" +
+                "                }\n" +
+                "              ],\n" +
+                "              \"edges\": [\n" +
+                "                {\n" +
+                "                  \"source\": \"product-view\",\n" +
+                "                  \"target\": \"compare-products\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                  \"source\": \"product-search\",\n" +
+                "                  \"target\": \"product-view\",\n" +
+                "                  \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "                }\n" +
+                "              ]\n" +
+                "            },\n" +
+                "            \"times\": null,\n" +
+                "            \"untilCondition\": null,\n" +
+                "            \"window\": null,\n" +
+                "            \"afterMatchSkipStrategy\": {\n" +
+                "              \"type\": \"NO_SKIP\",\n" +
+                "              \"patternName\": null\n" +
+                "            },\n" +
+                "            \"type\": \"COMPOSITE\"\n" +
+                "          }\n" +
+                "        ],\n" +
+                "        \"edges\": [\n" +
+                "          {\n" +
+                "            \"source\": \"cartGroup\",\n" +
+                "            \"target\": \"checkoutGroup\",\n" +
+                "            \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"source\": \"browsingGroup\",\n" +
+                "            \"target\": \"cartGroup\",\n" +
+                "            \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      \"times\": null,\n" +
+                "      \"untilCondition\": null,\n" +
+                "      \"window\": null,\n" +
+                "      \"afterMatchSkipStrategy\": {\n" +
+                "        \"type\": \"NO_SKIP\",\n" +
+                "        \"patternName\": null\n" +
+                "      },\n" +
+                "      \"type\": \"COMPOSITE\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"edges\": [\n" +
+                "    {\n" +
+                "      \"source\": \"shoppingFlowGroup\",\n" +
+                "      \"target\": \"afterSaleGroup\",\n" +
+                "      \"type\": \"SKIP_TILL_NEXT\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}\n";
         Pattern pattern = CepJsonUtils.convertJSONStringToPattern(json);
         System.out.println(pattern);
 

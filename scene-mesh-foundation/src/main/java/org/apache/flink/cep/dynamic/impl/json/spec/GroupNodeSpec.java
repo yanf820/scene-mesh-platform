@@ -18,6 +18,7 @@
 
 package org.apache.flink.cep.dynamic.impl.json.spec;
 
+import org.apache.flink.cep.dynamic.GroupPatternWrapper;
 import org.apache.flink.cep.pattern.GroupPattern;
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.cep.pattern.Quantifier;
@@ -51,6 +52,11 @@ public class GroupNodeSpec extends NodeSpec {
 
     public static GroupNodeSpec fromPattern(Pattern<?, ?> pattern) {
         GraphSpec graph = GraphSpec.fromPattern(((GroupPattern<?, ?>) pattern).getRawPattern());
+        return NodeSpec.newBuilder(pattern).graph(graph).buildGroup();
+    }
+
+    public static GroupNodeSpec fromPatternWithGroupPatternWrapper(Pattern<?, ?> pattern) {
+        GraphSpec graph = GraphSpec.fromPattern(((GroupPatternWrapper<?, ?>) pattern).getRawPattern());
         return NodeSpec.newBuilder(pattern).graph(graph).buildGroup();
     }
 

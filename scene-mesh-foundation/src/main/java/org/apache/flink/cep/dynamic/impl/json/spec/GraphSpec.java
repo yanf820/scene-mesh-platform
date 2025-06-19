@@ -1,5 +1,6 @@
 package org.apache.flink.cep.dynamic.impl.json.spec;
 
+import org.apache.flink.cep.dynamic.GroupPatternWrapper;
 import org.apache.flink.cep.pattern.GroupPattern;
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.cep.pattern.Quantifier;
@@ -29,7 +30,13 @@ public class GraphSpec {
                 GroupNodeSpec subgraphSpec =
                         GroupNodeSpec.fromPattern(pattern);
                 nodes.add(subgraphSpec);
-            } else {
+            }
+            if (pattern instanceof GroupPatternWrapper){
+                GroupNodeSpec subgraphSpec =
+                        GroupNodeSpec.fromPatternWithGroupPatternWrapper(pattern);
+                nodes.add(subgraphSpec);
+            }
+            else {
                 // Build nodeSpec
                 NodeSpec nodeSpec = NodeSpec.fromPattern(pattern);
                 nodes.add(nodeSpec);
