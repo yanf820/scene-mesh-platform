@@ -1,0 +1,136 @@
+{
+  "nodes": [
+    {
+      "name": "checkout-attempt",
+      "quantifier": {
+        "consumingStrategy": "SKIP_TILL_NEXT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "expression": "event.eventType == 'start_checkout'",
+        "type": "AVIATOR"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": {
+        "type": "FIRST_AND_LAST",
+        "time": {
+          "unit": "SECONDS",
+          "size": 30
+        }
+      },
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    },
+    {
+      "name": "human-verification",
+      "quantifier": {
+        "consumingStrategy": "SKIP_TILL_NEXT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE",
+          "OPTIONAL"
+        ]
+      },
+      "condition": {
+        "expression": "event.eventType == 'captcha_verified'",
+        "type": "AVIATOR"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": null,
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    },
+    {
+      "name": "add-to-cart",
+      "quantifier": {
+        "consumingStrategy": "STRICT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "expression": "event.eventType == 'add_to_cart' && event.properties.productId == 'limited_sneaker_2025'",
+        "type": "AVIATOR"
+      },
+      "times": null,
+      "untilCondition": null,
+      "window": null,
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    },
+    {
+      "name": "rapid-probing",
+      "quantifier": {
+        "consumingStrategy": "STRICT",
+        "innerConsumingStrategy": "STRICT",
+        "properties": [
+          "LOOPING"
+        ]
+      },
+      "condition": {
+        "nestedConditions": [
+          {
+            "expression": "event.eventType == 'view_product' && event.properties.productId == 'limited_sneaker_2025'",
+            "type": "AVIATOR"
+          },
+          {
+            "expression": "event.eventType == 'check_stock_api' && event.properties.productId == 'limited_sneaker_2025'",
+            "type": "AVIATOR"
+          }
+        ],
+        "type": "CLASS",
+        "className": "org.apache.flink.cep.pattern.conditions.RichOrCondition"
+      },
+      "times": {
+        "from": 5,
+        "to": 5,
+        "windowTime": null
+      },
+      "untilCondition": null,
+      "window": {
+        "type": "FIRST_AND_LAST",
+        "time": {
+          "unit": "SECONDS",
+          "size": 10
+        }
+      },
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
+      "type": "ATOMIC"
+    }
+  ],
+  "edges": [
+    {
+      "source": "human-verification",
+      "target": "checkout-attempt",
+      "type": "SKIP_TILL_NEXT"
+    },
+    {
+      "source": "add-to-cart",
+      "target": "human-verification",
+      "type": "SKIP_TILL_NEXT"
+    },
+    {
+      "source": "rapid-probing",
+      "target": "add-to-cart",
+      "type": "STRICT"
+    }
+  ]
+}

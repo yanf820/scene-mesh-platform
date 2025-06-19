@@ -1,11 +1,11 @@
-package com.scene.mesh.engin.processor.process;
+package com.scene.mesh.engin.processor.then;
 
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
-import com.scene.mesh.engin.processor.process.operator.AgentOperator;
-import com.scene.mesh.engin.processor.process.operator.IOperator;
-import com.scene.mesh.engin.processor.process.operator.NonAgentOperator;
-import com.scene.mesh.engin.processor.process.operator.OperatorManager;
+import com.scene.mesh.engin.processor.then.operator.AgentOperator;
+import com.scene.mesh.engin.processor.then.operator.IOperator;
+import com.scene.mesh.engin.processor.then.operator.NonAgentOperator;
+import com.scene.mesh.engin.processor.then.operator.OperatorManager;
 import com.scene.mesh.foundation.api.processor.IProcessActivateContext;
 import com.scene.mesh.foundation.api.processor.IProcessInput;
 import com.scene.mesh.foundation.api.processor.IProcessOutput;
@@ -22,16 +22,14 @@ public class OperationHandler extends BaseProcessor {
 
     private OperatorManager operatorManager;
 
-    public OperationHandler(MutableCacheService cacheService) {
+    public OperationHandler(MutableCacheService cacheService, OperatorManager operatorManager) {
         this.cacheService = cacheService;
+        this.operatorManager = operatorManager;
     }
 
     @Override
     public void activate(IProcessActivateContext activateContext) throws Exception {
         super.activate(activateContext);
-        this.operatorManager = new OperatorManager();
-        this.operatorManager.registerOperator(new AgentOperator());
-        this.operatorManager.registerOperator(new NonAgentOperator());
     }
 
     @Override

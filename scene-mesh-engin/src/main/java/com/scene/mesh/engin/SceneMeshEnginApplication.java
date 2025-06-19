@@ -20,6 +20,11 @@ public class SceneMeshEnginApplication {
 
     public static void main(String[] args) {
 
+        String graphId = null;
+        if (args.length != 0) {
+            graphId = args[0];
+        }
+
         SpringApplicationContextUtils.setContextId("engin.xml");
 
         log.info("执行引擎启动...  执行文件:{}", "engin.xml");
@@ -34,11 +39,13 @@ public class SceneMeshEnginApplication {
         log.info("Graph: {} 已注册， graph信息: {}", whenGraph.getGraphId(), whenGraph);
 
         //注册 then graph
-//        ProcessorGraph thenGraph = thenGraph();
-//        processManager.registerProcess(thenGraph);
-//        log.info("Graph: {} 已注册， graph信息: {}", thenGraph.getGraphId(), thenGraph);
+        ProcessorGraph thenGraph = thenGraph();
+        processManager.registerProcess(thenGraph);
+        log.info("Graph: {} 已注册， graph信息: {}", thenGraph.getGraphId(), thenGraph);
+
         //startup
         try {
+//            processManager.executeProcesses(graphId,new String[0]);
             processManager.executeAllProcesses();
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,6 +53,7 @@ public class SceneMeshEnginApplication {
     }
 
     private static ProcessorGraph whenGraph() {
+
         return ProcessorGraphBuilder.createWithId("when")
                 .addNode(ProcessorNodeBuilder.createWithId("scene-event-source")
                         .withComponentId("scene-event-producer")

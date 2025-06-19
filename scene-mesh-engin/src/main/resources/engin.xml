@@ -60,35 +60,56 @@
         <property name="port" value="6379"/>
     </bean>
 
+    <bean id="agentOperator" class="com.scene.mesh.engin.processor.then.operator.AgentOperator">
+        <constructor-arg>
+            <list>
+                <bean class="com.scene.mesh.service.impl.ai.model.zhipu.ZhiPuChatModel">
+                    <constructor-arg value="58245a200b71437bbece2b85c71c844a.uJKQJvMhutDrPQPE"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- 操作管理人 -->
+    <bean id="operatorManager" class="com.scene.mesh.engin.processor.then.operator.OperatorManager">
+        <constructor-arg>
+            <list>
+                <ref bean="agentOperator"/>
+                <bean class="com.scene.mesh.engin.processor.then.operator.NonAgentOperator"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- scene-match-graph -->
-    <bean id="scene-event-producer" class="com.scene.mesh.engin.processor.match.EventProducer">
+    <bean id="scene-event-producer" class="com.scene.mesh.engin.processor.when.EventProducer">
         <property name="env" value="dev"/>
         <property name="messageClass" value="com.scene.mesh.model.event.Event"/>
         <property name="messageConsumer" ref="messageConsumer"/>
         <property name="topicName" value="inbound_events"/>
     </bean>
 
-    <bean id="scene-match-sinker" class="com.scene.mesh.engin.processor.match.EventSinker">
+    <bean id="scene-match-sinker" class="com.scene.mesh.engin.processor.when.EventSinker">
         <property name="topicName" value="matched_result"/>
         <property name="messageProducer" ref="messageProducer"/>
     </bean>
 
     <!-- scene-process-graph -->
-    <bean id="matched-scene-producer" class="com.scene.mesh.engin.processor.process.MatchedSceneProducer">
+    <bean id="matched-scene-producer" class="com.scene.mesh.engin.processor.then.MatchedSceneProducer">
         <property name="env" value="dev"/>
         <property name="messageClass" value="com.scene.mesh.engin.model.SceneMatchedResult"/>
         <property name="messageConsumer" ref="messageConsumer"/>
         <property name="topicName" value="matched_result"/>
     </bean>
-    <bean id="scene-selector" class="com.scene.mesh.engin.processor.process.SceneSelector">
+    <bean id="scene-selector" class="com.scene.mesh.engin.processor.then.SceneSelector">
         <property name="env" value="dev"/>
         <property name="cacheService" ref="mutableCache"/>
         <property name="sceneService" ref="sceneService"/>
     </bean>
-    <bean id="operation-handler" class="com.scene.mesh.engin.processor.process.OperationHandler">
+    <bean id="operation-handler" class="com.scene.mesh.engin.processor.then.OperationHandler">
         <constructor-arg ref="mutableCache"/>
+        <constructor-arg ref="operatorManager"/>
     </bean>
-    <bean id="action-sinker" class="com.scene.mesh.engin.processor.process.ActionSinker">
+    <bean id="action-sinker" class="com.scene.mesh.engin.processor.then.ActionSinker">
         <property name="topicName" value="action"/>
         <property name="messageProducer" ref="messageProducer"/>
     </bean>

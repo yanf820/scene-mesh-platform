@@ -24,8 +24,8 @@ public class FlinkProcessExecutor implements IProcessExecutor {
     public void __init__(){
         this.configuration = new Configuration();
         // Rest 配置
-        configuration.set(RestOptions.PORT,webPort);
-        configuration.set(RestOptions.ADDRESS, webHost);
+//        configuration.set(RestOptions.PORT,webPort);
+//        configuration.set(RestOptions.ADDRESS, webHost);
         // 设置重启策略为固定延迟重启
         configuration.set(RestartStrategyOptions.RESTART_STRATEGY, "fixed-delay");
         configuration.set(RestartStrategyOptions.RESTART_STRATEGY_FIXED_DELAY_ATTEMPTS, 3);

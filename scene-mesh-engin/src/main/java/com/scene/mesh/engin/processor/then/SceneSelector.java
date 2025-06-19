@@ -1,12 +1,10 @@
-package com.scene.mesh.engin.processor.process;
+package com.scene.mesh.engin.processor.then;
 
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.SceneMatchedResult;
 import com.scene.mesh.foundation.api.processor.IProcessInput;
 import com.scene.mesh.foundation.api.processor.IProcessOutput;
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.impl.processor.BaseProcessor;
-import com.scene.mesh.model.operation.Operation;
 import com.scene.mesh.model.scene.Scene;
 import com.scene.mesh.model.session.TerminalSession;
 import com.scene.mesh.service.api.cache.MutableCacheService;
@@ -16,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.LinkedList;
 import java.util.UUID;
 
 public class SceneSelector extends BaseProcessor {

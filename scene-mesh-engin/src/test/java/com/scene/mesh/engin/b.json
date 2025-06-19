@@ -1,29 +1,39 @@
 {
   "nodes": [
     {
-      "name": "followed",
+      "name": "afterSaleGroup",
       "quantifier": {
         "consumingStrategy": "SKIP_TILL_NEXT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
         "properties": [
-          "SINGLE"
+          "TIMES"
         ]
       },
       "condition": {
-        "expression": "metaEventId == 'wakeup_word'",
-        "type": "AVIATOR"
+        "className": null,
+        "type": "CLASS"
       },
-      "times": null,
+      "times": {
+        "from": 1,
+        "to": 5,
+        "windowTime": null
+      },
       "untilCondition": null,
-      "window": null,
+      "window": {
+        "type": "FIRST_AND_LAST",
+        "time": {
+          "unit": "DAYS",
+          "size": 7
+        }
+      },
       "afterMatchSkipStrategy": {
-        "type": "SKIP_PAST_LAST_EVENT",
+        "type": "NO_SKIP",
         "patternName": null
       },
       "type": "ATOMIC"
     },
     {
-      "name": "start",
+      "name": "shoppingFlowGroup",
       "quantifier": {
         "consumingStrategy": "STRICT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -32,14 +42,14 @@
         ]
       },
       "condition": {
-        "expression": "metaEventId == 'wakeup_word'",
-        "type": "AVIATOR"
+        "className": null,
+        "type": "CLASS"
       },
       "times": null,
       "untilCondition": null,
       "window": null,
       "afterMatchSkipStrategy": {
-        "type": "SKIP_PAST_LAST_EVENT",
+        "type": "NO_SKIP",
         "patternName": null
       },
       "type": "ATOMIC"
@@ -47,8 +57,8 @@
   ],
   "edges": [
     {
-      "source": "start",
-      "target": "followed",
+      "source": "shoppingFlowGroup",
+      "target": "afterSaleGroup",
       "type": "SKIP_TILL_NEXT"
     }
   ]

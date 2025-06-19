@@ -1,6 +1,8 @@
 spring:
   application:
     name: scene-mesh-facade
+  main:
+    web-application-type: none
 
 # MQTT Server 配置（嵌入式启动,无需远端独立服务）
 mqtt:

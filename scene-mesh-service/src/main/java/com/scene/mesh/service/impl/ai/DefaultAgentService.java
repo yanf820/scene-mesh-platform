@@ -50,6 +50,6 @@ public class DefaultAgentService implements IAgentService {
         ChatClient chatClient = this.chatClientFactory.getChatClient(llm, toolNames);
         ChatResponse response = chatClient.prompt().user(userMessage).system(scenePrompt).call().chatClientResponse().chatResponse();
         log.info("测试输出 -- {}",response.getResult().getOutput().getText());
-        return null;
+        return response;
     }
 }

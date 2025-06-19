@@ -109,33 +109,6 @@
                 <version>42.7.5</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.apache.flink</groupId>-->
-<!--                <artifactId>flink-table-planner_2.12</artifactId>-->
-<!--                <version>${flink.version}</version>-->
-<!--                <scope>compile</scope>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.apache.flink</groupId>-->
-<!--                <artifactId>flink-connector-jdbc</artifactId>-->
-<!--                <version>3.3.0-1.20</version>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.flink/flink-sql-connector-postgres-cdc &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.apache.flink</groupId>-->
-<!--                <artifactId>flink-connector-postgres-cdc</artifactId>-->
-<!--                <version>3.4.0</version>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.postgresql/postgresql &ndash;&gt;-->
-
-<!--            &lt;!&ndash; mvel &ndash;&gt;-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.mvel/mvel2 &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.mvel</groupId>-->
-<!--                <artifactId>mvel2</artifactId>-->
-<!--                <version>2.5.2.Final</version>-->
-<!--            </dependency>-->
-
             <!-- spring boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

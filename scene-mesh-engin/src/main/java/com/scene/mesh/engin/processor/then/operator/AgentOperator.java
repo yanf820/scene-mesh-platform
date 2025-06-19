@@ -1,21 +1,32 @@
-package com.scene.mesh.engin.processor.process.operator;
+package com.scene.mesh.engin.processor.then.operator;
 
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
-import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.Event;
 import com.scene.mesh.model.event.OutputEventType;
 import com.scene.mesh.model.operation.Agent;
 import com.scene.mesh.model.operation.Operation;
 import com.scene.mesh.model.session.TerminalSession;
 import com.scene.mesh.service.api.ai.IAgentService;
+import com.scene.mesh.service.api.ai.IChatClientFactory;
+import com.scene.mesh.service.api.ai.IChatModel;
+import com.scene.mesh.service.impl.ai.DefaultAgentService;
+import com.scene.mesh.service.impl.ai.DefaultChatClientFactory;
 import org.springframework.ai.chat.model.ChatResponse;
 
 import java.util.List;
 
+/**
+ * agent 代理类操作员
+ */
 public class AgentOperator implements IOperator{
 
     private IAgentService agentService;
+
+    public AgentOperator(List<IChatModel> chatModels) {
+        IChatClientFactory chatClientFactory = new DefaultChatClientFactory(chatModels);
+        this.agentService = new DefaultAgentService(chatClientFactory);
+    }
 
     @Override
     public Operation.OperationType getOperationType() {

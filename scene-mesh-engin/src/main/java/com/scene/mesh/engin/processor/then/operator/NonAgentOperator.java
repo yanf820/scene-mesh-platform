@@ -1,4 +1,4 @@
-package com.scene.mesh.engin.processor.process.operator;
+package com.scene.mesh.engin.processor.then.operator;
 
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;

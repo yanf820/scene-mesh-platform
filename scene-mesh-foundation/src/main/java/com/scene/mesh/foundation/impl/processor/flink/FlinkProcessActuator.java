@@ -13,6 +13,7 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.cep.CEPUtils;
 import org.apache.flink.cep.TimeBehaviour;
+import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.configuration.*;
 import org.apache.flink.connector.jdbc.internal.options.JdbcConnectorOptions;
 import org.apache.flink.streaming.api.datastream.DataStream;

@@ -17,7 +17,7 @@ public class DefaultChatClientFactory implements IChatClientFactory {
 
 
     public DefaultChatClientFactory(List<IChatModel> chatModels) {
-        this.chatModels = new ConcurrentHashMap<>(chatModels.size());
+        this.chatClients = new ConcurrentHashMap<>();
         this.chatModels = new ConcurrentHashMap<>();
         for (IChatModel chatModel : chatModels) {
             this.chatModels.put(chatModel.getModelId(), chatModel);
