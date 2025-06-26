@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Setter;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Action
@@ -18,10 +19,16 @@ public class Action {
     //Action元模型 ID
     @Setter(AccessLevel.NONE)
     private String metaActionId;
-    //产品 ID
-    private String productId;
     //终端 ID
     private String terminalId;
     //payload
     private Map<String, Object> payload;
+
+    public Action(String metaActionId) {
+        this.metaActionId = metaActionId;
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public Action() {
+    }
 }

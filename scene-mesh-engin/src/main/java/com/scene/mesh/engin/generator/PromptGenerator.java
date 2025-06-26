@@ -19,13 +19,11 @@ public class PromptGenerator {
 
     public static void main(String[] args) {
         Event voiceE = new Event("voice");
-        voiceE.setProductId("product-1");
         voiceE.setTerminalId("terminal-1");
         voiceE.addPayloadEntry("text","你好啊");
         voiceE.addPayloadEntry("volume","1");
 
         Event faceE = new Event("face");
-        faceE.setProductId("product-1");
         faceE.setTerminalId("terminal-1");
         faceE.addPayloadEntry("expression","愉快");
 
@@ -58,7 +56,9 @@ public class PromptGenerator {
         // 将所有数据放入 Map，键名与 .av 文件中使用的变量名一致
         Map<String, Object> variables = Map.of(
                 "events", events,
-                "metaActions", metaActions
+                "metaActions", metaActions,
+                "productId", "product-1",
+                "terminalId", "terminal-1"
         );
 
         PromptTemplate template = PromptTemplate.builder()

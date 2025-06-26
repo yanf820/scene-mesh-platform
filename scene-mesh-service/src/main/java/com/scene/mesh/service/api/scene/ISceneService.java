@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public interface ISceneService {
 
-    Pair<SceneRelationType,Scene> analyseScenesRelation(Scene currentScene, Scene matchedScene);
+//    Pair<SceneRelationType,Scene> analyseScenesRelation(Scene currentScene, Scene matchedScene);
 
+    Scene getSceneById(String sceneId);
 }

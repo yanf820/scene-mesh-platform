@@ -11,8 +11,8 @@ public abstract class BaseInboundMessageInterceptor implements InboundMessageInt
 
     @Override
     public void intercept(InboundMessageRequest request, InboundMessageResponse response) {
-        log.info("入站拦截器 {} 开始工作 - clientId: {}, message: {}, protocol: {}",
-                getName(), request.getClientId(),request.getMessage(),request.getProtocolType());
+        log.info("入站拦截器 {} 开始工作 - terminalId: {}, message: {}",
+                getName(), request.getMessage().getTerminalId(),request.getMessage());
         doIntercept(request,response);
         log.info("入站拦截器 {} 完成工作.",getName());
     }

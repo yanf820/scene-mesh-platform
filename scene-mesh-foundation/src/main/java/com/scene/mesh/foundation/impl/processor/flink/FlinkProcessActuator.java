@@ -101,22 +101,17 @@ public class FlinkProcessActuator implements IProcessActuator {
                 CepModeDescriptor descriptor = this.processorGraph.getCepModeDescriptor();
 
                 //校验 cep 分区键
-                if (descriptor.getKeyed() == null || descriptor.getKeyed().length != 2) {
+                if (descriptor.getKeyed() == null || descriptor.getKeyed().length != 1) {
                     throw new RuntimeException("Cep 模式 - keyed 设置无效.");
                 }
 
                 // source stream 分区处理
-                KeyedStream keyedStream = dataStreamSource.keyBy(new KeySelector<Object, Tuple2<String, String>>()  {
+                KeyedStream keyedStream = dataStreamSource.keyBy(new KeySelector<Object, String>()  {
                     @Override
-                    public Tuple2<String, String> getKey(Object obj) throws Exception {
+                    public String getKey(Object obj) throws Exception {
                         Map<String, Object> objectMap = SimpleObjectHelper.obj2Map(obj);
                         String[] keyeds = descriptor.getKeyed();
-
-                        Tuple2<String, String> tuple2 = new Tuple2<>();
-                        tuple2.f0 = objectMap.get(keyeds[0]).toString();
-                        tuple2.f1 = objectMap.get(keyeds[1]).toString();
-
-                        return tuple2;
+                        return objectMap.get(keyeds[0]).toString();
                     }
                 });
 

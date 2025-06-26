@@ -68,4 +68,9 @@ public class MetaParameters {
         return ls;
     }
 
+    public Map<String,Object> getMap(String name){
+        Map<String,Object> map = (Map<String, Object>) this.parameterMap.get(name);
+        return map;
+    }
+
 }

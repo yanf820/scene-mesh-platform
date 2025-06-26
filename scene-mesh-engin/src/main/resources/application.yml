@@ -1,0 +1,35 @@
+scene-mesh:
+  # 基础设施配置
+  infrastructure:
+    flink-web:
+      host: 127.0.0.1
+      port: 8081
+    redis:
+      host: localhost
+      port: 6379
+    message:
+      batch-size: 10
+      timeout-seconds: 1
+
+  # 环境配置
+  environment:
+    name: dev
+
+  # 主题配置
+  topics:
+    inbound-events: inbound_events
+    matched-result: matched_result
+
+  # AI配置
+  ai:
+    provider:
+      zhipu:
+        api-key: 58245a200b71437bbece2b85c71c844a.uJKQJvMhutDrPQPE
+    mcp:
+      server:
+        url: http://localhost:9001
+
+  # 消息类配置
+  message-classes:
+    event: com.scene.mesh.model.event.Event
+    scene-matched-result: com.scene.mesh.engin.model.SceneMatchedResult

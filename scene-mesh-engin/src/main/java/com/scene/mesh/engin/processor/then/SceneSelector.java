@@ -66,15 +66,22 @@ public class SceneSelector extends BaseProcessor {
     //选择终端所处的场景
     private Scene selectSceneTerminalocated(String terminalId, String matchedSceneId) {
         // 获取当前所处场景
-        TerminalSession currentSession = this.cacheService.getTerminalSessionByTerminalId(terminalId);
-        if (currentSession == null) { // 如果当前没有所处场景，直接返回匹配到的场景
-            return this.cacheService.getSceneById(matchedSceneId);
+        Scene matchedScene = this.sceneService.getSceneById(matchedSceneId);
+        if (matchedScene == null) {
+            throw new RuntimeException("SceneId:" + matchedSceneId + " 未发现");
         }
-        // 从当前场景和匹配到的场景中选择
-        Scene currentScene = this.cacheService.getSceneById(currentSession.getLocatedSceneId());
-        Scene matchedScene = this.cacheService.getSceneById(matchedSceneId);
-        //分析currentScene和matchedScene的关系
-        Pair<SceneRelationType, Scene> scenesRelation = this.sceneService.analyseScenesRelation(currentScene, matchedScene);
-        return scenesRelation.getRight();
+
+        return matchedScene;
+
+//        TerminalSession currentSession = this.cacheService.getTerminalSessionByTerminalId(terminalId);
+//        if (currentSession == null) { // 如果当前没有所处场景，直接返回匹配到的场景
+//            return this.sceneService.getSceneById(matchedSceneId);
+//        }
+//        // 从当前场景和匹配到的场景中选择
+//        Scene currentScene = this.cacheService.getSceneById(currentSession.getLocatedSceneId());
+//        Scene matchedScene = this.cacheService.getSceneById(matchedSceneId);
+//        //分析currentScene和matchedScene的关系
+//        Pair<SceneRelationType, Scene> scenesRelation = this.sceneService.analyseScenesRelation(currentScene, matchedScene);
+//        return scenesRelation.getRight();
     }
 }

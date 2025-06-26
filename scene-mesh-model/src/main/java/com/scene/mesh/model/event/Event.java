@@ -17,8 +17,6 @@ public class Event {
     //事件元模型 ID
     @Setter(AccessLevel.NONE)
     private String metaEventId;
-    //产品 ID
-    private String productId;
     //终端 ID
     private String terminalId;
     //payload

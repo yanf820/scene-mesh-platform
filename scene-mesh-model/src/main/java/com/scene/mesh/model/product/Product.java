@@ -2,6 +2,7 @@ package com.scene.mesh.model.product;
 
 import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.IMetaEvent;
+import com.scene.mesh.model.protocol.ProtocolConfig;
 import com.scene.mesh.model.scene.Scene;
 import lombok.Data;
 
@@ -21,5 +22,5 @@ public class Product {
     private List<IMetaEvent> metaEvents; // type: 'one_to_many'
     private List<IMetaAction> metaActions; // type: 'one_to_many'
     private Scene rootScene; // type: 'one_to_one'
-
+    private ProtocolConfig protocolConfig;
 }

@@ -1,12 +1,10 @@
 package com.scene.mesh.facade.impl.config;
 
-import com.scene.mesh.facade.impl.endpoint.mqtt.PublishMessageInterceptor;
-import io.moquette.broker.ISessionsRepository;
+import com.scene.mesh.facade.impl.protocol.mqtt.PublishMessageInterceptor;
 import io.moquette.broker.Server;
 import io.moquette.broker.config.IConfig;
 import io.moquette.broker.config.MemoryConfig;
 import io.moquette.interception.InterceptHandler;
-import io.moquette.persistence.MemorySessionsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

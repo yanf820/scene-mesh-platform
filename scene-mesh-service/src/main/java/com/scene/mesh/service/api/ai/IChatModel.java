@@ -1,8 +1,10 @@
 package com.scene.mesh.service.api.ai;
 
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.tool.ToolCallback;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface IChatModel extends ChatModel, Serializable {
 

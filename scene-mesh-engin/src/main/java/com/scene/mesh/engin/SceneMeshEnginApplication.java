@@ -25,12 +25,12 @@ public class SceneMeshEnginApplication {
             graphId = args[0];
         }
 
-        SpringApplicationContextUtils.setContextId("engin.xml");
+        SpringApplicationContextUtils.setContextClass(EnginConfig.class);
 
-        log.info("执行引擎启动...  执行文件:{}", "engin.xml");
+        log.info("执行引擎启动...  加载引擎配置:{}", "EnginConfig.class");
 
         IProcessManager processManager = SpringApplicationContextUtils
-                .getApplicationContext()
+                .getApplicationContextByAnnotation()
                 .getBean(IProcessManager.class);
 
         //注册when graph
@@ -67,7 +67,7 @@ public class SceneMeshEnginApplication {
                         .username("postgres")
                         .password("scene_mesh")
                         .period(Duration.ofSeconds(10))
-                        .keyed(new String[]{"productId", "terminalId"})
+                        .keyed(new String[]{"terminalId"})
                         .parallelism(1)
                         .cepMatchedResultType(new GenericTypeInfo<>(SceneMatchedResult.class)))
                 .addNode(ProcessorNodeBuilder.createWithId("scene-match-sink")
@@ -97,12 +97,6 @@ public class SceneMeshEnginApplication {
                         .withParallelism(1)
                         .withOutputType(OperationResponse.class)
                         .from("scene-handler")
-                )
-                .addNode(ProcessorNodeBuilder.createWithId("action-sinker")
-                        .withComponentId("action-sinker")
-                        .withParallelism(1)
-                        .withOutputType(Object.class)
-                        .from("operation-handler")
                 )
                 .build();
     }

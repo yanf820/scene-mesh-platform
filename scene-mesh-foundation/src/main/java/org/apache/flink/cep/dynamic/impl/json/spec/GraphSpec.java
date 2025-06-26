@@ -31,7 +31,7 @@ public class GraphSpec {
                         GroupNodeSpec.fromPattern(pattern);
                 nodes.add(subgraphSpec);
             }
-            if (pattern instanceof GroupPatternWrapper){
+            else if (pattern instanceof GroupPatternWrapper){
                 GroupNodeSpec subgraphSpec =
                         GroupNodeSpec.fromPatternWithGroupPatternWrapper(pattern);
                 nodes.add(subgraphSpec);

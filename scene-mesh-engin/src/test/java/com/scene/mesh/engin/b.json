@@ -1,7 +1,7 @@
 {
   "nodes": [
     {
-      "name": "afterSaleGroup",
+      "name": "GroupPattern",
       "quantifier": {
         "consumingStrategy": "SKIP_TILL_NEXT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -113,7 +113,7 @@
       "type": "COMPOSITE"
     },
     {
-      "name": "shoppingFlowGroup",
+      "name": "GroupPattern",
       "quantifier": {
         "consumingStrategy": "STRICT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -125,7 +125,7 @@
       "graph": {
         "nodes": [
           {
-            "name": "checkoutGroup",
+            "name": "GroupPattern",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -259,7 +259,7 @@
             "type": "COMPOSITE"
           },
           {
-            "name": "cartGroup",
+            "name": "GroupPattern",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -353,7 +353,13 @@
             },
             "times": null,
             "untilCondition": null,
-            "window": null,
+            "window": {
+              "type": "FIRST_AND_LAST",
+              "time": {
+                "unit": "MINUTES",
+                "size": 30
+              }
+            },
             "afterMatchSkipStrategy": {
               "type": "NO_SKIP",
               "patternName": null
@@ -361,7 +367,7 @@
             "type": "COMPOSITE"
           },
           {
-            "name": "browsingGroup",
+            "name": "GroupPattern",
             "quantifier": {
               "consumingStrategy": "STRICT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -469,13 +475,13 @@
         ],
         "edges": [
           {
-            "source": "cartGroup",
-            "target": "checkoutGroup",
+            "source": "GroupPattern",
+            "target": "GroupPattern",
             "type": "SKIP_TILL_NEXT"
           },
           {
-            "source": "browsingGroup",
-            "target": "cartGroup",
+            "source": "GroupPattern",
+            "target": "GroupPattern",
             "type": "SKIP_TILL_NEXT"
           }
         ]
@@ -492,8 +498,8 @@
   ],
   "edges": [
     {
-      "source": "shoppingFlowGroup",
-      "target": "afterSaleGroup",
+      "source": "GroupPattern",
+      "target": "GroupPattern",
       "type": "SKIP_TILL_NEXT"
     }
   ]

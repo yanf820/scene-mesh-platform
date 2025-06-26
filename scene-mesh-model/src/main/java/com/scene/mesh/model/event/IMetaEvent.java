@@ -16,5 +16,5 @@ public interface IMetaEvent extends IMetaParameterized, Serializable {
      * 校验 json 是否符合 MetaEvent 规范
      * @return
      */
-    boolean validate(MetaParameters jsonData);
+    boolean validate(Map<String, Object> jsonData);
 }

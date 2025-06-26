@@ -2,6 +2,8 @@ package com.scene.mesh.service.api.ai;
 
 import com.scene.mesh.model.llm.LanguageModel;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.prompt.ChatOptions;
+import org.springframework.ai.tool.ToolCallback;
 
 import java.util.List;
 
@@ -17,5 +19,5 @@ public interface IChatClientFactory {
      */
     ChatClient getChatClient(LanguageModel languageModel);
 
-    ChatClient getChatClient(LanguageModel languageModel, List<String> toolNames);
+    ChatOptions getDefaultChatOptions(LanguageModel llm);
 }

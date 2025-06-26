@@ -18,7 +18,7 @@ public class SpringComponentProvider implements IComponentProvider, Serializable
 
     @Override
     public Object getComponent(String componentId) {
-        ApplicationContext applicationContext = SpringApplicationContextUtils.getApplicationContext();
+        ApplicationContext applicationContext = SpringApplicationContextUtils.getApplicationContextByAnnotation();
         log.info("BeanFactory get {}",componentId);
         return applicationContext.getBean(componentId);
     }

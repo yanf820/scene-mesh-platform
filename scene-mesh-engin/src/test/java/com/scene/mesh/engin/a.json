@@ -2,6 +2,7 @@
   "nodes": [
     {
       "name": "afterSaleGroup",
+      "type": "COMPOSITE",
       "quantifier": {
         "consumingStrategy": "SKIP_TILL_NEXT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -10,10 +11,28 @@
         ]
       },
       "condition": null,
+      "times": {
+        "from": 1,
+        "to": 5,
+        "windowTime": null
+      },
+      "window": {
+        "type": "FIRST_AND_LAST",
+        "time": {
+          "unit": "DAYS",
+          "size": 7
+        }
+      },
+      "untilCondition": null,
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
       "graph": {
         "nodes": [
           {
             "name": "post-purchase",
+            "type": "ATOMIC",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -23,20 +42,21 @@
               ]
             },
             "condition": {
-              "expression": "event.eventType == 'review_product' || event.eventType == 'customer_service_contact'",
-              "type": "AVIATOR"
+              "type": "AVIATOR",
+              "expression": "event.eventType == 'review_product' || event.eventType == 'customer_service_contact'"
             },
             "times": null,
-            "untilCondition": null,
             "window": null,
+            "untilCondition": null,
             "afterMatchSkipStrategy": {
               "type": "NO_SKIP",
               "patternName": null
             },
-            "type": "ATOMIC"
+            "graph": null
           },
           {
             "name": "delivery-received",
+            "type": "ATOMIC",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -45,20 +65,21 @@
               ]
             },
             "condition": {
-              "expression": "event.eventType == 'delivery_confirmed'",
-              "type": "AVIATOR"
+              "type": "AVIATOR",
+              "expression": "event.eventType == 'delivery_confirmed'"
             },
             "times": null,
-            "untilCondition": null,
             "window": null,
+            "untilCondition": null,
             "afterMatchSkipStrategy": {
               "type": "NO_SKIP",
               "patternName": null
             },
-            "type": "ATOMIC"
+            "graph": null
           },
           {
             "name": "order-tracking",
+            "type": "ATOMIC",
             "quantifier": {
               "consumingStrategy": "STRICT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -67,17 +88,17 @@
               ]
             },
             "condition": {
-              "expression": "event.eventType == 'track_order'",
-              "type": "AVIATOR"
+              "type": "AVIATOR",
+              "expression": "event.eventType == 'track_order'"
             },
             "times": null,
-            "untilCondition": null,
             "window": null,
+            "untilCondition": null,
             "afterMatchSkipStrategy": {
               "type": "NO_SKIP",
               "patternName": null
             },
-            "type": "ATOMIC"
+            "graph": null
           }
         ],
         "edges": [
@@ -92,28 +113,11 @@
             "type": "SKIP_TILL_NEXT"
           }
         ]
-      },
-      "times": {
-        "from": 1,
-        "to": 5,
-        "windowTime": null
-      },
-      "untilCondition": null,
-      "window": {
-        "type": "FIRST_AND_LAST",
-        "time": {
-          "unit": "DAYS",
-          "size": 7
-        }
-      },
-      "afterMatchSkipStrategy": {
-        "type": "NO_SKIP",
-        "patternName": null
-      },
-      "type": "COMPOSITE"
+      }
     },
     {
       "name": "shoppingFlowGroup",
+      "type": "COMPOSITE",
       "quantifier": {
         "consumingStrategy": "STRICT",
         "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -122,10 +126,18 @@
         ]
       },
       "condition": null,
+      "times": null,
+      "window": null,
+      "untilCondition": null,
+      "afterMatchSkipStrategy": {
+        "type": "NO_SKIP",
+        "patternName": null
+      },
       "graph": {
         "nodes": [
           {
             "name": "checkoutGroup",
+            "type": "COMPOSITE",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -134,10 +146,24 @@
               ]
             },
             "condition": null,
+            "times": null,
+            "window": {
+              "type": "FIRST_AND_LAST",
+              "time": {
+                "unit": "MINUTES",
+                "size": 15
+              }
+            },
+            "untilCondition": null,
+            "afterMatchSkipStrategy": {
+              "type": "NO_SKIP",
+              "patternName": null
+            },
             "graph": {
               "nodes": [
                 {
                   "name": "order-confirmation",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -146,20 +172,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'order_confirmed'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'order_confirmed'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "payment-processing",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -168,20 +195,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'process_payment'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'process_payment'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "shipping-selection",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -190,20 +218,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'select_shipping'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'select_shipping'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "start-checkout",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "STRICT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -212,17 +241,17 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'start_checkout'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'start_checkout'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 }
               ],
               "edges": [
@@ -242,24 +271,11 @@
                   "type": "SKIP_TILL_NEXT"
                 }
               ]
-            },
-            "times": null,
-            "untilCondition": null,
-            "window": {
-              "type": "FIRST_AND_LAST",
-              "time": {
-                "unit": "MINUTES",
-                "size": 15
-              }
-            },
-            "afterMatchSkipStrategy": {
-              "type": "NO_SKIP",
-              "patternName": null
-            },
-            "type": "COMPOSITE"
+            }
           },
           {
             "name": "cartGroup",
+            "type": "COMPOSITE",
             "quantifier": {
               "consumingStrategy": "SKIP_TILL_NEXT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -268,10 +284,18 @@
               ]
             },
             "condition": null,
+            "times": null,
+            "window": null,
+            "untilCondition": null,
+            "afterMatchSkipStrategy": {
+              "type": "NO_SKIP",
+              "patternName": null
+            },
             "graph": {
               "nodes": [
                 {
                   "name": "cart-review",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -280,20 +304,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'view_cart'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'view_cart'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "modify-cart",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -303,20 +328,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'cart_update' && (event.properties.action == 'quantity_change' || event.properties.action == 'remove_item')",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'cart_update' && (event.properties.action == 'quantity_change' || event.properties.action == 'remove_item')"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "add-items",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "STRICT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -325,17 +351,17 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'add_to_cart'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'add_to_cart'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 }
               ],
               "edges": [
@@ -350,18 +376,11 @@
                   "type": "SKIP_TILL_NEXT"
                 }
               ]
-            },
-            "times": null,
-            "untilCondition": null,
-            "window": null,
-            "afterMatchSkipStrategy": {
-              "type": "NO_SKIP",
-              "patternName": null
-            },
-            "type": "COMPOSITE"
+            }
           },
           {
             "name": "browsingGroup",
+            "type": "COMPOSITE",
             "quantifier": {
               "consumingStrategy": "STRICT",
               "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -370,10 +389,18 @@
               ]
             },
             "condition": null,
+            "times": null,
+            "window": null,
+            "untilCondition": null,
+            "afterMatchSkipStrategy": {
+              "type": "NO_SKIP",
+              "patternName": null
+            },
             "graph": {
               "nodes": [
                 {
                   "name": "compare-products",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -383,20 +410,21 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'compare' && event.properties.productCount >= 2",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'compare' && event.properties.productCount >= 2"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "product-view",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "SKIP_TILL_NEXT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -405,24 +433,25 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'view_product'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'view_product'"
                   },
                   "times": {
                     "from": 3,
                     "to": 3,
                     "windowTime": null
                   },
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 },
                 {
                   "name": "product-search",
+                  "type": "ATOMIC",
                   "quantifier": {
                     "consumingStrategy": "STRICT",
                     "innerConsumingStrategy": "SKIP_TILL_NEXT",
@@ -431,17 +460,17 @@
                     ]
                   },
                   "condition": {
-                    "expression": "event.eventType == 'search' && event.properties.category == 'electronics'",
-                    "type": "AVIATOR"
+                    "type": "AVIATOR",
+                    "expression": "event.eventType == 'search' && event.properties.category == 'electronics'"
                   },
                   "times": null,
-                  "untilCondition": null,
                   "window": null,
+                  "untilCondition": null,
                   "afterMatchSkipStrategy": {
                     "type": "NO_SKIP",
                     "patternName": null
                   },
-                  "type": "ATOMIC"
+                  "graph": null
                 }
               ],
               "edges": [
@@ -456,15 +485,7 @@
                   "type": "SKIP_TILL_NEXT"
                 }
               ]
-            },
-            "times": null,
-            "untilCondition": null,
-            "window": null,
-            "afterMatchSkipStrategy": {
-              "type": "NO_SKIP",
-              "patternName": null
-            },
-            "type": "COMPOSITE"
+            }
           }
         ],
         "edges": [
@@ -479,21 +500,41 @@
             "type": "SKIP_TILL_NEXT"
           }
         ]
+      }
+    },
+    {
+      "name": "add-items-222",
+      "type": "ATOMIC",
+      "quantifier": {
+        "consumingStrategy": "STRICT",
+        "innerConsumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ]
+      },
+      "condition": {
+        "type": "AVIATOR",
+        "expression": "event.eventType == 'add_to_cart'"
       },
       "times": null,
-      "untilCondition": null,
       "window": null,
+      "untilCondition": null,
       "afterMatchSkipStrategy": {
         "type": "NO_SKIP",
         "patternName": null
       },
-      "type": "COMPOSITE"
+      "graph": null
     }
   ],
   "edges": [
     {
       "source": "shoppingFlowGroup",
       "target": "afterSaleGroup",
+      "type": "SKIP_TILL_NEXT"
+    },
+    {
+      "source": "afterSaleGroup",
+      "target": "add-items-222",
       "type": "SKIP_TILL_NEXT"
     }
   ]

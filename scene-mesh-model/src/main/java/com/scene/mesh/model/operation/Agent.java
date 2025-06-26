@@ -14,14 +14,6 @@ public class Agent {
 
     private LanguageModel languageModel;
 
-    //场景提示词模板
-    @Deprecated //TODO 删除
-    private PromptTemplate scenePromptTemplate;
-
-    //用户提示词模板
-    @Deprecated //TODO 删除
-    private PromptTemplate userPromptTemplate;
-
     private String scenePrompt;
 
     //mcp tools

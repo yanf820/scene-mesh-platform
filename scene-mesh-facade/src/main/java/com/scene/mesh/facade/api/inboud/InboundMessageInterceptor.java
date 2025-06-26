@@ -1,6 +1,6 @@
 package com.scene.mesh.facade.api.inboud;
 
-import com.scene.mesh.facade.api.ProtocolType;
+import com.scene.mesh.model.protocol.ProtocolType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,36 +31,21 @@ public interface InboundMessageInterceptor {
     class InboundMessageRequest {
 
         @Getter
-        private String clientId;
-        //协议层 sessionId
-        @Getter
-        private String protocolSessionId;
-        //消息
-        @Getter
-        private String message;
-        @Getter
-        private String metaEventId;
+        private InboundMessage message;
 
-        @Getter
-        private ProtocolType protocolType;
+        private final Map<String, Object> properties;
 
-        private final Map<String, Object> payload;
-
-        public InboundMessageRequest(String metaEventId,String clientId, String message, ProtocolType protocolType, String protocolSessionId) {
-            this.payload = new HashMap<>();
-            this.clientId = clientId;
-            this.metaEventId = metaEventId;
+        public InboundMessageRequest(InboundMessage message) {
+            this.properties = new HashMap<>();
             this.message = message;
-            this.protocolType = protocolType;
-            this.protocolSessionId = protocolSessionId;
         }
 
-        public Object getPayloadVal(String key) {
-            return payload.get(key);
+        public Object getPropVal(String key) {
+            return properties.get(key);
         }
 
-        public void setPayloadVal(String key, Object val) {
-            payload.put(key, val);
+        public void setPropVal(String key, Object val) {
+            properties.put(key, val);
         }
     }
 
@@ -75,27 +60,24 @@ public interface InboundMessageInterceptor {
         private String opinion;
         @Setter
         @Getter
-        private String clientId;
+        private String terminalId;
         //源消息
         @Setter
         @Getter
         private String sourceMessage;
-        @Setter
-        @Getter
-        private ProtocolType protocolType;
 
-        private final Map<String, Object> payload;
+        private final Map<String, Object> properties;
 
         public InboundMessageResponse() {
-            this.payload = new HashMap<>();
+            this.properties = new HashMap<>();
         }
 
-        public Object getPayloadVal(String key) {
-            return payload.get(key);
+        public Object getPropVal(String key) {
+            return properties.get(key);
         }
 
-        public void addPayloadEntry(String key, Object val) {
-            payload.put(key, val);
+        public void addPropEntry(String key, Object val) {
+            properties.put(key, val);
         }
     }
 }

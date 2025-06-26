@@ -45,7 +45,6 @@ public class SceneMatchedProcessor extends AbstractPatternProcessFunction<Event,
         SceneMatchedResult result = new SceneMatchedResult();
         result.setSceneId("1");//TODO 获取规则关联的场景 ID
         result.setRuleId(ruleId);
-        result.setProductId(events.get(0).getProductId());
         result.setTerminalId(events.get(0).getTerminalId());
         result.setMatchedEvents(events);
         result.setMatchedTime(System.currentTimeMillis());

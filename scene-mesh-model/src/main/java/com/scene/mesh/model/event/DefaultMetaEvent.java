@@ -29,8 +29,7 @@ public class DefaultMetaEvent implements IMetaEvent {
     }
 
     @Override
-    public boolean validate(MetaParameters jsonData) {
-        Map<String,Object> dataMap = jsonData.getParameterMap();
+    public boolean validate(Map<String,Object> dataMap) {
         for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
             MetaParameterDescriptor mpd = parameterCollection.findParameterDescriptorByName(entry.getKey());
             if (mpd == null) {

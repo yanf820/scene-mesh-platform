@@ -3,7 +3,6 @@ package com.scene.mesh.engin.processor.then.operator;
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
 import com.scene.mesh.model.event.Event;
-import com.scene.mesh.model.event.OutputEventType;
 import com.scene.mesh.model.operation.Agent;
 import com.scene.mesh.model.operation.Operation;
 import com.scene.mesh.model.session.TerminalSession;
@@ -13,6 +12,7 @@ import com.scene.mesh.service.api.ai.IChatModel;
 import com.scene.mesh.service.impl.ai.DefaultAgentService;
 import com.scene.mesh.service.impl.ai.DefaultChatClientFactory;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.tool.ToolCallbackProvider;
 
 import java.util.List;
 
@@ -23,9 +23,9 @@ public class AgentOperator implements IOperator{
 
     private IAgentService agentService;
 
-    public AgentOperator(List<IChatModel> chatModels) {
+    public AgentOperator(List<IChatModel> chatModels, ToolCallbackProvider toolCallbackProvider) {
         IChatClientFactory chatClientFactory = new DefaultChatClientFactory(chatModels);
-        this.agentService = new DefaultAgentService(chatClientFactory);
+        this.agentService = new DefaultAgentService(chatClientFactory,toolCallbackProvider);
     }
 
     @Override
@@ -40,12 +40,12 @@ public class AgentOperator implements IOperator{
         List<Event> eventsInScene = operationRequest.getEventsInScene();
 
         ChatResponse response = agentService.callAgent(agent,eventsInScene);
-        String assistantMessage = response.getResult().getOutput().getText();
-
-        Event event = new Event(OutputEventType.ASSISTANT.getName());
-        event.setProductId(operationRequest.getProductId());
-        event.setTerminalId(operationRequest.getTerminalId());
-        event.addPayloadEntry("assistantMessage", assistantMessage);
-        operationResponse.addEvent(event);
+//        String assistantMessage = response.getResult().getOutput().getText();
+//
+//        Event event = new Event(OutputEventType.ASSISTANT.getName());
+//        event.setProductId(operationRequest.getProductId());
+//        event.setTerminalId(operationRequest.getTerminalId());
+//        event.addPayloadEntry("assistantMessage", assistantMessage);
+//        operationResponse.addEvent(event);
     }
 }

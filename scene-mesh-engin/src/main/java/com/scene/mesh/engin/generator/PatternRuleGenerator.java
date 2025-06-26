@@ -31,9 +31,30 @@ public class PatternRuleGenerator {
 //
 //        // 新增的GroupPattern示例
 //        generateGroupPattern();
-//        generateNestedGroupPattern();
+        generateNestedGroupPattern();
 //        generateNestedGroupPatternWithName();
-        json2Pattern();
+//        json2Pattern();
+//        generateJson();
+//        simple();
+//        jsonTest();
+    }
+    private static void jsonTest() throws Exception {
+        String json = "{ \"nodes\": [{ \"name\": \"afterSaleGroup\", \"type\": \"COMPOSITE\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"TIMES\"] }, \"condition\": null, \"times\": { \"from\": 1, \"to\": 5, \"windowTime\": null }, \"window\": { \"type\": \"FIRST_AND_LAST\", \"time\": { \"unit\": \"DAYS\", \"size\": 7 } }, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": { \"nodes\": [{ \"name\": \"post-purchase\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\", \"OPTIONAL\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'review_product' || event.eventType == 'customer_service_contact'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"delivery-received\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'delivery_confirmed'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"order-tracking\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'track_order'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }], \"edges\": [{ \"source\": \"delivery-received\", \"target\": \"post-purchase\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"order-tracking\", \"target\": \"delivery-received\", \"type\": \"SKIP_TILL_NEXT\" }] } }, { \"name\": \"shoppingFlowGroup\", \"type\": \"COMPOSITE\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": null, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": { \"nodes\": [{ \"name\": \"checkoutGroup\", \"type\": \"COMPOSITE\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": null, \"times\": null, \"window\": { \"type\": \"FIRST_AND_LAST\", \"time\": { \"unit\": \"MINUTES\", \"size\": 15 } }, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": { \"nodes\": [{ \"name\": \"order-confirmation\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'order_confirmed'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"payment-processing\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'process_payment'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"shipping-selection\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'select_shipping'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"start-checkout\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'start_checkout'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }], \"edges\": [{ \"source\": \"payment-processing\", \"target\": \"order-confirmation\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"shipping-selection\", \"target\": \"payment-processing\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"start-checkout\", \"target\": \"shipping-selection\", \"type\": \"SKIP_TILL_NEXT\" }] } }, { \"name\": \"cartGroup\", \"type\": \"COMPOSITE\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": null, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": { \"nodes\": [{ \"name\": \"cart-review\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'view_cart'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"modify-cart\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\", \"OPTIONAL\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'cart_update' && (event.properties.action == 'quantity_change' || event.properties.action == 'remove_item')\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"add-items\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'add_to_cart'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }], \"edges\": [{ \"source\": \"modify-cart\", \"target\": \"cart-review\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"add-items\", \"target\": \"modify-cart\", \"type\": \"SKIP_TILL_NEXT\" }] } }, { \"name\": \"browsingGroup\", \"type\": \"COMPOSITE\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": null, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": { \"nodes\": [{ \"name\": \"compare-products\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\", \"OPTIONAL\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'compare' && event.properties.productCount >= 2\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"product-view\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"SKIP_TILL_NEXT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"LOOPING\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'view_product'\" }, \"times\": { \"from\": 3, \"to\": 3, \"windowTime\": null }, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }, { \"name\": \"product-search\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'search' && event.properties.category == 'electronics'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }], \"edges\": [{ \"source\": \"product-view\", \"target\": \"compare-products\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"product-search\", \"target\": \"product-view\", \"type\": \"SKIP_TILL_NEXT\" }] } }], \"edges\": [{ \"source\": \"cartGroup\", \"target\": \"checkoutGroup\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"browsingGroup\", \"target\": \"cartGroup\", \"type\": \"SKIP_TILL_NEXT\" }] } }, { \"name\": \"add-items-222\", \"type\": \"ATOMIC\", \"quantifier\": { \"consumingStrategy\": \"STRICT\", \"innerConsumingStrategy\": \"SKIP_TILL_NEXT\", \"properties\": [\"SINGLE\"] }, \"condition\": { \"type\": \"AVIATOR\", \"expression\": \"event.eventType == 'add_to_cart'\" }, \"times\": null, \"window\": null, \"untilCondition\": null, \"afterMatchSkipStrategy\": { \"type\": \"NO_SKIP\", \"patternName\": null }, \"graph\": null }], \"edges\": [{ \"source\": \"shoppingFlowGroup\", \"target\": \"afterSaleGroup\", \"type\": \"SKIP_TILL_NEXT\" }, { \"source\": \"afterSaleGroup\", \"target\": \"add-items-222\", \"type\": \"SKIP_TILL_NEXT\" }] }";
+        Pattern pattern = CepJsonUtils.convertJSONStringToPattern(json);
+        System.out.println(pattern);
+        String json1 = CepJsonUtils.convertPatternToJSONString(pattern);
+        System.out.println(json1);
+
+    }
+
+    private static void simple() throws JsonProcessingException {
+        System.out.println("=== 或Pattern示例 ===");
+
+        Pattern<Event,?> pattern = Pattern.<Event>begin("start",AfterMatchSkipStrategy.skipPastLastEvent())
+                .where(new AviatorCondition<>("metaEventId == 'wakeup_word'"))
+                .within(Time.seconds(10));
+
+        System.out.println(CepJsonUtils.convertPatternToJSONString(pattern));
     }
 
     private static void generateOrPattern() throws JsonProcessingException {
@@ -311,6 +332,45 @@ public class PatternRuleGenerator {
 
         System.out.println("嵌套Pattern JSON:");
         System.out.println(CepJsonUtils.convertPatternToJSONString(completeUserJourneyPattern));
+    }
+
+    private static void generateJson() throws JsonProcessingException {
+
+        // Pattern1：用户浏览行为模式
+        Pattern<Event, Event> b = Pattern
+                .<Event>begin("product-search")
+                .where(new AviatorCondition<>("event.eventType == 'search' && event.properties.category == 'electronics'"))
+                .followedBy("product-view")
+                .where(new AviatorCondition<>("event.eventType == 'view_product'"))
+                .timesOrMore(3)
+                .followedBy("compare-products")
+                .where(new AviatorCondition<>("event.eventType == 'compare' && event.properties.productCount >= 2"))
+                .optional();
+
+        // Pattern2：购物车行为模式
+        Pattern<Event, Event> c = Pattern
+                .<Event>begin("add-items")
+                .where(new AviatorCondition<>("event.eventType == 'add_to_cart'"))
+                .followedBy("modify-cart")
+                .where(new AviatorCondition<>(
+                        "event.eventType == 'cart_update' && (event.properties.action == 'quantity_change' || event.properties.action == 'remove_item')"
+                ))
+                .optional()
+                .followedBy("cart-review")
+                .where(new AviatorCondition<>("event.eventType == 'view_cart'"));
+
+        Pattern<Event,Event> bOrc = Pattern
+                .begin(b)
+                .optional()
+                .followedBy(c)
+                .optional();
+
+        Pattern<Event,Event> aWithbOrC = Pattern
+                .<Event>begin("a")
+                .where(new AviatorCondition<>("type == 'a'"))
+                .followedBy(bOrc);
+
+        System.out.println(CepJsonUtils.convertPatternToJSONString(aWithbOrC));
     }
 
     private static void json2Pattern() throws Exception {
