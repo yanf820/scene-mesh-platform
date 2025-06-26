@@ -1,0 +1,45 @@
+server:
+  port: 9001
+
+# redis ?????????
+redis:
+  connection:
+    host: 127.0.0.1
+    port: 6379
+
+spring:
+  application:
+    name: scene-mesh-mcp-server
+  ai:
+    mcp:
+      # MCP Server ??????????
+      server:
+        name: sm-mcp-gateway
+        version: 1.0.0
+        type: SYNC
+        instructions: "???MCP?? - ?????????MCP???"
+        sse-message-endpoint: /mcp/message
+        sse-endpoint: /sse
+        capabilities:
+          tool: true
+          resource: false
+          prompt: false
+          completion: false
+        stdio: false
+      # MCP Client ???????????
+      client:
+        type: SYNC
+        request-timeout: 30s
+        stdio:
+          connections:
+            bingcn:
+              command: npx
+              args: [
+                "bing-cn-mcp"
+              ]
+        toolcallback:
+          enabled: true
+
+logging:
+  level:
+    root: INFO
