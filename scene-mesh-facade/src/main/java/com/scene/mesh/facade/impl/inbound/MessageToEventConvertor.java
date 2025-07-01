@@ -1,10 +1,10 @@
 package com.scene.mesh.facade.impl.inbound;
 
-import com.scene.mesh.foundation.api.parameter.MetaParameters;
+import com.scene.mesh.foundation.spec.parameter.MetaParameters;
 import com.scene.mesh.model.event.Event;
 
 /**
- * json->事件转换器
+ * json->event
  */
 public class MessageToEventConvertor extends BaseInboundMessageInterceptor {
 
@@ -20,7 +20,7 @@ public class MessageToEventConvertor extends BaseInboundMessageInterceptor {
         Event event = new Event(metaEventId);
         event.setTerminalId(terminalId);
 
-        //把json 加入 event
+        //set payload of event
         event.setPayload(metaParameters.getMap("payload"));
 
         response.setSuccess(true);

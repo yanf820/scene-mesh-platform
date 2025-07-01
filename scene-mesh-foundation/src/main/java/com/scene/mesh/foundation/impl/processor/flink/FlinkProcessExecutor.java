@@ -1,11 +1,10 @@
 package com.scene.mesh.foundation.impl.processor.flink;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
-import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
-import com.scene.mesh.foundation.api.processor.execute.IProcessExecutor;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorGraph;
+import com.scene.mesh.foundation.spec.processor.execute.IProcessExecutor;
 import lombok.Setter;
 import org.apache.flink.configuration.*;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.time.Duration;
 

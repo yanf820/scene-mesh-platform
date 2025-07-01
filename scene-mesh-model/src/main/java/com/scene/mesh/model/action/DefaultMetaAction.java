@@ -1,12 +1,8 @@
 package com.scene.mesh.model.action;
 
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptorCollection;
-import com.scene.mesh.foundation.api.parameter.MetaParameters;
-import com.scene.mesh.foundation.api.parameter.data.StringParameterDataType;
-import com.scene.mesh.model.event.IMetaEvent;
-import lombok.Getter;
-import lombok.Setter;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptorCollection;
+import com.scene.mesh.foundation.spec.parameter.MetaParameters;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class Scene implements Serializable {
 
     private String id;
-    private String productId;
     private String name;
     private String description;
     private boolean enable;
+
     private String rules; // type: 'json' -> String (holds JSON content)
     //场景优先级
     private int priority;

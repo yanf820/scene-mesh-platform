@@ -3,6 +3,31 @@ spring:
     name: scene-mesh-facade
   main:
     web-application-type: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: scene_mesh
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10          # 减少最大连接数
+      minimum-idle: 2               # 减少最小空闲连接
+      connection-timeout: 20000      # 减少连接超时时间
+      idle-timeout: 300000          # 减少空闲超时(5分钟)
+      max-lifetime: 1200000         # 减少最大生命周期(20分钟)
+      leak-detection-threshold: 60000 # 添加连接泄漏检测
+      keepalive-time: 30000         # 添加保活时间
+  jpa:
+    hibernate:
+      ddl-auto: update  # 开发环境用update，生产环境用none/validate
+    show-sql: true      # 开发时显示SQL，生产环境设为false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
 
 # MQTT Server 配置（嵌入式启动,无需远端独立服务）
 mqtt:
@@ -18,10 +43,14 @@ redis:
     host: 127.0.0.1
     port: 6379
 
+topic:
+    inbound-event: inbound_events
+    outbound-action: actions
+
 logging:
   level:
     root: INFO
     com.scene.mesh: INFO
-    org.apache.flink: INFO
     org.hibernate: INFO
     org.springframework: INFO
+    org.hibernate.SQL: INFO

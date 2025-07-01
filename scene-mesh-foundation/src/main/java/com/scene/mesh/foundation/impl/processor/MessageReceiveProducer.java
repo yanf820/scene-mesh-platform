@@ -1,10 +1,10 @@
 package com.scene.mesh.foundation.impl.processor;
 
-import com.scene.mesh.foundation.api.collector.ICollector;
-import com.scene.mesh.foundation.api.message.IMessageConsumer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
-import com.scene.mesh.foundation.api.processor.IProcessInput;
-import com.scene.mesh.foundation.api.processor.IProcessOutput;
+import com.scene.mesh.foundation.spec.collector.ICollector;
+import com.scene.mesh.foundation.spec.message.IMessageConsumer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
+import com.scene.mesh.foundation.spec.processor.IProcessInput;
+import com.scene.mesh.foundation.spec.processor.IProcessOutput;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import lombok.Getter;
 import lombok.Setter;

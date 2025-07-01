@@ -1,11 +1,11 @@
 package com.scene.mesh.engin;
 
 import com.scene.mesh.engin.model.SceneMatchedResult;
-import com.scene.mesh.foundation.api.cache.ICache;
-import com.scene.mesh.foundation.api.message.IMessageConsumer;
-import com.scene.mesh.foundation.api.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.cache.ICache;
+import com.scene.mesh.foundation.spec.message.IMessageConsumer;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
 import com.scene.mesh.model.event.Event;
-import com.scene.mesh.service.api.scene.ISceneService;
+import com.scene.mesh.service.spec.scene.ISceneService;
 import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import io.modelcontextprotocol.client.*;
@@ -21,7 +21,7 @@ import com.scene.mesh.foundation.impl.processor.flink.FlinkProcessExecutor;
 import com.scene.mesh.foundation.impl.cache.RedisCache;
 import com.scene.mesh.foundation.impl.message.RedisMessageConsumer;
 import com.scene.mesh.foundation.impl.message.RedisMessageProducer;
-import com.scene.mesh.service.api.cache.MutableCacheService;
+import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.impl.scene.SceneService;
 import com.scene.mesh.service.impl.ai.model.zhipu.ZhiPuChatModel;
 import com.scene.mesh.engin.processor.then.operator.AgentOperator;

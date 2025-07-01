@@ -1,6 +1,6 @@
 package com.scene.mesh.mcp.server.config;
 
-import com.scene.mesh.foundation.api.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
 import com.scene.mesh.foundation.impl.message.JsonMessageSerializer;
 import com.scene.mesh.foundation.impl.message.RedisMessageProducer;
 import org.springframework.beans.factory.annotation.Value;

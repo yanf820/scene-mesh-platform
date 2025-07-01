@@ -1,7 +1,7 @@
 package com.scene.mesh.model.action;
 
-import com.scene.mesh.foundation.api.parameter.IMetaParameterized;
-import com.scene.mesh.foundation.api.parameter.MetaParameters;
+import com.scene.mesh.foundation.spec.parameter.IMetaParameterized;
+import com.scene.mesh.foundation.spec.parameter.MetaParameters;
 
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 package com.scene.mesh.facade.impl.protocol.mqtt;
 
 /**
- * mqtt 主题工具
+ * mqtt topic tool
  */
 public class MqttTopicUtil {
 

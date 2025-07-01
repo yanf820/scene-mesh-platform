@@ -1,6 +1,6 @@
 package com.scene.mesh.foundation.impl.component;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
 
 /**
  * 基于类加载的组件提供者

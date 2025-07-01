@@ -1,10 +1,6 @@
 package com.scene.mesh.foundation.impl.cache;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.scene.mesh.foundation.api.cache.ICache;
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
+import com.scene.mesh.foundation.spec.cache.ICache;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

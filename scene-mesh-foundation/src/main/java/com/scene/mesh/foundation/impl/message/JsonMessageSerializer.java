@@ -3,7 +3,7 @@ package com.scene.mesh.foundation.impl.message;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scene.mesh.foundation.api.message.IMessageSerializer;
+import com.scene.mesh.foundation.spec.message.IMessageSerializer;
 
 import java.io.IOException;
 

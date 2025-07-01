@@ -2,15 +2,10 @@ package com.scene.mesh.service.impl.ai;
 
 import com.scene.mesh.foundation.impl.helper.StringHelper;
 import com.scene.mesh.model.llm.LanguageModel;
-import com.scene.mesh.service.api.ai.IChatClientFactory;
-import com.scene.mesh.service.api.ai.IChatModel;
+import com.scene.mesh.service.spec.ai.IChatClientFactory;
+import com.scene.mesh.service.spec.ai.IChatModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.ChatOptions;
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.zhipuai.ZhiPuAiChatOptions;
-import org.springframework.ai.zhipuai.api.ZhiPuAiApi;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.util.List;
 import java.util.Map;

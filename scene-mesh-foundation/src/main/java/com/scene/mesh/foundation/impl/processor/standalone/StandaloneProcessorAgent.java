@@ -1,10 +1,10 @@
 package com.scene.mesh.foundation.impl.processor.standalone;
 
-import com.scene.mesh.foundation.api.collector.ICollector;
-import com.scene.mesh.foundation.api.component.IComponentProvider;
-import com.scene.mesh.foundation.api.processor.IProcessor;
-import com.scene.mesh.foundation.api.processor.config.ProcessorLinker;
-import com.scene.mesh.foundation.api.processor.config.ProcessorNode;
+import com.scene.mesh.foundation.spec.collector.ICollector;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.processor.IProcessor;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorLinker;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorNode;
 import com.scene.mesh.foundation.impl.processor.ProcessActivateContext;
 
 import java.util.ArrayList;

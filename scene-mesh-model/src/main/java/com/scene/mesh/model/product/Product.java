@@ -22,5 +22,4 @@ public class Product {
     private List<IMetaEvent> metaEvents; // type: 'one_to_many'
     private List<IMetaAction> metaActions; // type: 'one_to_many'
     private Scene rootScene; // type: 'one_to_one'
-    private ProtocolConfig protocolConfig;
 }

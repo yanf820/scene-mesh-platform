@@ -1,9 +1,9 @@
 package com.scene.mesh.foundation.impl.processor;
 
-import com.scene.mesh.foundation.api.processor.IProcessActivateContext;
-import com.scene.mesh.foundation.api.processor.IProcessInput;
-import com.scene.mesh.foundation.api.processor.IProcessOutput;
-import com.scene.mesh.foundation.api.processor.IProcessor;
+import com.scene.mesh.foundation.spec.processor.IProcessActivateContext;
+import com.scene.mesh.foundation.spec.processor.IProcessInput;
+import com.scene.mesh.foundation.spec.processor.IProcessOutput;
+import com.scene.mesh.foundation.spec.processor.IProcessor;
 import com.scene.mesh.foundation.impl.processor.standalone.ProcessTask;
 import lombok.extern.slf4j.Slf4j;
 

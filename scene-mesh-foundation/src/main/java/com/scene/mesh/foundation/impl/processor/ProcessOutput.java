@@ -1,7 +1,7 @@
 package com.scene.mesh.foundation.impl.processor;
 
-import com.scene.mesh.foundation.api.collector.ICollector;
-import com.scene.mesh.foundation.api.processor.IProcessOutput;
+import com.scene.mesh.foundation.spec.collector.ICollector;
+import com.scene.mesh.foundation.spec.processor.IProcessOutput;
 
 /**
  */

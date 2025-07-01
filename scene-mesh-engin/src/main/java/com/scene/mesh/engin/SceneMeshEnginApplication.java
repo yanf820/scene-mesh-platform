@@ -3,11 +3,11 @@ package com.scene.mesh.engin;
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
 import com.scene.mesh.engin.model.SceneMatchedResult;
-import com.scene.mesh.foundation.api.processor.config.CepModeDescriptor;
-import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
-import com.scene.mesh.foundation.api.processor.config.ProcessorGraphBuilder;
-import com.scene.mesh.foundation.api.processor.config.ProcessorNodeBuilder;
-import com.scene.mesh.foundation.api.processor.execute.IProcessManager;
+import com.scene.mesh.foundation.spec.processor.config.CepModeDescriptor;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorGraph;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorGraphBuilder;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorNodeBuilder;
+import com.scene.mesh.foundation.spec.processor.execute.IProcessManager;
 import com.scene.mesh.foundation.impl.component.SpringApplicationContextUtils;
 import com.scene.mesh.model.event.Event;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +19,6 @@ import java.time.Duration;
 public class SceneMeshEnginApplication {
 
     public static void main(String[] args) {
-
-        String graphId = null;
-        if (args.length != 0) {
-            graphId = args[0];
-        }
 
         SpringApplicationContextUtils.setContextClass(EnginConfig.class);
 

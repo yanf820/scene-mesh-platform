@@ -1,8 +1,8 @@
 package com.scene.mesh.service.impl.cache;
 
-import com.scene.mesh.foundation.api.cache.ICache;
+import com.scene.mesh.foundation.spec.cache.ICache;
 import com.scene.mesh.model.session.TerminalSession;
-import com.scene.mesh.service.api.cache.IDisposed;
+import com.scene.mesh.service.spec.cache.IDisposed;
 
 public class TerminalSessionCache implements IDisposed {
 

@@ -1,15 +1,13 @@
 package com.scene.mesh.mcp.server.loader;
 
-import com.scene.mesh.foundation.api.parameter.IMetaParameterized;
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.api.parameter.data.StringParameterDataType;
+import com.scene.mesh.foundation.spec.parameter.IMetaParameterized;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
+import com.scene.mesh.foundation.spec.parameter.data.StringParameterDataType;
 import com.scene.mesh.model.action.DefaultMetaAction;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class ActionToolDrawingLoader implements IToolDrawingLoader {

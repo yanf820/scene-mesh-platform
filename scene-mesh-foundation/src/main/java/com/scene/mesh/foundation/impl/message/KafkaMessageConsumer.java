@@ -1,8 +1,8 @@
 package com.scene.mesh.foundation.impl.message;
 
-import com.scene.mesh.foundation.api.message.IMessageConsumer;
-import com.scene.mesh.foundation.api.message.IMessageSerializer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
+import com.scene.mesh.foundation.spec.message.IMessageConsumer;
+import com.scene.mesh.foundation.spec.message.IMessageSerializer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

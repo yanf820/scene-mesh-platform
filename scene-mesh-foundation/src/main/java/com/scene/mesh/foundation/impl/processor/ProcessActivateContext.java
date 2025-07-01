@@ -1,6 +1,6 @@
 package com.scene.mesh.foundation.impl.processor;
 
-import com.scene.mesh.foundation.api.processor.IProcessActivateContext;
+import com.scene.mesh.foundation.spec.processor.IProcessActivateContext;
 /**
  */
 public class ProcessActivateContext implements IProcessActivateContext {

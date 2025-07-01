@@ -1,15 +1,12 @@
-// Redis Stream消息消费者 - 使用Spring Framework Redis
 package com.scene.mesh.foundation.impl.message;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.scene.mesh.foundation.api.message.IMessageConsumer;
-import com.scene.mesh.foundation.api.message.IMessageSerializer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
+import com.scene.mesh.foundation.spec.message.IMessageConsumer;
+import com.scene.mesh.foundation.spec.message.IMessageSerializer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Range;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -17,19 +14,14 @@ import org.springframework.data.redis.connection.stream.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StreamOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * 使用Spring Framework的StreamOperations实现的消息消费者
- */
 @Slf4j
 public class RedisMessageConsumer implements IMessageConsumer {
 
@@ -47,27 +39,28 @@ public class RedisMessageConsumer implements IMessageConsumer {
     private StreamOperations<String, Object, Object> streamOperations;
 
     @Setter
-    private int batchSize = 10; // 默认一次获取10条消息
+    private int batchSize = 10;
 
     @Setter
-    private int timeoutSeconds = 1; // 默认超时1秒
+    private int timeoutSeconds = 1;
 
-    // 消费者组和消费者名称
     private String consumerGroup;
     private String consumerName;
 
+    private boolean isShutdown = false;
+
     public void __init__() {
-        // 创建Redis连接工厂
+        // create redis factory
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
         this.connectionFactory = new LettuceConnectionFactory(config);
         ((LettuceConnectionFactory) this.connectionFactory).afterPropertiesSet();
 
-        // 创建RedisTemplate
+        // create redis template
         this.redisTemplate = new RedisTemplate<>();
         this.redisTemplate.setConnectionFactory(connectionFactory);
-        // 配置完整的序列化器
+
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
 
@@ -77,13 +70,12 @@ public class RedisMessageConsumer implements IMessageConsumer {
         redisTemplate.setHashValueSerializer(stringSerializer);
         redisTemplate.setDefaultSerializer(jsonSerializer);
 
-        // 初始化 RedisTemplate
+        // init RedisTemplate
         redisTemplate.afterPropertiesSet();
 
-        // 获取StreamOperations
+        // get StreamOperations
         this.streamOperations = this.redisTemplate.opsForStream();
 
-        // 为每个消费者实例生成唯一标识
         this.consumerGroup = "group-" + UUID.randomUUID().toString().substring(0, 8);
         this.consumerName = "consumer-" + UUID.randomUUID().toString().substring(0, 8);
     }
@@ -91,6 +83,7 @@ public class RedisMessageConsumer implements IMessageConsumer {
     public void shutdown() {
         if (connectionFactory instanceof LettuceConnectionFactory) {
             ((LettuceConnectionFactory) connectionFactory).destroy();
+            isShutdown = true;
         }
     }
 
@@ -100,7 +93,12 @@ public class RedisMessageConsumer implements IMessageConsumer {
     }
 
     @Override
-    public <T> List<T> receive(MessageTopic topic, Class<T> messageType) {
+    public <T> List<T> receive(MessageTopic topic, Class<T> messageType) throws Exception {
+
+        if (isShutdown) {
+            throw new Exception("message consumer is shutdown");
+        }
+
         String streamKey = topic.getTopicName();
         List<T> messages = new ArrayList<>();
 

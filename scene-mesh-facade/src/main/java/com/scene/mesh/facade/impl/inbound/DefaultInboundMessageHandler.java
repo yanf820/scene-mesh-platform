@@ -1,33 +1,27 @@
 package com.scene.mesh.facade.impl.inbound;
 
-import com.scene.mesh.facade.api.common.IMessageExchanger;
-import com.scene.mesh.facade.api.inboud.InboundMessage;
-import com.scene.mesh.facade.api.inboud.InboundMessageHandler;
-import com.scene.mesh.facade.api.inboud.InboundMessageInterceptor;
-import com.scene.mesh.facade.api.outbound.OutboundMessage;
+import com.scene.mesh.facade.spec.common.IMessageExchanger;
+import com.scene.mesh.facade.spec.inboud.InboundMessage;
+import com.scene.mesh.facade.spec.inboud.InboundMessageHandler;
+import com.scene.mesh.facade.spec.inboud.InboundMessageInterceptor;
+import com.scene.mesh.facade.spec.outbound.OutboundMessage;
 import com.scene.mesh.model.event.Event;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.LinkedList;
 import java.util.List;
 
-/**
- * 终端消息处理服务
- */
 @Slf4j
 @Component
 public class DefaultInboundMessageHandler implements InboundMessageHandler{
 
-    List<InboundMessageInterceptor> interceptors = new LinkedList<>();
+    private final List<InboundMessageInterceptor> interceptors;
 
-    @Autowired
-    private IMessageExchanger messageExchanger;
+    private final IMessageExchanger messageExchanger;
 
-    public DefaultInboundMessageHandler(List<InboundMessageInterceptor> interceptors) {
+    public DefaultInboundMessageHandler(List<InboundMessageInterceptor> interceptors,IMessageExchanger messageExchanger) {
         this.interceptors = interceptors;
+        this.messageExchanger = messageExchanger;
     }
 
     @PostConstruct
@@ -36,20 +30,20 @@ public class DefaultInboundMessageHandler implements InboundMessageHandler{
     }
 
     public void handle(InboundMessage inboundMessage) {
-        log.info("开始处理消息 - {}", inboundMessage.getMessage());
+        log.debug("Start processing the message - {}", inboundMessage.getMessage());
 
-        //定义 intercept request
+        //intercept request
         InboundMessageInterceptor.InboundMessageRequest request =
                 new InboundMessageInterceptor.InboundMessageRequest(inboundMessage);
 
-        //定义 intercept response
+        //intercept response
         InboundMessageInterceptor.InboundMessageResponse response =
                 new InboundMessageInterceptor.InboundMessageResponse();
 
-        //拦截消息处理
+        //intercept
         this.interceptMessage(request, response);
 
-        //拦截处理结果false 的情况，交给事件监听器进行 error 处理
+        //handle interception result - false
         if (!response.isSuccess()) {
             OutboundMessage outboundMessage = new OutboundMessage();
             outboundMessage.setTerminalId(request.getMessage().getTerminalId());
@@ -59,7 +53,7 @@ public class DefaultInboundMessageHandler implements InboundMessageHandler{
             return;
         }
 
-        //拦截处理结果true 的情况，进行 入站 处理
+        //handle interception result - true
         Event event = (Event) response.getPropVal("event");
         this.messageExchanger.handleInboundEvent(event);
     }

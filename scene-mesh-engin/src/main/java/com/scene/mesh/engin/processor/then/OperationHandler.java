@@ -2,17 +2,15 @@ package com.scene.mesh.engin.processor.then;
 
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
-import com.scene.mesh.engin.processor.then.operator.AgentOperator;
 import com.scene.mesh.engin.processor.then.operator.IOperator;
-import com.scene.mesh.engin.processor.then.operator.NonAgentOperator;
 import com.scene.mesh.engin.processor.then.operator.OperatorManager;
-import com.scene.mesh.foundation.api.processor.IProcessActivateContext;
-import com.scene.mesh.foundation.api.processor.IProcessInput;
-import com.scene.mesh.foundation.api.processor.IProcessOutput;
+import com.scene.mesh.foundation.spec.processor.IProcessActivateContext;
+import com.scene.mesh.foundation.spec.processor.IProcessInput;
+import com.scene.mesh.foundation.spec.processor.IProcessOutput;
 import com.scene.mesh.foundation.impl.processor.BaseProcessor;
 import com.scene.mesh.model.operation.Operation;
 import com.scene.mesh.model.session.TerminalSession;
-import com.scene.mesh.service.api.cache.MutableCacheService;
+import com.scene.mesh.service.spec.cache.MutableCacheService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

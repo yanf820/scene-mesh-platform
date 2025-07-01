@@ -1,9 +1,9 @@
 package com.scene.mesh.foundation.impl.processor;
 
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
-import com.scene.mesh.foundation.api.processor.IProcessInput;
-import com.scene.mesh.foundation.api.processor.IProcessOutput;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
+import com.scene.mesh.foundation.spec.processor.IProcessInput;
+import com.scene.mesh.foundation.spec.processor.IProcessOutput;
 
 /**
  */

@@ -1,13 +1,11 @@
 package com.scene.mesh.foundation.impl.processor.flink;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
-import com.scene.mesh.foundation.api.processor.IProcessor;
-import com.scene.mesh.foundation.api.processor.config.ProcessorNode;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.processor.IProcessor;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorNode;
 import com.scene.mesh.foundation.impl.processor.ProcessActivateContext;
 import com.scene.mesh.foundation.impl.processor.ProcessInput;
 import com.scene.mesh.foundation.impl.processor.ProcessOutput;
-import org.apache.flink.api.common.functions.RuntimeContext;
-import org.apache.flink.cep.CEP;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 

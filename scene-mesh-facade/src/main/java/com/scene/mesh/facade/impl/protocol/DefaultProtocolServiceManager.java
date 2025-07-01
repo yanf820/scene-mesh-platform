@@ -1,7 +1,7 @@
 package com.scene.mesh.facade.impl.protocol;
 
-import com.scene.mesh.facade.api.protocol.IProtocolService;
-import com.scene.mesh.facade.api.protocol.IProtocolServiceManager;
+import com.scene.mesh.facade.spec.protocol.IProtocolService;
+import com.scene.mesh.facade.spec.protocol.IProtocolServiceManager;
 import com.scene.mesh.model.protocol.ProtocolType;
 import org.springframework.stereotype.Component;
 

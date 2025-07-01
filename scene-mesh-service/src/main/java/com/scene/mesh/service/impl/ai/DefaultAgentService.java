@@ -1,29 +1,23 @@
 package com.scene.mesh.service.impl.ai;
 
-import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.Event;
 import com.scene.mesh.model.llm.LanguageModel;
 import com.scene.mesh.model.operation.Agent;
-import com.scene.mesh.service.api.ai.IAgentService;
-import com.scene.mesh.service.api.ai.IChatClientFactory;
-import com.scene.mesh.service.api.ai.IPromptService;
-import com.scene.mesh.service.api.ai.IToolsService;
+import com.scene.mesh.service.spec.ai.IAgentService;
+import com.scene.mesh.service.spec.ai.IChatClientFactory;
+import com.scene.mesh.service.spec.ai.IPromptService;
+import com.scene.mesh.service.spec.ai.IToolsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
-import org.springframework.ai.zhipuai.ZhiPuAiChatOptions;
-import org.springframework.ai.zhipuai.api.ZhiPuAiApi;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

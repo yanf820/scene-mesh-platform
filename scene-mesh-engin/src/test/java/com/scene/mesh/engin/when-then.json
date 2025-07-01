@@ -1,0 +1,179 @@
+[
+  {
+    "when": {
+      "nodes": [
+        {
+          "name": "vi3csmmkqq7bts6c992sl83d",
+          "type": "ATOMIC",
+          "quantifier": {
+            "consumingStrategy": "STRICT",
+            "innerConsumingStrategy": "SKIP_TILL_NEXT",
+            "properties": [
+              "LOOPING"
+            ]
+          },
+          "condition": {
+            "type": "AVIATOR",
+            "expression": "event.type === 'voice'"
+          },
+          "times": {
+            "from": 1,
+            "to": 5,
+            "windowTime": null
+          },
+          "window": {
+            "type": "FIRST_AND_LAST",
+            "time": {
+              "unit": "SECONDS",
+              "size": 60
+            }
+          },
+          "untilCondition": null,
+          "afterMatchSkipStrategy": {
+            "type": "SKIP_TILL_NEXT",
+            "patternName": null
+          },
+          "graph": null
+        },
+        {
+          "name": "iwsnot91r1shz92ustq97ks2",
+          "type": "ATOMIC",
+          "quantifier": {
+            "consumingStrategy": "STRICT",
+            "innerConsumingStrategy": "SKIP_TILL_NEXT",
+            "properties": [
+              "SINGLE"
+            ]
+          },
+          "condition": {
+            "type": "AVIATOR",
+            "expression": "event.type === 'hello'"
+          },
+          "times": null,
+          "window": null,
+          "untilCondition": null,
+          "afterMatchSkipStrategy": {
+            "type": "SKIP_TILL_NEXT",
+            "patternName": null
+          },
+          "graph": null
+        },
+        {
+          "name": "qif0bnzrecry1pqcpmracrg7",
+          "type": "COMPOSITE",
+          "quantifier": {
+            "consumingStrategy": "STRICT",
+            "innerConsumingStrategy": "SKIP_TILL_NEXT",
+            "properties": [
+              "SINGLE"
+            ]
+          },
+          "condition": null,
+          "times": null,
+          "window": null,
+          "untilCondition": null,
+          "afterMatchSkipStrategy": {
+            "type": "SKIP_TILL_NEXT",
+            "patternName": null
+          },
+          "graph": {
+            "nodes": [
+              {
+                "name": "fwei14de7fftaq8bgey77imy",
+                "type": "ATOMIC",
+                "quantifier": {
+                  "consumingStrategy": "STRICT",
+                  "innerConsumingStrategy": "SKIP_TILL_NEXT",
+                  "properties": [
+                    "SINGLE",
+                    "OPTIONAL"
+                  ]
+                },
+                "condition": {
+                  "type": "AVIATOR",
+                  "expression": "event.type === 'voice'"
+                },
+                "times": null,
+                "window": null,
+                "untilCondition": null,
+                "afterMatchSkipStrategy": {
+                  "type": "SKIP_TILL_NEXT",
+                  "patternName": null
+                },
+                "graph": null
+              },
+              {
+                "name": "c0sr4jw8wwmr5lill2c0g80h",
+                "type": "ATOMIC",
+                "quantifier": {
+                  "consumingStrategy": "STRICT",
+                  "innerConsumingStrategy": "SKIP_TILL_NEXT",
+                  "properties": [
+                    "LOOPING"
+                  ]
+                },
+                "condition": {
+                  "type": "AVIATOR",
+                  "expression": "event.type === 123"
+                },
+                "times": {
+                  "from": 1,
+                  "to": 5,
+                  "windowTime": null
+                },
+                "window": {
+                  "type": "FIRST_AND_LAST",
+                  "time": {
+                    "unit": "SECONDS",
+                    "size": 60
+                  }
+                },
+                "untilCondition": null,
+                "afterMatchSkipStrategy": {
+                  "type": "SKIP_TILL_NEXT",
+                  "patternName": null
+                },
+                "graph": null
+              }
+            ],
+            "edges": [
+              {
+                "source": "fwei14de7fftaq8bgey77imy",
+                "target": "c0sr4jw8wwmr5lill2c0g80h",
+                "type": "SKIP_TILL_NEXT"
+              }
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "iwsnot91r1shz92ustq97ks2",
+          "target": "vi3csmmkqq7bts6c992sl83d",
+          "type": "SKIP_TILL_NEXT"
+        }
+      ]
+    },
+    "then": {
+      "id": "1111",
+      "name": "大模型处理",
+      "label": "大模型处理",
+      "type": "LLM_INFERENCE",
+      "modelProvider": "OpenAI",
+      "model": "o1",
+      "promptTemplate": "我希望你能扮演一个使用TPOT的自动机器学习(AutoML)机器人。我正在研究一个预测[...]的模型。请编写Python代码来找到具有最高AUC测试集分数的最佳分类模型。",
+      "promptVariables": [],
+      "temperature": 0.7,
+      "topP": 1,
+      "mcps": [
+        "dwmwpos580dvs0gpypc78xx8",
+        "owfu52n4jqli2mlg7o19tbvs"
+      ],
+      "outputActions": [
+        "voaexrgt4f6a0ccw73ldu6t6",
+        "gae9o9tgnl0i30se7bdsd1gs"
+      ],
+      "errors": []
+    }
+  }
+]

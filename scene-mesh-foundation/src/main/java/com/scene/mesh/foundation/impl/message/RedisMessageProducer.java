@@ -1,29 +1,22 @@
 // Redis Stream消息生产者 - 使用Spring Framework Redis
 package com.scene.mesh.foundation.impl.message;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.message.IMessageSerializer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.IMessageSerializer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.StreamOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 使用Spring Framework的StreamOperations实现的消息生产者
- */
 public class RedisMessageProducer implements IMessageProducer {
 
     @Setter
@@ -36,22 +29,20 @@ public class RedisMessageProducer implements IMessageProducer {
 
     private IMessageSerializer serializer;
     private RedisConnectionFactory connectionFactory;
-    private RedisTemplate<String, Object> redisTemplate;
     private StreamOperations<String, Object, Object> streamOperations;
 
     public void __init__(){
-        // 创建Redis连接工厂
+        // create redis factory
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
         this.connectionFactory = new LettuceConnectionFactory(config);
         ((LettuceConnectionFactory) this.connectionFactory).afterPropertiesSet();
 
-        // 创建RedisTemplate
-        this.redisTemplate = new RedisTemplate<>();
-        this.redisTemplate.setConnectionFactory(connectionFactory);
+        // create redis template
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
 
-        // 配置完整的序列化器
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
 
@@ -61,19 +52,13 @@ public class RedisMessageProducer implements IMessageProducer {
         redisTemplate.setHashValueSerializer(stringSerializer);
         redisTemplate.setDefaultSerializer(jsonSerializer);
 
-        // 初始化 RedisTemplate
+        // init RedisTemplate
         redisTemplate.afterPropertiesSet();
 
-        // 获取StreamOperations
-        this.streamOperations = this.redisTemplate.opsForStream();
+        // get StreamOperations
+        this.streamOperations = redisTemplate.opsForStream();
     }
 
-    public RedisMessageProducer() {
-    }
-
-    /**
-     * 关闭资源
-     */
     public void shutdown() {
         if (connectionFactory instanceof LettuceConnectionFactory) {
             ((LettuceConnectionFactory) connectionFactory).destroy();
@@ -95,14 +80,9 @@ public class RedisMessageProducer implements IMessageProducer {
 
         for (Object message : messages) {
             try {
-                // 序列化消息
-                String data = SimpleObjectHelper.objectData2json(message);
-                
-                // 创建记录（字段-值映射）
                 Map<String, Object> record = new HashMap<>();
-                record.put("data", data);
-                
-                // 发布到Stream
+                record.put("data", message);
+
                 streamOperations.add(streamKey, record);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to send message to Redis Stream: " + e.getMessage(), e);

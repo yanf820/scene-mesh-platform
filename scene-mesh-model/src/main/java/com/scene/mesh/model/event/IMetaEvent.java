@@ -1,10 +1,8 @@
 package com.scene.mesh.model.event;
 
-import com.scene.mesh.foundation.api.parameter.IMetaParameterized;
-import com.scene.mesh.foundation.api.parameter.MetaParameters;
+import com.scene.mesh.foundation.spec.parameter.IMetaParameterized;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

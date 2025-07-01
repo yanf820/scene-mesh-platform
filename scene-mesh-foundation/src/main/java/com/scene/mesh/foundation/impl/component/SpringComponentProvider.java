@@ -1,6 +1,6 @@
 package com.scene.mesh.foundation.impl.component;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 

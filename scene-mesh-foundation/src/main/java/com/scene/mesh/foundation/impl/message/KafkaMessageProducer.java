@@ -1,8 +1,8 @@
 package com.scene.mesh.foundation.impl.message;
 
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.message.IMessageSerializer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.IMessageSerializer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -12,8 +12,6 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.LongSerializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 

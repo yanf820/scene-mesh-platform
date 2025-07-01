@@ -1,8 +1,8 @@
 package com.scene.mesh.foundation.impl.processor.execute;
 
-import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
-import com.scene.mesh.foundation.api.processor.execute.IProcessExecutor;
-import com.scene.mesh.foundation.api.processor.execute.IProcessManager;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorGraph;
+import com.scene.mesh.foundation.spec.processor.execute.IProcessExecutor;
+import com.scene.mesh.foundation.spec.processor.execute.IProcessManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

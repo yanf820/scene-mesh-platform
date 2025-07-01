@@ -1,6 +1,6 @@
 package com.scene.mesh.service.impl.ai;
 
-import com.scene.mesh.service.api.ai.IPromptService;
+import com.scene.mesh.service.spec.ai.IPromptService;
 import com.scene.mesh.service.impl.ai.template.AviatorTemplateRenderer;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;

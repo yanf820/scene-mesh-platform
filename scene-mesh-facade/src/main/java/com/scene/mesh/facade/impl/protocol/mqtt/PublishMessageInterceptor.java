@@ -1,28 +1,38 @@
 package com.scene.mesh.facade.impl.protocol.mqtt;
 
-import com.scene.mesh.facade.api.protocol.TerminalProtocolStateManager;
+import com.scene.mesh.facade.spec.protocol.TerminalProtocolStateManager;
 import com.scene.mesh.model.protocol.ProtocolType;
-import com.scene.mesh.facade.api.inboud.InboundMessage;
-import com.scene.mesh.facade.api.inboud.InboundMessageHandler;
+import com.scene.mesh.facade.spec.inboud.InboundMessage;
+import com.scene.mesh.facade.spec.inboud.InboundMessageHandler;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.impl.helper.StringHelper;
+import com.scene.mesh.model.terminal.TerminalStatus;
+import com.scene.mesh.service.spec.product.IProductService;
+import com.scene.mesh.service.spec.terminal.ITerminalService;
 import io.moquette.interception.InterceptHandler;
 import io.moquette.interception.messages.*;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PublishMessageInterceptor implements InterceptHandler {
 
-    @Autowired
-    private InboundMessageHandler inboundMessageHandler;
+    private final InboundMessageHandler inboundMessageHandler;
 
-    @Autowired
-    private TerminalProtocolStateManager terminalProtocolStateManager;
+    private final TerminalProtocolStateManager terminalProtocolStateManager;
+
+    private final IProductService productService;
+
+    private final ITerminalService terminalService;
+
+    public PublishMessageInterceptor(InboundMessageHandler inboundMessageHandler, TerminalProtocolStateManager terminalProtocolStateManager, IProductService productService, ITerminalService terminalService) {
+        this.inboundMessageHandler = inboundMessageHandler;
+        this.terminalProtocolStateManager = terminalProtocolStateManager;
+        this.productService = productService;
+        this.terminalService = terminalService;
+    }
 
     @Override
     public String getID() {
@@ -36,20 +46,23 @@ public class PublishMessageInterceptor implements InterceptHandler {
 
     @Override
     public void onConnect(InterceptConnectMessage msg) {
+        this.terminalService.updateStatus(msg.getUsername(), msg.getClientID(),  TerminalStatus.ONLINE);
         this.terminalProtocolStateManager.setProtocolState(msg.getClientID(), ProtocolType.MQTT);
-        log.info("终端已连接: client id - {}", SimpleObjectHelper.objectData2json(msg));
+        log.info("The terminal is connected : terminal id - {}", msg.getClientID());
     }
 
     @Override
     public void onDisconnect(InterceptDisconnectMessage msg) {
+        this.terminalService.updateStatus(msg.getUsername(),msg.getClientID(), TerminalStatus.OFFLINE); // TODO 补充
         this.terminalProtocolStateManager.removeProtocolState(msg.getClientID());
-        log.info("终端已断开: client id - {}", SimpleObjectHelper.objectData2json(msg));
+        log.info("The terminal has disconnected : terminal id - {}", msg.getClientID());
     }
 
     @Override
     public void onConnectionLost(InterceptConnectionLostMessage msg) {
+        this.terminalService.updateStatus(msg.getUsername(), msg.getClientID(), TerminalStatus.OFFLINE); // TODO 补充
         this.terminalProtocolStateManager.removeProtocolState(msg.getClientID());
-        log.info("终端已丢失: client id - {}", SimpleObjectHelper.objectData2json(msg));
+        log.info("The terminal has been lost : terminal id - {}", msg.getClientID());
     }
 
     @Override
@@ -60,7 +73,7 @@ public class PublishMessageInterceptor implements InterceptHandler {
         String topicName = msg.getTopicName();
         String clientId = msg.getClientID();
 
-        log.debug("接收到消息: client id - {}, topic - {}, payload - {}",
+        log.debug("Received terminal message: terminal id - {}, topic - {}, payload - {}",
                 clientId, topicName, messageContent);
 
         //交给 inboundMessageHandler 处理

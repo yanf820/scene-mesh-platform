@@ -1,7 +1,7 @@
 package com.scene.mesh.engin.generator;
 
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.api.parameter.data.StringParameterDataType;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
+import com.scene.mesh.foundation.spec.parameter.data.StringParameterDataType;
 import com.scene.mesh.model.action.DefaultMetaAction;
 import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.Event;

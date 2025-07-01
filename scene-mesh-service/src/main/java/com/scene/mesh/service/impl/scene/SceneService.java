@@ -1,23 +1,19 @@
 package com.scene.mesh.service.impl.scene;
 
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.model.llm.LanguageModel;
 import com.scene.mesh.model.llm.LanguageModelProvider;
 import com.scene.mesh.model.operation.Agent;
 import com.scene.mesh.model.operation.Operation;
 import com.scene.mesh.model.scene.Scene;
-import com.scene.mesh.service.api.scene.ISceneService;
-import com.scene.mesh.service.api.scene.SceneRelationType;
-import org.apache.commons.lang3.tuple.Pair;
+import com.scene.mesh.service.spec.scene.ISceneService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SceneService implements ISceneService {
     @Override
-    public Scene getSceneById(String sceneId) {
+    public Scene getSceneById(String sceneId) { //TODO 补充
 
         List<Scene> scenes = getAllScenes();
         for (Scene scene : scenes) {
@@ -28,13 +24,17 @@ public class SceneService implements ISceneService {
         return null;
     }
 
+    @Override
+    public void getAllSceneWhens() { //TODO 补充
+
+    }
+
     public List<Scene> getAllScenes(){
         List<Scene> scenes = new ArrayList<>();
 
         // 创建第一个场景 - 智能客服场景
         Scene scene1 = new Scene();
         scene1.setId("1");
-        scene1.setProductId("product-001");
         scene1.setName("早教场景");
         scene1.setDescription("提供早教类服务");
         scene1.setEnable(true);
@@ -72,7 +72,6 @@ public class SceneService implements ISceneService {
         // 创建第二个场景 - 订单处理场景
         Scene scene3 = new Scene();
         scene3.setId("3");
-        scene3.setProductId("product-002");
         scene3.setName("订单处理场景");
         scene3.setDescription("自动处理用户订单，包括订单确认、支付处理、物流跟踪等");
         scene3.setEnable(true);

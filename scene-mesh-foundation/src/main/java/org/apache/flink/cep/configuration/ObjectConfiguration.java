@@ -6,10 +6,9 @@ import java.util.Map;
 
 /**
  * 以Object类型存储的配置
- *
- * 
  */
 public class ObjectConfiguration extends Configuration {
+
     public Object getObject(String key) {
         return confData.get(key);
     }

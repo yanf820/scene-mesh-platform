@@ -1,10 +1,10 @@
 package com.scene.mesh.service.impl.event;
 
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.api.parameter.data.StringParameterDataType;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
+import com.scene.mesh.foundation.spec.parameter.data.StringParameterDataType;
 import com.scene.mesh.model.event.DefaultMetaEvent;
 import com.scene.mesh.model.event.IMetaEvent;
-import com.scene.mesh.service.api.event.IMetaEventService;
+import com.scene.mesh.service.spec.event.IMetaEventService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class DefaultMetaEventService implements IMetaEventService {
 
     @Override
-    public IMetaEvent getIMetaEvent(String metaEventId) {
+    public IMetaEvent getIMetaEvent(String metaEventId) { //TODO 真实查询 spec
 
         List<IMetaEvent> metaEvents = getAllMetaEvents();
         for (IMetaEvent metaEvent : metaEvents) {

@@ -1,34 +1,38 @@
 package com.scene.mesh.facade.impl.common;
 
-import com.scene.mesh.facade.api.common.IMessageExchanger;
-import com.scene.mesh.facade.api.outbound.IOutboundMessageHandler;
-import com.scene.mesh.facade.api.outbound.OutboundMessage;
-import com.scene.mesh.facade.api.outbound.OutboundMessageType;
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
+import com.scene.mesh.facade.spec.common.IMessageExchanger;
+import com.scene.mesh.facade.spec.outbound.IOutboundMessageHandler;
+import com.scene.mesh.facade.spec.outbound.OutboundMessage;
+import com.scene.mesh.facade.spec.outbound.OutboundMessageType;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.model.action.Action;
 import com.scene.mesh.model.event.Event;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class DefaultMessageExchanger implements IMessageExchanger {
 
-    @Autowired
-    private IOutboundMessageHandler outboundMessageHandler;
+    private final IOutboundMessageHandler outboundMessageHandler;
 
-    @Autowired
-    private IMessageProducer messageProducer;
+    private final IMessageProducer messageProducer;
+
+    private final MessageTopic inboundEventTopic;
+
+    public DefaultMessageExchanger(IOutboundMessageHandler outboundMessageHandler, IMessageProducer messageProducer, MessageTopic inboundEventTopic) {
+        this.outboundMessageHandler = outboundMessageHandler;
+        this.messageProducer = messageProducer;
+        this.inboundEventTopic = inboundEventTopic;
+    }
 
     @Override
     public void handleInboundEvent(Event event) {
-        log.info("onInboundEvent: {}", SimpleObjectHelper.objectData2json(event));
+        log.info("handle inbound event: {}", event.toString());
         try {
-            String topicName = "inbound_events";
-            this.messageProducer.send(new MessageTopic(topicName), event);
+            this.messageProducer.send(inboundEventTopic, event);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

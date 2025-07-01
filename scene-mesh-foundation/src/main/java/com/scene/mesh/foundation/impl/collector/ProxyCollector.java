@@ -1,6 +1,6 @@
 package com.scene.mesh.foundation.impl.collector;
 
-import com.scene.mesh.foundation.api.collector.ICollector;
+import com.scene.mesh.foundation.spec.collector.ICollector;
 
 /**
  */

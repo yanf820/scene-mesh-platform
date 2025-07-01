@@ -1,6 +1,6 @@
 package com.scene.mesh.service.impl.ai;
 
-import com.scene.mesh.service.api.ai.IToolsService;
+import com.scene.mesh.service.spec.ai.IToolsService;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 
@@ -26,7 +26,6 @@ public class DefaultIToolsService implements IToolsService {
         ToolCallback[] toolCallbacks = toolCallbackProvider.getToolCallbacks();
         for (ToolCallback toolCallback : toolCallbacks) {
             for (String toolName : toolNames) {
-                 // java mcp sdk 默认加上此前缀
                 if (toolCallback.getToolDefinition().name().contains(toolName))
                     discoveredToolCallbacks.add(toolCallback);
             }

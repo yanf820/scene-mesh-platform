@@ -1,9 +1,9 @@
 package com.scene.mesh.mcp.server.provider;
 
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.parameter.IMetaParameterized;
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.api.parameter.MetaParameterDescriptorCollection;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.parameter.IMetaParameterized;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
+import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptorCollection;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.mcp.server.loader.ActionToolCallback;
 import com.scene.mesh.mcp.server.loader.IToolDrawingLoader;
@@ -13,7 +13,6 @@ import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.definition.DefaultToolDefinition;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.method.MethodToolCallback;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -28,14 +27,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DynamicToolProvider implements ToolCallbackProvider {
 
-    @Autowired
-    private IToolDrawingLoader toolDrawingLoader;
+    private final IToolDrawingLoader toolDrawingLoader;
 
-    @Autowired
-    private IMessageProducer messageProducer;
+    private final IMessageProducer messageProducer;
 
     private final Map<String, ToolCallback> toolCallbackCache = new ConcurrentHashMap<>();
-    
+
+    public DynamicToolProvider(IToolDrawingLoader toolDrawingLoader, IMessageProducer messageProducer) {
+        this.toolDrawingLoader = toolDrawingLoader;
+        this.messageProducer = messageProducer;
+    }
+
     /**
      * 获取所有动态生成的工具回调
      */

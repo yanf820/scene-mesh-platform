@@ -1,7 +1,7 @@
 package com.scene.mesh.facade.impl.protocol.websocket;
 
-import com.scene.mesh.facade.api.outbound.OutboundMessage;
-import com.scene.mesh.facade.api.protocol.IProtocolService;
+import com.scene.mesh.facade.spec.outbound.OutboundMessage;
+import com.scene.mesh.facade.spec.protocol.IProtocolService;
 import com.scene.mesh.model.protocol.ProtocolType;
 
 public class WebSocketProtocolService implements IProtocolService {
@@ -11,7 +11,6 @@ public class WebSocketProtocolService implements IProtocolService {
     }
 
     @Override
-    public boolean send(OutboundMessage outboundMessage) {
-        return false;
+    public void send(OutboundMessage outboundMessage) {
     }
 }

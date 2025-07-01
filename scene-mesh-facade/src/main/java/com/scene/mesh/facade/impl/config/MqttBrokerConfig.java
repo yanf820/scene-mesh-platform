@@ -4,6 +4,7 @@ import com.scene.mesh.facade.impl.protocol.mqtt.PublishMessageInterceptor;
 import io.moquette.broker.Server;
 import io.moquette.broker.config.IConfig;
 import io.moquette.broker.config.MemoryConfig;
+import io.moquette.broker.security.IAuthenticator;
 import io.moquette.interception.InterceptHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,8 @@ public class MqttBrokerConfig {
     private int messageSize;
 
     @Bean
-    public Server mqttBroker(List<InterceptHandler> interceptHandlers) throws IOException {
-        log.info("启动 MQTT broker - {}:{}", host, port);
+    public Server mqttBroker(List<InterceptHandler> interceptHandlers, IAuthenticator authenticator) throws IOException {
+        log.info("启动 MQTT broker - TCP: {}:{}", host, port);
 
         Properties properties = new Properties();
         properties.setProperty(IConfig.HOST_PROPERTY_NAME, host);
@@ -41,12 +42,14 @@ public class MqttBrokerConfig {
         properties.setProperty(IConfig.ALLOW_ANONYMOUS_PROPERTY_NAME, String.valueOf(allowAnonymous));
         // 其他配置
         properties.setProperty(IConfig.NETTY_MAX_BYTES_PROPERTY_NAME, String.valueOf(messageSize));
-
+        // WebSocket 配置
+//        properties.setProperty(IConfig.WEB_SOCKET_PATH_PROPERTY_NAME, "/sm");
+//        properties.setProperty(IConfig.WEB_SOCKET_PORT_PROPERTY_NAME, "1885"); // 使用不同端口
         IConfig config = new MemoryConfig(properties);
 
         Server server = new Server();
 
-        server.startServer(config, interceptHandlers);
+        server.startServer(config, interceptHandlers, null,authenticator,null);
 
         return server;
     }

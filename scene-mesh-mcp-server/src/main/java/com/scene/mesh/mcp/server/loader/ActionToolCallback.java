@@ -1,20 +1,16 @@
 package com.scene.mesh.mcp.server.loader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.scene.mesh.foundation.api.message.IMessageProducer;
-import com.scene.mesh.foundation.api.message.MessageTopic;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.message.MessageTopic;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.impl.helper.StringHelper;
 import com.scene.mesh.model.action.Action;
-import io.modelcontextprotocol.server.McpSyncServerExchange;
 import org.springframework.ai.chat.model.ToolContext;
-import org.springframework.ai.mcp.McpToolUtils;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
-import org.springframework.ai.tool.method.MethodToolCallback;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class ActionToolCallback implements ToolCallback {
 

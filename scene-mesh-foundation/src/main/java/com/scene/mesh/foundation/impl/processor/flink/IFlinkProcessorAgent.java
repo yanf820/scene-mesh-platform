@@ -1,8 +1,6 @@
 package com.scene.mesh.foundation.impl.processor.flink;
 
-import com.scene.mesh.foundation.api.processor.config.ProcessorNode;
-import org.apache.flink.cep.CEP;
-import org.apache.flink.configuration.Configuration;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorNode;
 
 /**
  */

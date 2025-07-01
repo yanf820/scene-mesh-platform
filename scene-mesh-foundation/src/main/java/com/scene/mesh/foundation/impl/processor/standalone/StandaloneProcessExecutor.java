@@ -1,8 +1,8 @@
 package com.scene.mesh.foundation.impl.processor.standalone;
 
-import com.scene.mesh.foundation.api.component.IComponentProvider;
-import com.scene.mesh.foundation.api.processor.config.ProcessorGraph;
-import com.scene.mesh.foundation.api.processor.execute.IProcessExecutor;
+import com.scene.mesh.foundation.spec.component.IComponentProvider;
+import com.scene.mesh.foundation.spec.processor.config.ProcessorGraph;
+import com.scene.mesh.foundation.spec.processor.execute.IProcessExecutor;
 
 /**
  */

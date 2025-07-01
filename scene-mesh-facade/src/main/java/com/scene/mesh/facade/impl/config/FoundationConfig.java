@@ -1,8 +1,8 @@
 package com.scene.mesh.facade.impl.config;
 
-import com.scene.mesh.foundation.api.cache.ICache;
-import com.scene.mesh.foundation.api.message.IMessageConsumer;
-import com.scene.mesh.foundation.api.message.IMessageProducer;
+import com.scene.mesh.foundation.spec.cache.ICache;
+import com.scene.mesh.foundation.spec.message.IMessageConsumer;
+import com.scene.mesh.foundation.spec.message.IMessageProducer;
 import com.scene.mesh.foundation.impl.cache.RedisCache;
 import com.scene.mesh.foundation.impl.message.JsonMessageSerializer;
 import com.scene.mesh.foundation.impl.message.RedisMessageConsumer;
