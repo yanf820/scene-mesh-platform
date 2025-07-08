@@ -6,10 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * 终端当前协议状态管理
- */
-@Component
 public class TerminalProtocolStateManager {
 
     private Map<String, ProtocolType> activatedProtocolTypes;

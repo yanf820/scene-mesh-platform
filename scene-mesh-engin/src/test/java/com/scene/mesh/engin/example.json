@@ -1,136 +1,275 @@
 {
-  "nodes": [
-    {
-      "name": "checkout-attempt",
-      "quantifier": {
-        "consumingStrategy": "SKIP_TILL_NEXT",
-        "innerConsumingStrategy": "SKIP_TILL_NEXT",
-        "properties": [
-          "SINGLE"
-        ]
-      },
-      "condition": {
-        "expression": "event.eventType == 'start_checkout'",
-        "type": "AVIATOR"
-      },
-      "times": null,
-      "untilCondition": null,
-      "window": {
-        "type": "FIRST_AND_LAST",
-        "time": {
-          "unit": "SECONDS",
-          "size": 30
-        }
-      },
-      "afterMatchSkipStrategy": {
-        "type": "NO_SKIP",
-        "patternName": null
-      },
-      "type": "ATOMIC"
+  "id": "bry9wbiy3nasmd8afkkf0wjm",
+  "modelName": "product",
+  "values": {
+    "name": "星宝",
+    "image": {
+      "fileName": "首页.svg",
+      "filePath": "product/ce60z15mecv7blyzlk3bwov3.svg",
+      "fileSize": 2250,
+      "fileType": "image/svg+xml"
     },
-    {
-      "name": "human-verification",
-      "quantifier": {
-        "consumingStrategy": "SKIP_TILL_NEXT",
-        "innerConsumingStrategy": "SKIP_TILL_NEXT",
-        "properties": [
-          "SINGLE",
-          "OPTIONAL"
-        ]
-      },
-      "condition": {
-        "expression": "event.eventType == 'captcha_verified'",
-        "type": "AVIATOR"
-      },
-      "times": null,
-      "untilCondition": null,
-      "window": null,
-      "afterMatchSkipStrategy": {
-        "type": "NO_SKIP",
-        "patternName": null
-      },
-      "type": "ATOMIC"
-    },
-    {
-      "name": "add-to-cart",
-      "quantifier": {
-        "consumingStrategy": "STRICT",
-        "innerConsumingStrategy": "SKIP_TILL_NEXT",
-        "properties": [
-          "SINGLE"
-        ]
-      },
-      "condition": {
-        "expression": "event.eventType == 'add_to_cart' && event.properties.productId == 'limited_sneaker_2025'",
-        "type": "AVIATOR"
-      },
-      "times": null,
-      "untilCondition": null,
-      "window": null,
-      "afterMatchSkipStrategy": {
-        "type": "NO_SKIP",
-        "patternName": null
-      },
-      "type": "ATOMIC"
-    },
-    {
-      "name": "rapid-probing",
-      "quantifier": {
-        "consumingStrategy": "STRICT",
-        "innerConsumingStrategy": "STRICT",
-        "properties": [
-          "LOOPING"
-        ]
-      },
-      "condition": {
-        "nestedConditions": [
-          {
-            "expression": "event.eventType == 'view_product' && event.properties.productId == 'limited_sneaker_2025'",
-            "type": "AVIATOR"
+    "category": "1",
+    "settings": [
+      {
+        "id": "wfek0yqv17btewj0se880b0y",
+        "modelName": "productSetting",
+        "values": {
+          "secret": "9194053a-cb7c-425a-aff9-c722093e2575",
+          "mqttPort": 1883,
+          "mqttEnabled": true,
+          "webSocketPort": 8080,
+          "webSocketEnabled": true
+        },
+        "isDeleted": false
+      }
+    ],
+    "tenement": "",
+    "rootScene": [
+      {
+        "id": "wey6lcqaf2sn9qgh0nht5ene",
+        "modelName": "scene",
+        "values": {
+          "flow": "H4sIAAAAAAAAA81X/2vbRhT/V8L9nJnTnXTSGfpDSJNilm/E7jYYxcjWSVYs6WTpZFsOgcK6LDDWrVs7Osa+lWwrHSMbFNZ2bH9NnKT/xe7sxHFqx6WjbPVP5u7d5957n/d577QNIu6wFBTf3wa+A4ogh2HNjFzDaWwx3vK8KPFSPWVNMA9invrC5xEoboMuKGomLRAdI2xCE1FoUTwPclDUYQHpCGOoWya2DKrpO/NA5DGT4HUeDkCYRHNsYSukyA7VVn9v/+jLX/t7u8d/3gKjA4vrqxvr5VJlSS4Fdo0FyvLu/vPdz4dmrcyOhO/6LFFQdR6lWehHXlkktmCe9AaUK5ulxYo09aOIJYvTLN4ubVQrpZWV6trSe8oyTnjMEuEP0gLKpbVrK0vghoyi40cO76ibTt1bLm2WK9WFtavVlYWyOip8Fcw2yCJfKOilxfW1q2W5kfo9uUHgjoRhScITha0wQ2anWcIcdarjO6IBihSa86DBfK8hMRBR+UtZwOpCWbl2kDKZvcT2PBnHaGF0lhQIIYZFNVPlHl9AKmimZSGKDBPqWDd25k9JT/N6SJwOZA7hsGkKx4DYwnk+SboOByRrCE5gnSXFFjz065cy/Mm9/ocfnDO8UFlfLS2O0Xvy4Jchw/85vRLfOY0VsDaLREH5OHflylzHbrIsrnZ44oAX+IvtRFqWXiId1o3tyNkY2IKiSDI2lXlswHO+NDiF+RFlIe4xx6nXSb1nNDXMmyInkUm6k5QZ2kRJDBl8bZQd3314tPfHycHjk4Nv3iDW2tyvs/+Zrwmljgh0e5Qyq5Y3DYLM2PMzByIkAjyl0SKdFBCBxKSy2RoIDRnEqIBMgqhpadjSdYLO+VxZWa2W1paXNpfWFpem0Lr/89HDH/rfftzfv3X82e4Ykwuluf7B0yGNl2CFcl4EGwlv+44iGBx99ezkt9/nFkpne3LtmjyjV5cDO20MqQtjUWFhHEh65fbhX98f3T84fHLz8Mmj5w92T/Ye9e/cHxm+Yye+XQsGRN+QbshzTNaFTD0owoJsjYLHGzIr8rp6PKgGlzAS1oxek9S2nHanAZt6GoWUAHmcZyLOxEJd5XNgbLcbGPZcsoVNk3UJIl7WE8IKVcQs70EXaW5P8908a3a8Xpo3bF31b0YRiTh0zFrUhlkMQ2urHYSRuuJl/RzDsSrRNeNVqsRHWkgFIsTdIpyynECexq5JJqsEaXoBQ2phy9RMWTI6Go5juUx1aFJqWEQnlvnaVJ+4vjPX//TO8d3v3iDRK69e1PxrVi5PRW61Etvg3TChooeNBnZyzZjkxKSGTL6cjjLvloEsY0gJsgqalLKmIWoQOD47l9c3Vxcq1fXrlY3rlUlmjr9+fHT7x5O/v+h/9Gy8/15cvgTrRSVsA3vwf9ALZ6iibQfZ6QtR0hs4a0NfBOuKs13VBm7ePny617/3E1B5Gjds8yAL2ZipAcHODWU1dv8M6V1yv2vXWXUQ6jmyNgl8qXAvBU64kAU5BXp+qp0decG4IVY+vGpXQANdvrQCFazjjT/X08zrkaZkyghou9WKu10rc8K2miIpz5I6m/26E3biMTH7OXFaTumZTs+rcqrKL2pYRSXyYPAolgi8yd4dhq+K3o780B7EqybsSF+MuD5ssa3M0HCK9IZdN2gr1N3xmGbM7lFMMybs2PdINvgauejK5U6fO1mDotnLPNZBsQ9j3op9q6HR9riTM5r3yMkZzeTfOynrpO2zTswTcdqJ3tKwWcBY1w3NoCaV82HYi2BBDgikyR+Wq/KFQck86HEeqi1iYflshJqmW0ijlr6z8w/zjKMqLw4AAA==",
+          "name": "通用场景",
+          "input": "",
+          "rules": {
+            "id": "939ed8a8-47e1-402c-b50d-857ca454ccde",
+            "rules": [],
+            "combinator": "and"
           },
-          {
-            "expression": "event.eventType == 'check_stock_api' && event.properties.productId == 'limited_sneaker_2025'",
-            "type": "AVIATOR"
-          }
-        ],
-        "type": "CLASS",
-        "className": "org.apache.flink.cep.pattern.conditions.RichOrCondition"
+          "enable": true,
+          "prompt": "111",
+          "flowData": "[{\"when\":{\"nodes\":[{\"name\":\"y0mb7nf5dhjeoqggnrgs4sek\",\"type\":\"COMPOSITE\",\"quantifier\":{\"consumingStrategy\":\"STRICT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"SINGLE\"]},\"condition\":null,\"times\":null,\"window\":{\"type\":\"FIRST_AND_LAST\",\"time\":{\"unit\":\"SECONDS\",\"size\":60}},\"untilCondition\":null,\"afterMatchSkipStrategy\":{\"type\":\"SKIP_TILL_NEXT\",\"patternName\":null},\"graph\":{\"nodes\":[{\"name\":\"sycm6dw0ed6o0k7td50383yy\",\"type\":\"ATOMIC\",\"quantifier\":{\"consumingStrategy\":\"STRICT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"SINGLE\"]},\"condition\":{\"type\":\"AVIATOR\",\"expression\":\"event.type == wakeup_word\"},\"times\":null,\"window\":null,\"untilCondition\":null,\"afterMatchSkipStrategy\":{\"type\":\"SKIP_TILL_NEXT\",\"patternName\":null},\"graph\":null},{\"name\":\"m3zeddcc6cz5k13okty6n76x\",\"type\":\"ATOMIC\",\"quantifier\":{\"consumingStrategy\":\"STRICT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"SINGLE\"]},\"condition\":{\"type\":\"AVIATOR\",\"expression\":\"event.type == voice\"},\"times\":null,\"window\":null,\"untilCondition\":null,\"afterMatchSkipStrategy\":{\"type\":\"SKIP_TILL_NEXT\",\"patternName\":null},\"graph\":null}],\"edges\":[{\"source\":\"sycm6dw0ed6o0k7td50383yy\",\"target\":\"m3zeddcc6cz5k13okty6n76x\",\"type\":\"SKIP_TILL_NEXT\"}]}}],\"edges\":[]},\"then\":{\"id\":\"fz99e8byk5627pgiud022tl3\",\"name\":\"大模型处理\",\"label\":\"AI 对话\",\"type\":\"LLM_INFERENCE\",\"modelProvider\":\"智谱 AI\",\"model\":\"GLM_4_Flash\",\"promptTemplate\":\"你是一个领航员\",\"promptVariables\":[],\"temperature\":0.7,\"topP\":1,\"mcps\":[\"f6e6mb5zk6bjdvwh0k4snm96\"],\"outputActions\":[\"avh30zf6j377ex626guztt8m\",\"teyz0f21fz1ifyukwgzsyha4\",\"se926no0d7bnv0up0m8jvlmn\"],\"errors\":[]}},{\"when\":{\"nodes\":[{\"name\":\"i21m9t266fj6o9ey60ospf76\",\"type\":\"ATOMIC\",\"quantifier\":{\"consumingStrategy\":\"STRICT\",\"innerConsumingStrategy\":\"SKIP_TILL_NEXT\",\"properties\":[\"SINGLE\"]},\"condition\":{\"type\":\"AVIATOR\",\"expression\":\"event.type == rfid\"},\"times\":null,\"window\":null,\"untilCondition\":null,\"afterMatchSkipStrategy\":{\"type\":\"SKIP_TILL_NEXT\",\"patternName\":null},\"graph\":null}],\"edges\":[]},\"then\":{\"id\":\"osty8qra5oxmr9tz35h3dy15\",\"name\":\"直接输出\",\"label\":\"直接输出\",\"type\":\"FORMAT_OUTPUT\",\"outputActions\":[{\"actionId\":\"avh30zf6j377ex626guztt8m\",\"values\":[{\"fieldName\":\"text\",\"value\":\"怎么啦\"},{\"fieldName\":\"volume\",\"value\":\"50\"}]},{\"actionId\":\"teyz0f21fz1ifyukwgzsyha4\",\"values\":[{\"fieldName\":\"face_type\",\"value\":\"1\"}]},{\"actionId\":\"se926no0d7bnv0up0m8jvlmn\",\"values\":[{\"fieldName\":\"rotate_type\",\"value\":\"1\"},{\"fieldName\":\"rotate_angle\",\"value\":\"3\"}]}],\"errors\":[]}}]",
+          "timeWindow": 300,
+          "description": "",
+          "promptInherited": "inherit",
+          "flowDataPublishTime": "2025-07-06T12:13:08.971Z",
+          "children": [
+            {
+              "id": "g043a4ogxmpralxarxt661gj",
+              "modelName": "scene",
+              "values": {
+                "flow": "",
+                "name": "测试场景 1",
+                "input": "",
+                "rules": {
+                  "id": "c75837c4-2951-4942-8c02-a885741fc029",
+                  "rules": [],
+                  "combinator": "and"
+                },
+                "enable": true,
+                "prompt": "1111",
+                "flowData": "",
+                "timeWindow": 300,
+                "description": "",
+                "promptInherited": "inherit",
+                "flowDataPublishTime": "2025-07-05T14:47:15.571Z",
+                "children": [
+                  {
+                    "id": "ljf0axkxelsypz34zm48hwsy",
+                    "modelName": "scene",
+                    "values": {
+                      "flow": "",
+                      "name": "测试场景 2",
+                      "input": "",
+                      "rules": {
+                        "id": "71fe8f1f-f27e-44e5-a127-56dfdfc5e635",
+                        "rules": [],
+                        "combinator": "and"
+                      },
+                      "enable": true,
+                      "prompt": "222",
+                      "flowData": "",
+                      "timeWindow": 300,
+                      "description": "",
+                      "promptInherited": "inherit",
+                      "flowDataPublishTime": "2025-07-05T14:47:28.556Z"
+                    },
+                    "isDeleted": false
+                  }
+                ]
+              },
+              "isDeleted": false
+            },
+            {
+              "id": "fgmvwflbqvc08dsdjy33gmqv",
+              "modelName": "scene",
+              "values": {
+                "flow": "",
+                "name": "测试场景 3",
+                "input": "",
+                "rules": {
+                  "id": "817a3101-da58-4a6c-8b35-eac72d2aae1c",
+                  "rules": [],
+                  "combinator": "and"
+                },
+                "enable": true,
+                "prompt": "333",
+                "flowData": "",
+                "timeWindow": 300,
+                "description": "",
+                "promptInherited": "inherit",
+                "flowDataPublishTime": "2025-07-05T14:48:26.543Z"
+              },
+              "isDeleted": false
+            }
+          ]
+        },
+        "isDeleted": false
+      }
+    ],
+    "description": "星宝玩具",
+    "actions": [
+      {
+        "id": "avh30zf6j377ex626guztt8m",
+        "modelName": "action",
+        "values": {
+          "name": "voice_action",
+          "title": "语音播放动作",
+          "description": "控制设备播放语音内容，用于与用户进行语音交互、朗读文本、播放提示音等场景。当需要设备说话、朗读、播报消息时使用此工具",
+          "fields": [
+            {
+              "id": "s9pg2h1ygpkt9jbgxlqlpmih",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "text",
+                "fieldType": "string",
+                "fieldTitle": "对话文本",
+                "fieldCategory": "native",
+                "fieldDescription": "需要播放的文本内容，支持中英文，不能为空。例如：'你好，欢迎使用智能助手"
+              },
+              "isDeleted": false
+            },
+            {
+              "id": "dyr1uof21ux1rkf6rdnd4uqx",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "volume",
+                "fieldType": "string",
+                "fieldTitle": "音量",
+                "fieldCategory": "native",
+                "fieldDescription": "播放音量，取值范围0-100的数字字符串，不填则使用默认音量50。例如：'80'表示80%音量，'30'表示较小音量"
+              },
+              "isDeleted": false
+            },
+            {
+              "id": "ipfavbflpmh0a50t65u609ox",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "对话语音",
+                "fieldType": "string",
+                "fieldTitle": "audio",
+                "fieldCategory": "compute",
+                "fieldDescription": "通过对话文本转换的语音 base64 字符串"
+              },
+              "isDeleted": false
+            }
+          ]
+        },
+        "isDeleted": false
       },
-      "times": {
-        "from": 5,
-        "to": 5,
-        "windowTime": null
+      {
+        "id": "teyz0f21fz1ifyukwgzsyha4",
+        "modelName": "action",
+        "values": {
+          "name": "face_action",
+          "title": "表情播放动作",
+          "description": "控制设备显示表情动画，用于表达情感状态，增强人机交互的亲和力。当需要表达高兴、悲伤等情绪，或配合语音内容展示合适表情时使用",
+          "fields": [
+            {
+              "id": "la9bxtyi5meucfq1fjbdnia3",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "face_type",
+                "fieldType": "string",
+                "fieldTitle": "表情类型",
+                "fieldCategory": "native",
+                "fieldDescription": "要播放的表情类型，必须选择以下数字之一：'1'-开心/高兴（成功、赞美时），'2'-伤心/难过（遗憾、失望时），'3'-沮丧/失望（挫败、无奈时），'4'-调皮/俏皮（幽默、玩笑时），'5'-无所事事/无聊（等待、思考时）"
+              },
+              "isDeleted": false
+            }
+          ]
+        },
+        "isDeleted": false
       },
-      "untilCondition": null,
-      "window": {
-        "type": "FIRST_AND_LAST",
-        "time": {
-          "unit": "SECONDS",
-          "size": 10
-        }
-      },
-      "afterMatchSkipStrategy": {
-        "type": "NO_SKIP",
-        "patternName": null
-      },
-      "type": "ATOMIC"
-    }
-  ],
-  "edges": [
-    {
-      "source": "human-verification",
-      "target": "checkout-attempt",
-      "type": "SKIP_TILL_NEXT"
-    },
-    {
-      "source": "add-to-cart",
-      "target": "human-verification",
-      "type": "SKIP_TILL_NEXT"
-    },
-    {
-      "source": "rapid-probing",
-      "target": "add-to-cart",
-      "type": "STRICT"
-    }
-  ]
+      {
+        "id": "se926no0d7bnv0up0m8jvlmn",
+        "modelName": "action",
+        "values": {
+          "name": "rotate_action",
+          "title": "转身动作",
+          "description": "控制设备身体旋转，用于调整朝向、寻找目标、表达动作意图。当需要设备转向特定方向、回正朝向、或表达转身动作时使用",
+          "fields": [
+            {
+              "id": "ye6ff80ltxf8o8yk8zi61dlo",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "rotate_type",
+                "fieldType": "string",
+                "fieldTitle": "转动类型",
+                "fieldCategory": "native",
+                "fieldDescription": "旋转方向类型，必须选择以下数字之一：'0'-回到原始正面朝向，'1'-向左转（逆时针），'2'-向右转（顺时针）"
+              },
+              "isDeleted": false
+            },
+            {
+              "id": "owxi9zi8gpz5xpkwohz6nivw",
+              "modelName": "actionField",
+              "values": {
+                "fieldName": "rotate_angle",
+                "fieldType": "string",
+                "fieldTitle": "转身角度",
+                "fieldCategory": "native",
+                "fieldDescription": "旋转的角度数值，取值范围1-180的整数字符串，单位为度。常用角度：'15'（小幅转动），'45'（中等转动），'90'（直角转动），'180'（转向背面）"
+              },
+              "isDeleted": false
+            }
+          ]
+        },
+        "isDeleted": false
+      }
+    ],
+    "events": [
+      {
+        "id": "kinfntzn6yj3ave2oxmrzh7u",
+        "modelName": "event",
+        "values": {
+          "name": "speech_event",
+          "title": "语音事件",
+          "description": "用户发送的语音数据",
+          "fields": [
+            {
+              "id": "huzbxtdjtkkhsvs0fzz3n4qm",
+              "modelName": "eventField",
+              "values": {
+                "fieldName": "audio",
+                "fieldType": "string",
+                "fieldTitle": "语音数据",
+                "fieldAsInput": false,
+                "fieldCategory": "native",
+                "fieldDescription": "base64 位的语音数据"
+              },
+              "isDeleted": false
+            },
+            {
+              "id": "fot5ssasznsmek8qjup47zrs",
+              "modelName": "eventField",
+              "values": {
+                "fieldName": "audioText",
+                "fieldType": "string",
+                "fieldTitle": "语音文本",
+                "fieldAsInput": true,
+                "fieldCategory": "compute",
+                "fieldDescription": "语音转换的文本数据"
+              },
+              "isDeleted": false
+            }
+          ]
+        },
+        "isDeleted": false
+      }
+    ]
+  },
+  "isDeleted": false
 }

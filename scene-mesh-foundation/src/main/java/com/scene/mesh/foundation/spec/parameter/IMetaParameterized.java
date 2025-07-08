@@ -8,6 +8,8 @@ public interface IMetaParameterized {
 
     String getUuid();
 
+    String getProductId();
+
     String getName();
 
     String getDescription();

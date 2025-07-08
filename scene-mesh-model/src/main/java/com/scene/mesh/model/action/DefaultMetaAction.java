@@ -12,6 +12,8 @@ public class DefaultMetaAction implements IMetaAction {
 
     // 元事件 ID
     private String uuid;
+    // 所属产品 ID
+    private String productId;
     // 元事件名称
     private String name;
     // 元事件描述
@@ -22,10 +24,11 @@ public class DefaultMetaAction implements IMetaAction {
     public DefaultMetaAction() {
     }
 
-    public DefaultMetaAction(String id, String name, String description) {
+    public DefaultMetaAction(String id, String name, String description, String productId) {
         this.uuid = id;
         this.name = name;
         this.description = description;
+        this.productId = productId;
     }
 
     @Override
@@ -44,6 +47,11 @@ public class DefaultMetaAction implements IMetaAction {
     @Override
     public String getUuid() {
         return this.uuid;
+    }
+
+    @Override
+    public String getProductId() {
+        return this.productId;
     }
 
     @Override

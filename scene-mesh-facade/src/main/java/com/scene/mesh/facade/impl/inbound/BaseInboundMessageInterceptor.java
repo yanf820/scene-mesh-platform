@@ -11,6 +11,9 @@ public abstract class BaseInboundMessageInterceptor implements InboundMessageInt
         log.debug("The interceptor {} intercept item - terminalId: {}, message: {}",
                 getName(), request.getMessage().getTerminalId(),request.getMessage());
         doIntercept(request,response);
+        if (!response.isSuccess()){
+            return;
+        }
         log.debug("Intercept {} response - {}", getName(), response.toString());
     }
 

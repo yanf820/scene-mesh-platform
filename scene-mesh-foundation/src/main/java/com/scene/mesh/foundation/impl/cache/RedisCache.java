@@ -3,6 +3,7 @@ package com.scene.mesh.foundation.impl.cache;
 import com.scene.mesh.foundation.spec.cache.ICache;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -13,12 +14,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Redis缓存实现
  * 使用Spring Framework的RedisTemplate实现Redis缓存功能
  */
+@Slf4j
 public class RedisCache<K, V> implements ICache<K, V> {
 
     @Setter
@@ -104,6 +108,15 @@ public class RedisCache<K, V> implements ICache<K, V> {
     }
 
     @Override
+    public List<V> getAll(K keyPrefix) {
+        Set<K> keys = this.redisTemplate.keys(keyPrefix);
+        if (!keys.isEmpty()) {
+            return this.redisTemplate.opsForValue().multiGet(keys);
+        }
+        return null;
+    }
+
+    @Override
     public boolean delete(K key) {
         try {
             return Boolean.TRUE.equals(redisTemplate.delete(key));
@@ -111,6 +124,17 @@ public class RedisCache<K, V> implements ICache<K, V> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteByKeyPrefix(K keyPrefix) {
+        Set<K> keys = this.redisTemplate.keys(keyPrefix);
+        if (!keys.isEmpty()) {
+            Long deletedCount = redisTemplate.delete(keys);
+            log.info("删除了 {} 下 {} 个 key " ,keyPrefix, deletedCount);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -141,41 +165,6 @@ public class RedisCache<K, V> implements ICache<K, V> {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    /**
-     * 自定义Redis序列化器，使用Java序列化
-     */
-    private static class CustomRedisSerializer<T> implements RedisSerializer<T> {
-        @Override
-        public byte[] serialize(T t) throws SerializationException {
-            if (t == null) {
-                return new byte[0];
-            }
-
-            try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                 ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-                oos.writeObject(t);
-                return bos.toByteArray();
-            } catch (Exception e) {
-                throw new SerializationException("Error serializing object", e);
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public T deserialize(byte[] bytes) throws SerializationException {
-            if (bytes == null || bytes.length == 0) {
-                return null;
-            }
-
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                 ObjectInputStream ois = new ObjectInputStream(bis)) {
-                return (T) ois.readObject();
-            } catch (Exception e) {
-                throw new SerializationException("Error deserializing object", e);
-            }
         }
     }
 } 

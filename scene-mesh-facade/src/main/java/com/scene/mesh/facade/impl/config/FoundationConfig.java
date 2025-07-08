@@ -1,5 +1,6 @@
 package com.scene.mesh.facade.impl.config;
 
+import com.scene.mesh.foundation.spec.api.ApiClient;
 import com.scene.mesh.foundation.spec.cache.ICache;
 import com.scene.mesh.foundation.spec.message.IMessageConsumer;
 import com.scene.mesh.foundation.spec.message.IMessageProducer;
@@ -10,6 +11,8 @@ import com.scene.mesh.foundation.impl.message.RedisMessageProducer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
 
 @Configuration
 public class FoundationConfig {

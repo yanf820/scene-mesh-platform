@@ -170,13 +170,16 @@ docker-compose.override.yml
 data/temp/
 data/test/
 
+# 根目录运行时数据文件（精确忽略）
+/data
+/scene-mesh-facade/data
+
+
 # 上传文件目录
 uploads/
 files/
 
-# 缓存目录
-cache/
-
 # 本地配置文件备份
 *.bak
 *.backup
+

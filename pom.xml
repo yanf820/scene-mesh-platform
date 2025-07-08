@@ -31,6 +31,7 @@
         <module>scene-mesh-facade</module>
         <module>scene-mesh-engin</module>
         <module>scene-mesh-mcp-server</module>
+        <module>scene-mesh-manager</module>
     </modules>
 
     <dependencyManagement>

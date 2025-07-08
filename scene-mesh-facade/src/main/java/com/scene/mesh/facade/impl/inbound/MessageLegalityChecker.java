@@ -6,16 +6,17 @@ import com.scene.mesh.foundation.spec.parameter.MetaParameters;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.impl.helper.StringHelper;
 import com.scene.mesh.model.event.IMetaEvent;
+import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.spec.event.IMetaEventService;
 
 import java.util.Map;
 
 public class MessageLegalityChecker extends BaseInboundMessageInterceptor {
 
-    private final IMetaEventService metaEventService;
+    private final MutableCacheService mutableCacheService;
 
-    public MessageLegalityChecker(IMetaEventService metaEventService) {
-        this.metaEventService = metaEventService;
+    public MessageLegalityChecker(MutableCacheService mutableCacheService) {
+        this.mutableCacheService = mutableCacheService;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class MessageLegalityChecker extends BaseInboundMessageInterceptor {
         }
 
         //Verify the existence of the metaEvent
-        IMetaEvent metaEvent = this.metaEventService.getIMetaEvent(metaEventId);
+        IMetaEvent metaEvent = this.mutableCacheService.getIMetaEvent(metaEventId);
         if (metaEvent == null) {
             response.setSuccess(Boolean.FALSE);
             response.setOpinion(StringHelper.format("Illegal metaEventId - The metaEvent model cannot be found : metaEvent id {0}", metaEventId));

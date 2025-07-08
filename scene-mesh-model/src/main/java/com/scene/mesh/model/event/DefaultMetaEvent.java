@@ -11,6 +11,8 @@ public class DefaultMetaEvent implements IMetaEvent {
 
     // 元事件 ID
     private String uuid;
+    // 所属产品 ID
+    private String productId;
     // 元事件名称
     private String name;
     // 元事件描述
@@ -21,10 +23,11 @@ public class DefaultMetaEvent implements IMetaEvent {
     public DefaultMetaEvent() {
     }
 
-    public DefaultMetaEvent(String id, String name, String description) {
+    public DefaultMetaEvent(String id, String name, String description, String productId) {
         this.uuid = id;
         this.name = name;
         this.description = description;
+        this.productId = productId;
     }
 
     @Override
@@ -42,6 +45,11 @@ public class DefaultMetaEvent implements IMetaEvent {
     @Override
     public String getUuid() {
         return this.uuid;
+    }
+
+    @Override
+    public String getProductId() {
+        return this.productId;
     }
 
     @Override

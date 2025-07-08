@@ -1,5 +1,6 @@
 package com.scene.mesh.service.spec.scene;
 
+@Deprecated
 public enum SceneRelationType {
     LINEAL, // 直系关系，在同一路径上
     SIBLING, // 兄弟关系

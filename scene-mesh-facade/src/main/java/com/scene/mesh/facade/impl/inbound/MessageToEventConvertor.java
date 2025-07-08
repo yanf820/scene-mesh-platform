@@ -2,6 +2,7 @@ package com.scene.mesh.facade.impl.inbound;
 
 import com.scene.mesh.foundation.spec.parameter.MetaParameters;
 import com.scene.mesh.model.event.Event;
+import com.scene.mesh.service.spec.event.IMetaEventService;
 
 /**
  * json->event

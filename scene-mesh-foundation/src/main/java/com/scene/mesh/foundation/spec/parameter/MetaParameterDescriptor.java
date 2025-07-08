@@ -2,14 +2,16 @@
 package com.scene.mesh.foundation.spec.parameter;
 
 import com.scene.mesh.foundation.spec.parameter.data.IParameterDataType;
+import com.scene.mesh.foundation.spec.parameter.data.calculate.IParameterCalculateType;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * 参数描述符
  */
-public class MetaParameterDescriptor implements Serializable {
+public class MetaParameterDescriptor<T> implements Serializable {
 
     @Getter
     private String name;
@@ -17,12 +19,14 @@ public class MetaParameterDescriptor implements Serializable {
     private String title;
     @Getter
     private String description;
-    /**
-     * 参数数据类型
-     */
     @Getter
-    private IParameterDataType dataType;
-
+    private IParameterDataType<T> dataType;
+    @Getter
+    @Setter
+    private IParameterCalculateType calculateType;
+    @Getter
+    @Setter
+    private boolean asInput;
     @Getter
     private boolean required;
 
@@ -37,6 +41,18 @@ public class MetaParameterDescriptor implements Serializable {
         this.description = description;
         this.required = required;
         this.dataType = dataType;
+    }
+
+    public MetaParameterDescriptor(String name, String title, String description, IParameterDataType dataType,IParameterCalculateType calculateType, boolean
+            required) {
+        super();
+        this.name = name;
+        this.title = title;
+        this.description = description;
+        this.required = required;
+        this.dataType = dataType;
+        this.calculateType = calculateType;
+        this.calculateType.setAssociatedParam(this);
     }
 
     public MetaParameterDescriptor setName(String name) {

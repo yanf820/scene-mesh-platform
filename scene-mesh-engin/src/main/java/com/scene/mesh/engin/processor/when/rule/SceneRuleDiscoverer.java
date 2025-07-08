@@ -18,7 +18,7 @@ public class SceneRuleDiscoverer extends PeriodicRuleDiscoverer {
 
     @Override
     public List<Rule> getLatestRules() throws Exception {
-        Map<String,String> whenRules = this.sceneService.getAllSceneWhens();
+//        Map<String,String> whenRules = this.sceneService.getAllSceneWhens();
         return List.of();
     }
 }

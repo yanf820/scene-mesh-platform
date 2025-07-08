@@ -1,5 +1,9 @@
 package com.scene.mesh.engin;
 
+import com.scene.mesh.engin.config.EnginConfig;
+import com.scene.mesh.engin.config.FoundationConfig;
+import com.scene.mesh.engin.config.McpConfig;
+import com.scene.mesh.engin.config.ServiceConfig;
 import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.OperationResponse;
 import com.scene.mesh.engin.model.SceneMatchedResult;
@@ -14,15 +18,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 @Slf4j
 public class SceneMeshEnginApplication {
 
     public static void main(String[] args) {
 
-        SpringApplicationContextUtils.setContextClass(EnginConfig.class);
+        Class[] configClasses = new Class[]{
+                EnginConfig.class,
+                FoundationConfig.class,
+                McpConfig.class,
+                ServiceConfig.class
+        };
 
-        log.info("执行引擎启动...  加载引擎配置:{}", "EnginConfig.class");
+        SpringApplicationContextUtils.setContextClass(configClasses);
+
+        log.info("执行引擎启动...  加载引擎配置:{}", Arrays.toString(configClasses));
 
         IProcessManager processManager = SpringApplicationContextUtils
                 .getApplicationContextByAnnotation()
@@ -37,6 +49,11 @@ public class SceneMeshEnginApplication {
         ProcessorGraph thenGraph = thenGraph();
         processManager.registerProcess(thenGraph);
         log.info("Graph: {} 已注册， graph信息: {}", thenGraph.getGraphId(), thenGraph);
+
+        //注册 cacheScheduler graph
+        ProcessorGraph cacheScheduler = cacheScheduler();
+        processManager.registerProcess(cacheScheduler);
+        log.info("Graph: {} 已注册， graph信息: {}", cacheScheduler.getGraphId(), cacheScheduler);
 
         //startup
         try {
@@ -92,6 +109,22 @@ public class SceneMeshEnginApplication {
                         .withParallelism(1)
                         .withOutputType(OperationResponse.class)
                         .from("scene-handler")
+                )
+                .build();
+    }
+
+    private static ProcessorGraph cacheScheduler(){
+        return ProcessorGraphBuilder.createWithId("cache-scheduler")
+                .addNode(ProcessorNodeBuilder.createWithId("trigger-source")
+                        .withComponentId("cron-trigger")
+                        .withParallelism(1)
+                        .withOutputType(String.class)
+                )
+                .addNode(ProcessorNodeBuilder.createWithId("cache-handler")
+                        .withComponentId("cache-processor")
+                        .withParallelism(1)
+                        .withOutputType(Boolean.class)
+                        .from("trigger-source")
                 )
                 .build();
     }

@@ -4,19 +4,19 @@ import com.scene.mesh.model.operation.Operation;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class Scene implements Serializable {
 
     private String id;
+    private String productId;
     private String name;
     private String description;
     private boolean enable;
-
-    private String rules; // type: 'json' -> String (holds JSON content)
-    //场景优先级
-    private int priority;
-    //场景操作
+    private List<WhenThen> whenThenList;
+    private String flowDataPublishTime;
+    private String prompt;
     private Operation operation;
 
 }

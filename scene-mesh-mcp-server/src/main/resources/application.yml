@@ -1,7 +1,6 @@
 server:
   port: 9001
 
-# redis ?????????
 redis:
   connection:
     host: 127.0.0.1
@@ -12,12 +11,11 @@ spring:
     name: scene-mesh-mcp-server
   ai:
     mcp:
-      # MCP Server ??????????
       server:
         name: sm-mcp-gateway
         version: 1.0.0
         type: SYNC
-        instructions: "???MCP?? - ?????????MCP???"
+        instructions:
         sse-message-endpoint: /mcp/message
         sse-endpoint: /sse
         capabilities:
@@ -26,7 +24,7 @@ spring:
           prompt: false
           completion: false
         stdio: false
-      # MCP Client ???????????
+      # MCP Client
       client:
         type: SYNC
         request-timeout: 30s

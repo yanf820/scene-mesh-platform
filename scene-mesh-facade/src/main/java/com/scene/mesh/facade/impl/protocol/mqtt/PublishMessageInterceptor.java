@@ -23,14 +23,11 @@ public class PublishMessageInterceptor implements InterceptHandler {
 
     private final TerminalProtocolStateManager terminalProtocolStateManager;
 
-    private final IProductService productService;
-
     private final ITerminalService terminalService;
 
-    public PublishMessageInterceptor(InboundMessageHandler inboundMessageHandler, TerminalProtocolStateManager terminalProtocolStateManager, IProductService productService, ITerminalService terminalService) {
+    public PublishMessageInterceptor(InboundMessageHandler inboundMessageHandler, TerminalProtocolStateManager terminalProtocolStateManager, ITerminalService terminalService) {
         this.inboundMessageHandler = inboundMessageHandler;
         this.terminalProtocolStateManager = terminalProtocolStateManager;
-        this.productService = productService;
         this.terminalService = terminalService;
     }
 
@@ -48,21 +45,21 @@ public class PublishMessageInterceptor implements InterceptHandler {
     public void onConnect(InterceptConnectMessage msg) {
         this.terminalService.updateStatus(msg.getUsername(), msg.getClientID(),  TerminalStatus.ONLINE);
         this.terminalProtocolStateManager.setProtocolState(msg.getClientID(), ProtocolType.MQTT);
-        log.info("The terminal is connected : terminal id - {}", msg.getClientID());
+        log.info("The terminal is connected - protocol:{}, terminal id: {}", ProtocolType.MQTT, msg.getClientID());
     }
 
     @Override
     public void onDisconnect(InterceptDisconnectMessage msg) {
-        this.terminalService.updateStatus(msg.getUsername(),msg.getClientID(), TerminalStatus.OFFLINE); // TODO 补充
+        this.terminalService.updateStatus(msg.getUsername(),msg.getClientID(), TerminalStatus.OFFLINE);
         this.terminalProtocolStateManager.removeProtocolState(msg.getClientID());
-        log.info("The terminal has disconnected : terminal id - {}", msg.getClientID());
+        log.info("The terminal has disconnected - protocol:{}, terminal id: {}", ProtocolType.MQTT, msg.getClientID());
     }
 
     @Override
     public void onConnectionLost(InterceptConnectionLostMessage msg) {
-        this.terminalService.updateStatus(msg.getUsername(), msg.getClientID(), TerminalStatus.OFFLINE); // TODO 补充
+        this.terminalService.updateStatus(msg.getUsername(), msg.getClientID(), TerminalStatus.OFFLINE);
         this.terminalProtocolStateManager.removeProtocolState(msg.getClientID());
-        log.info("The terminal has been lost : terminal id - {}", msg.getClientID());
+        log.info("The terminal has been lost - protocol:{}, terminal id: {}", ProtocolType.MQTT, msg.getClientID());
     }
 
     @Override
@@ -73,8 +70,8 @@ public class PublishMessageInterceptor implements InterceptHandler {
         String topicName = msg.getTopicName();
         String clientId = msg.getClientID();
 
-        log.debug("Received terminal message: terminal id - {}, topic - {}, payload - {}",
-                clientId, topicName, messageContent);
+        log.debug("Received terminal message - protocol:{}, terminal id - {}, topic - {}, payload - {}",
+                ProtocolType.MQTT, clientId, topicName, messageContent);
 
         //交给 inboundMessageHandler 处理
         InboundMessage inboundMessage = new InboundMessage(

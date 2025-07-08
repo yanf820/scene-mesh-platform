@@ -15,7 +15,7 @@ public class SpringApplicationContextUtils {
     @lombok.Getter
     private static String contextId;
     @lombok.Setter
-    private static Class<?> contextClass;
+    private static Class<?>[] contextClass;
 
     public static synchronized ApplicationContext getApplicationContext() {
         if (applicationContext != null) {

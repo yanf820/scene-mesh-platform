@@ -32,6 +32,8 @@ public class SimpleObjectHelper {
         return mappedObject;
     }
 
+//    public static <T> T object2(String json, TypeReference<T> tr)
+
     public static String map2json(Map<String, Object> map) {
         try {
             return objectMapper.writeValueAsString(map);
@@ -78,6 +80,10 @@ public class SimpleObjectHelper {
         }
     }
 
+    public static <T> T obj2SpecificObj(Object productObj, TypeReference<T> tr) {
+        return objectMapper.convertValue(productObj,tr);
+    }
+
 
     public static String convertSimpleObject2String(Object val) {
         if (val instanceof String) {
@@ -93,5 +99,4 @@ public class SimpleObjectHelper {
         }
         return val.toString();
     }
-
 }

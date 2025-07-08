@@ -10,16 +10,12 @@ scene-mesh:
     message:
       batch-size: 10
       timeout-seconds: 1
-
-  # 环境配置
   environment:
     name: dev
-
   # 主题配置
   topics:
     inbound-events: inbound_events
     matched-result: matched_result
-
   # AI配置
   ai:
     provider:
@@ -33,3 +29,8 @@ scene-mesh:
   message-classes:
     event: com.scene.mesh.model.event.Event
     scene-matched-result: com.scene.mesh.engin.model.SceneMatchedResult
+
+  # api client
+  api-client:
+    urls:
+      product: http://localhost:8082/api/entities/objects/product/?withReference=true
