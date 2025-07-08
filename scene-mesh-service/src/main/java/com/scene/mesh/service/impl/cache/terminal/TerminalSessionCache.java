@@ -1,4 +1,4 @@
-package com.scene.mesh.service.impl.cache;
+package com.scene.mesh.service.impl.cache.terminal;
 
 import com.scene.mesh.foundation.spec.cache.ICache;
 import com.scene.mesh.model.session.TerminalSession;

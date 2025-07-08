@@ -1,10 +1,12 @@
-package com.scene.mesh.service.impl.cache;
+package com.scene.mesh.service.impl.cache.terminal;
 
 import com.scene.mesh.foundation.spec.cache.ICache;
 import com.scene.mesh.model.session.TerminalSession;
 import com.scene.mesh.service.spec.cache.ICacheProvider;
 
-public class TerminalSessionCacheProvider implements ICacheProvider<TerminalSessionCache> {
+import java.util.List;
+
+public class TerminalSessionCacheProvider implements ICacheProvider<TerminalSessionCache,TerminalSession> {
 
     private final ICache<String, TerminalSession> cache;
 
@@ -15,5 +17,10 @@ public class TerminalSessionCacheProvider implements ICacheProvider<TerminalSess
     @Override
     public TerminalSessionCache generateCacheObject() {
         return new TerminalSessionCache(cache);
+    }
+
+    @Override
+    public TerminalSessionCache refreshCacheObject(List<TerminalSession> objects) {
+        return null;
     }
 }
