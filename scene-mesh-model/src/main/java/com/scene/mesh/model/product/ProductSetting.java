@@ -9,4 +9,8 @@ public class ProductSetting {
     private String[] secretKey;
     // 协议配置
     private ProtocolConfig protocolConfig;
+    // stt model
+    private String sttProcessor;
+    // tts model
+    private String ttsProcessor;
 }

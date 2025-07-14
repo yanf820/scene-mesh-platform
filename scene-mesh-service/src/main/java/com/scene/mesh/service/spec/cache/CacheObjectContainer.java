@@ -7,16 +7,14 @@ import java.util.List;
  *
  * @param <T>
  */
-public abstract class CacheObjectContainer<T,C> {
+public abstract class CacheObjectContainer<T, C> {
 
-    private final ICacheProvider<T,C> provider;
+    private final ICacheProvider<T, C> provider;
     private T cacheObject;
 
-    public CacheObjectContainer(ICacheProvider<T,C> provider, boolean waitRefresh) {
+    public CacheObjectContainer(ICacheProvider<T, C> provider, boolean waitRefresh) {
         this.provider = provider;
-        if (!waitRefresh) {
-            this.cacheObject = this.provider.generateCacheObject();
-        }
+        this.cacheObject = this.provider.generateCacheObject();
     }
 
     public T read() {

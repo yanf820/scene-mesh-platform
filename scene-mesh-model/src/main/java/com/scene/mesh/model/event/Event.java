@@ -16,7 +16,7 @@ public class Event {
     private String id;
     //事件元模型 ID
     @Setter(AccessLevel.NONE)
-    private String metaEventId;
+    private String type;
     //终端 ID
     private String terminalId;
     //payload
@@ -25,9 +25,9 @@ public class Event {
     public Event() {
     }
 
-    public Event(String metaEventId) {
+    public Event(String type) {
         this.id = UUID.randomUUID().toString();
-        this.metaEventId = metaEventId;
+        this.type = type;
         this.payload = new HashMap<>();
     }
 

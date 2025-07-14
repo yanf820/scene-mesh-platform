@@ -1,8 +1,6 @@
 spring:
   application:
     name: scene-mesh-facade
-  main:
-    web-application-type: none
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -29,6 +27,9 @@ spring:
         order_inserts: true
         order_updates: true
 
+server:
+  port: 8888
+
 # MQTT Server 配置（嵌入式启动,无需远端独立服务）
 mqtt:
   server:
@@ -46,6 +47,10 @@ redis:
 topic:
     inbound-event: inbound_events
     outbound-action: actions
+
+audio:
+  model:
+    vosk: /Users/fang/develop/project/scene-mesh-platform/scene-mesh-service/models/vosk-model
 
 logging:
   level:

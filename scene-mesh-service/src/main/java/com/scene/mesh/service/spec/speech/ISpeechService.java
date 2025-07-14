@@ -2,7 +2,17 @@ package com.scene.mesh.service.spec.speech;
 
 public interface ISpeechService {
 
-    String stt(String base64audioStr);
+    /**
+     * opus base64 audio -> text
+     * @param base64audioStr
+     * @return
+     */
+    String stt(String terminalId, String base64audioStr);
 
-    String tts(String audioText);
+    /**
+     * opus text -> opus base64
+     * @param audioText
+     * @return
+     */
+    String tts(String terminalId, String audioText);
 }

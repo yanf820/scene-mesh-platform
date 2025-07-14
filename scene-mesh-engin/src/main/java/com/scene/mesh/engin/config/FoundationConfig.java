@@ -2,6 +2,7 @@ package com.scene.mesh.engin.config;
 
 import com.scene.mesh.foundation.impl.cache.RedisCache;
 import com.scene.mesh.foundation.impl.component.SpringComponentProvider;
+import com.scene.mesh.foundation.impl.message.JsonMessageSerializer;
 import com.scene.mesh.foundation.impl.message.RedisMessageConsumer;
 import com.scene.mesh.foundation.impl.message.RedisMessageProducer;
 import com.scene.mesh.foundation.spec.api.ApiClient;
@@ -58,6 +59,7 @@ public class FoundationConfig {
         RedisMessageProducer producer = new RedisMessageProducer();
         producer.setHost(redisHost);
         producer.setPort(Integer.parseInt(redisPort));
+        producer.setSerializer(new JsonMessageSerializer());
         producer.__init__();
         return producer;
     }

@@ -25,6 +25,9 @@ public class DefaultOutboundMessageHandler implements IOutboundMessageHandler {
         String terminalId = outboundMessage.getTerminalId();
         ProtocolType currentProtocolType = this.terminalProtocolStateManager.getProtocolState(terminalId);
         IProtocolService protocolService = this.protocolServiceManager.getProtocolService(currentProtocolType);
+        if (protocolService == null) {
+            throw new RuntimeException("can't find protocol service for protocol type: websocket");
+        }
         protocolService.send(outboundMessage);
     }
 

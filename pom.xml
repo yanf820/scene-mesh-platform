@@ -127,6 +127,18 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Vosk -->
+            <dependency>
+                <groupId>com.alphacephei</groupId>
+                <artifactId>vosk</artifactId>
+                <version>0.3.38</version>
+            </dependency>
+            <!--Opus-->
+            <dependency>
+                <groupId>io.github.jaredmdobson</groupId>
+                <artifactId>concentus</artifactId>
+                <version>1.0.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

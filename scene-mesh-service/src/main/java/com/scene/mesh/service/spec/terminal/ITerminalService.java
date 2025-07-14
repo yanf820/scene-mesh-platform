@@ -16,4 +16,6 @@ public interface ITerminalService {
     boolean registerTerminal(String productId, String terminalId);
 
     Page<Terminal> searchTerminals(String productId, String terminalId, TerminalStatus terminalStatus, Instant createTimeBegin, Instant createTimeEnd, int page, int size);
+
+    Terminal getTerminalWithTerminalId(String terminalId);
 }

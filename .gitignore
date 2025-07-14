@@ -183,3 +183,6 @@ files/
 *.bak
 *.backup
 
+# vosk model
+/scene-mesh-service/models
+

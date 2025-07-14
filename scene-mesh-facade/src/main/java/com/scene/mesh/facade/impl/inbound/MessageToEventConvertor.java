@@ -14,7 +14,7 @@ public class MessageToEventConvertor extends BaseInboundMessageInterceptor {
         MetaParameters metaParameters = (MetaParameters) response.getPropVal("metaParameters");
 
         // metaEventId
-        String metaEventId = metaParameters.get("metaEventId",null); //metaEventId 经过 MessageLegalityChecker 拦截，不可能为空
+        String metaEventId = metaParameters.get("type",null); //metaEventId 经过 MessageLegalityChecker 拦截，不可能为空
         // terminalId
         String terminalId = request.getMessage().getTerminalId();
 

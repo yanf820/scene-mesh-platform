@@ -69,4 +69,9 @@ public class DefaultTerminalService implements ITerminalService {
         return terminals;
     }
 
+    @Override
+    public Terminal getTerminalWithTerminalId(String terminalId) {
+        return this.terminalRepository.getTerminalByTerminalId(terminalId);
+    }
+
 }

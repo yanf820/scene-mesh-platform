@@ -13,10 +13,10 @@ import java.util.Map;
 
 public class MessageLegalityChecker extends BaseInboundMessageInterceptor {
 
-    private final MutableCacheService mutableCacheService;
+    private final IMetaEventService metaEventService;
 
-    public MessageLegalityChecker(MutableCacheService mutableCacheService) {
-        this.mutableCacheService = mutableCacheService;
+    public MessageLegalityChecker(IMetaEventService metaEventService) {
+        this.metaEventService = metaEventService;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MessageLegalityChecker extends BaseInboundMessageInterceptor {
         }
 
         //verify metaEventId key
-        String metaEventId = metaParameters.get("metaEventId", null);
+        String metaEventId = metaParameters.get("type", null);
         if (metaEventId == null || metaEventId.isEmpty()) {
             response.setSuccess(Boolean.FALSE);
             response.setOpinion("Illegal json message - metaEventId is missing");
@@ -50,7 +50,7 @@ public class MessageLegalityChecker extends BaseInboundMessageInterceptor {
         }
 
         //Verify the existence of the metaEvent
-        IMetaEvent metaEvent = this.mutableCacheService.getIMetaEvent(metaEventId);
+        IMetaEvent metaEvent = this.metaEventService.getIMetaEvent(metaEventId);
         if (metaEvent == null) {
             response.setSuccess(Boolean.FALSE);
             response.setOpinion(StringHelper.format("Illegal metaEventId - The metaEvent model cannot be found : metaEvent id {0}", metaEventId));

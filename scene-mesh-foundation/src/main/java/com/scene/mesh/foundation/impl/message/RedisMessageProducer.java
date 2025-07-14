@@ -1,6 +1,7 @@
 // Redis Stream消息生产者 - 使用Spring Framework Redis
 package com.scene.mesh.foundation.impl.message;
 
+import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.spec.message.IMessageProducer;
 import com.scene.mesh.foundation.spec.message.IMessageSerializer;
 import com.scene.mesh.foundation.spec.message.MessageTopic;
@@ -81,7 +82,7 @@ public class RedisMessageProducer implements IMessageProducer {
         for (Object message : messages) {
             try {
                 Map<String, Object> record = new HashMap<>();
-                record.put("data", message);
+                record.put("data", this.serializer.serialize(message));
 
                 streamOperations.add(streamKey, record);
             } catch (Exception e) {

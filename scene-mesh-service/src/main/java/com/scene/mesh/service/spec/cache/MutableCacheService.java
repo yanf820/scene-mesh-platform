@@ -6,6 +6,7 @@ import com.scene.mesh.foundation.spec.api.ApiClient;
 import com.scene.mesh.foundation.spec.cache.ICache;
 import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
 import com.scene.mesh.foundation.spec.parameter.data.*;
+import com.scene.mesh.foundation.spec.parameter.data.calculate.IParameterCalculator;
 import com.scene.mesh.model.action.DefaultMetaAction;
 import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.DefaultMetaEvent;
@@ -28,12 +29,6 @@ import com.scene.mesh.service.impl.cache.scene.SceneCache;
 import com.scene.mesh.service.impl.cache.scene.SceneCacheProvider;
 import com.scene.mesh.service.impl.cache.terminal.TerminalSessionCache;
 import com.scene.mesh.service.impl.cache.terminal.TerminalSessionCacheProvider;
-import com.scene.mesh.service.impl.event.SttCalculateType;
-import com.scene.mesh.service.impl.event.TtsCalculateType;
-import com.scene.mesh.service.spec.action.IMetaActionService;
-import com.scene.mesh.service.spec.event.IMetaEventService;
-import com.scene.mesh.service.spec.product.IProductService;
-import com.scene.mesh.service.spec.scene.ISceneService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,7 +125,7 @@ public class MutableCacheService {
                     }
                     MetaParameterDescriptor metaParameterDescriptor = new MetaParameterDescriptor(
                             fName, fTitle, fDes, dataType, false);
-                    metaParameterDescriptor.setCalculateType("compute".equals(fCategory) ? new TtsCalculateType() : null);
+                    metaParameterDescriptor.setCalculateType("compute".equals(fCategory) ? IParameterCalculator.CalculateType.STT : null);
 
                     metaAction.addParameterDescriptor(metaParameterDescriptor);
                 });
@@ -208,7 +203,7 @@ public class MutableCacheService {
                     }
                     MetaParameterDescriptor metaParameterDescriptor = new MetaParameterDescriptor(
                             fName, fTitle, fDes, dataType, false);
-                    metaParameterDescriptor.setCalculateType("compute".equals(fCategory) ? new SttCalculateType() : null);
+                    metaParameterDescriptor.setCalculateType("compute".equals(fCategory) ? IParameterCalculator.CalculateType.STT : null);
                     metaParameterDescriptor.setAsInput(fAsInput);
 
                     metaEvent.addParameterDescriptor(metaParameterDescriptor);
@@ -277,6 +272,9 @@ public class MutableCacheService {
                 ProductSetting settings = new ProductSetting();
                 settings.setProtocolConfig(protocolConfig);
                 settings.setSecretKey(new String[]{secretKey});
+                //TODO 修改为真实的产品配置
+                settings.setSttProcessor("VOSK");
+                settings.setTtsProcessor("EDGE");
                 product.setSettings(settings);
             }
 

@@ -29,13 +29,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public IMetaEventService metaEventService() {
-        return new DefaultMetaEventService();
-    }
-
-    @Bean
-    public ISpeechService speechService() {
-        return new DefaultSpeechService();
+    public IMetaEventService metaEventService(MutableCacheService mutableCacheService) {
+        return new DefaultMetaEventService(mutableCacheService);
     }
 
     @Bean
@@ -44,8 +39,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ISceneService sceneService() {
-        return new DefaultSceneService();
+    public ISceneService sceneService(MutableCacheService mutableCacheService) {
+        return new DefaultSceneService(mutableCacheService);
     }
 
     @Bean

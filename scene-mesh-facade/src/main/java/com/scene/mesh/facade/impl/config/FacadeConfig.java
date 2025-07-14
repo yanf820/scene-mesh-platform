@@ -1,12 +1,14 @@
 package com.scene.mesh.facade.impl.config;
 
 import com.scene.mesh.facade.impl.common.DefaultTerminalAuthenticator;
+import com.scene.mesh.facade.impl.inbound.ComputableFieldCalculator;
 import com.scene.mesh.facade.spec.common.ITerminalAuthenticator;
 import com.scene.mesh.facade.spec.inboud.InboundMessageInterceptor;
 import com.scene.mesh.facade.impl.inbound.MessageLegalityChecker;
 import com.scene.mesh.facade.impl.inbound.MessageToEventConvertor;
 import com.scene.mesh.facade.spec.protocol.TerminalProtocolStateManager;
 import com.scene.mesh.foundation.spec.message.MessageTopic;
+import com.scene.mesh.foundation.spec.parameter.data.calculate.IParameterCalculatorManager;
 import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.spec.event.IMetaEventService;
 import com.scene.mesh.service.impl.event.DefaultMetaEventService;
@@ -31,10 +33,13 @@ public class FacadeConfig {
     private String outboundActionTopic;
 
     @Bean
-    public List<InboundMessageInterceptor> messageInterceptors(MutableCacheService mutableCacheService) {
+    public List<InboundMessageInterceptor> messageInterceptors(
+            IMetaEventService metaEventService,
+            IParameterCalculatorManager parameterCalculatorManager) {
         List<InboundMessageInterceptor> interceptors = new ArrayList<>();
-        interceptors.add(new MessageLegalityChecker(mutableCacheService));
+        interceptors.add(new MessageLegalityChecker(metaEventService));
         interceptors.add(new MessageToEventConvertor());
+        interceptors.add(new ComputableFieldCalculator(metaEventService,parameterCalculatorManager));
         return interceptors;
     }
 

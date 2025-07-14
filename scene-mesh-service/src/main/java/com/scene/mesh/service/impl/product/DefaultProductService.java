@@ -1,27 +1,9 @@
 package com.scene.mesh.service.impl.product;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
-import com.scene.mesh.foundation.spec.api.ApiClient;
-import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptor;
-import com.scene.mesh.foundation.spec.parameter.data.*;
-import com.scene.mesh.model.event.DefaultMetaEvent;
-import com.scene.mesh.model.event.IMetaEvent;
-import com.scene.mesh.model.product.OriginalProduct;
 import com.scene.mesh.model.product.Product;
-import com.scene.mesh.model.product.ProductSetting;
-import com.scene.mesh.model.protocol.ProtocolConfig;
-import com.scene.mesh.model.protocol.ProtocolType;
-import com.scene.mesh.model.scene.Scene;
-import com.scene.mesh.model.scene.WhenThen;
-import com.scene.mesh.service.impl.event.SttCalculateType;
 import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.spec.product.IProductService;
-import com.scene.mesh.service.spec.speech.ISpeechService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.*;
 
 @Slf4j
 public class DefaultProductService implements IProductService {

@@ -18,7 +18,7 @@ public class ActionToolDrawingLoader implements IToolDrawingLoader {
         DefaultMetaAction voiceMetaAction = new DefaultMetaAction(
                 "voice_action",
                 "语音播放动作",
-                "控制设备播放语音内容，用于与用户进行语音交互、朗读文本、播放提示音等场景。当需要设备说话、朗读、播报消息时使用此工具"
+                "控制设备播放语音内容，用于与用户进行语音交互、朗读文本、播放提示音等场景。当需要设备说话、朗读、播报消息时使用此工具","bry9wbiy3nasmd8afkkf0wjm"
         );
         voiceMetaAction.addParameterDescriptor(new MetaParameterDescriptor(
                 "text",
@@ -39,7 +39,7 @@ public class ActionToolDrawingLoader implements IToolDrawingLoader {
                 "face_action",
                 "表情播放动作",
                 "控制设备显示表情动画，用于表达情感状态，增强人机交互的亲和力。当需要表达高兴、悲伤等情绪，或配合语音内容展示合适表情时使用"
-        );
+        ,"bry9wbiy3nasmd8afkkf0wjm");
         animationMetaAction.addParameterDescriptor(new MetaParameterDescriptor(
                 "face_type",
                 "表情类型",
@@ -52,7 +52,7 @@ public class ActionToolDrawingLoader implements IToolDrawingLoader {
                 "rotate_action",
                 "转身动作",
                 "控制设备身体旋转，用于调整朝向、寻找目标、表达动作意图。当需要设备转向特定方向、回正朝向、或表达转身动作时使用"
-        );
+        ,"bry9wbiy3nasmd8afkkf0wjm");
         rotateMetaAction.addParameterDescriptor(new MetaParameterDescriptor(
                 "rotate_type",
                 "转动类型",

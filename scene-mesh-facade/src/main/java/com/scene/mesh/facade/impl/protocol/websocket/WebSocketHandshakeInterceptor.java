@@ -30,6 +30,9 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
         String terminalId = request.getHeaders().getFirst("terminalId");
         String passwordString = request.getHeaders().getFirst("secretKey");
 
+        attributes.put("productId", productId);
+        attributes.put("terminalId", terminalId);
+
         return terminalAuthenticator.authenticate(productId, terminalId, passwordString, ProtocolType.WEBSOCKET);
     }
 

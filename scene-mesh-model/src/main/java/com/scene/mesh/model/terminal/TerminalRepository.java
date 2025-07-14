@@ -19,4 +19,6 @@ public interface TerminalRepository extends JpaRepository<Terminal, String> {
     List<Terminal> getTerminalByProductIdAndTerminalId(String productId, String terminalId);
 
     Page<Terminal> searchTerminalsByProductIdOrTerminalIdOrStatusOrCreatedAtBetween(String productId, String terminalId, TerminalStatus status, Instant createdAtAfter, Instant createdAtBefore, Pageable pageable);
+
+    Terminal getTerminalByTerminalId(String terminalId);
 }

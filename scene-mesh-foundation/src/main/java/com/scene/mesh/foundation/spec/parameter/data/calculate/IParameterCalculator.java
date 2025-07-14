@@ -6,6 +6,12 @@ import java.util.Map;
 
 public interface IParameterCalculator {
 
-    void calculate(Map<String,Object> payload, MetaParameterDescriptor calculatedField);
+    CalculateType getCalculateType();
 
+    void calculate(String terminalId, Map<String,Object> payload, MetaParameterDescriptor calculatedField);
+
+    enum CalculateType{
+        TTS,
+        STT
+    }
 }

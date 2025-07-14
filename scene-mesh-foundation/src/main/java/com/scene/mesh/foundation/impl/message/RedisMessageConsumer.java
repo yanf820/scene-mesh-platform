@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.StreamOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class RedisMessageConsumer implements IMessageConsumer {
                         String data = (String) body.get("data");
 
                         // 反序列化消息
-                        T msg = SimpleObjectHelper.str2Obj(data, messageType);
+                        T msg = this.serializer.deserialize(data.getBytes(StandardCharsets.UTF_8), messageType);
                         messages.add(msg);
                     }
 
