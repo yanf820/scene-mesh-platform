@@ -8,7 +8,7 @@ import com.scene.mesh.foundation.spec.processor.execute.IProcessExecutor;
  */
 public class StandaloneProcessExecutor implements IProcessExecutor {
 
-    private IComponentProvider componentProvider;
+    private final IComponentProvider componentProvider;
 
     public StandaloneProcessExecutor(IComponentProvider componentProvider) {
         this.componentProvider = componentProvider;

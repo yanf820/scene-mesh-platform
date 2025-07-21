@@ -8,7 +8,7 @@ import com.scene.mesh.foundation.impl.processor.ProcessOutput;
  */
 public class StandaloneProcessorThread implements Runnable {
 
-    private StandaloneProcessorAgent processorAgent;
+    private final StandaloneProcessorAgent processorAgent;
 
     public StandaloneProcessorThread(StandaloneProcessorAgent processorAgent) {
         this.processorAgent = processorAgent;

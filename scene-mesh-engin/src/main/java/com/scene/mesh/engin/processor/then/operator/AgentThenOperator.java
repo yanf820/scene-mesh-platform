@@ -26,9 +26,9 @@ import java.util.Map;
  */
 public class AgentThenOperator implements IThenOperator{
 
-    private IAgentService agentService;
+    private final IAgentService agentService;
 
-    private IMetaEventService metaEventService;
+    private final IMetaEventService metaEventService;
 
     public AgentThenOperator(ILLmConfigService llmConfigService, IToolsService toolsService, IMetaEventService metaEventService) {
         IChatClientFactory chatClientFactory = new DefaultChatClientFactory(llmConfigService);

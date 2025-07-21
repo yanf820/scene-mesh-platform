@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TerminalProtocolStateManager {
 
-    private Map<String, ProtocolType> activatedProtocolTypes;
+    private final Map<String, ProtocolType> activatedProtocolTypes;
 
     public TerminalProtocolStateManager() {
         activatedProtocolTypes = new ConcurrentHashMap<>();

@@ -48,6 +48,6 @@ public class AviatorConditionSpec extends ConditionSpec {
                 classLoader
                         .loadClass(AviatorCondition.class.getCanonicalName())
                         .getConstructor(String.class, ObjectConfiguration.class)
-                        .newInstance(expression, (ObjectConfiguration) globalConfiguration);
+                        .newInstance(expression, globalConfiguration);
     }
 }

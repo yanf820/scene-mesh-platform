@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class DefaultProcessManager implements IProcessManager {
 
     private IProcessExecutor processExecutor;
-    private List<ProcessorGraph> processGraphs;
+    private final List<ProcessorGraph> processGraphs;
     private final ExecutorService executorService;
 
     public DefaultProcessManager() {

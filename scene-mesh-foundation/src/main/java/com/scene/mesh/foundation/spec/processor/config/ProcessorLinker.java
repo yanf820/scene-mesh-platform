@@ -3,6 +3,7 @@ package com.scene.mesh.foundation.spec.processor.config;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class ProcessorLinker implements Serializable {
@@ -52,8 +53,8 @@ public class ProcessorLinker implements Serializable {
 
         ProcessorLinker that = (ProcessorLinker) o;
 
-        if (fromNodeId != null ? !fromNodeId.equals(that.fromNodeId) : that.fromNodeId != null) return false;
-        return toNodeId != null ? toNodeId.equals(that.toNodeId) : that.toNodeId == null;
+        if (!Objects.equals(fromNodeId, that.fromNodeId)) return false;
+        return Objects.equals(toNodeId, that.toNodeId);
 
     }
 
@@ -66,12 +67,11 @@ public class ProcessorLinker implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ProcessorLinker{");
-        sb.append("fromNodeId='").append(fromNodeId).append('\'');
-        sb.append(", toNodeId='").append(toNodeId).append('\'');
-        sb.append(", linkType='").append(linkType).append('\'');
-        sb.append(", linkParameters=").append(linkParameters);
-        sb.append('}');
-        return sb.toString();
+        String sb = "ProcessorLinker{" + "fromNodeId='" + fromNodeId + '\'' +
+                ", toNodeId='" + toNodeId + '\'' +
+                ", linkType='" + linkType + '\'' +
+                ", linkParameters=" + linkParameters +
+                '}';
+        return sb;
     }
 }

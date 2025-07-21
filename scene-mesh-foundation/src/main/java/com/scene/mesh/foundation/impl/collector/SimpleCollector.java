@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class SimpleCollector implements ICollector {
 
-    private List<Object> collectedObjects;
+    private final List<Object> collectedObjects;
 
     public SimpleCollector() {
         this.collectedObjects = new ArrayList<Object>();

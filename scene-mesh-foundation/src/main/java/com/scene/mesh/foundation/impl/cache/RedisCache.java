@@ -40,8 +40,8 @@ public class RedisCache<K, V> implements ICache<K, V> {
     @Getter
     private int port;
 
-    private RedisConnectionFactory connectionFactory;
-    private RedisTemplate<K, V> redisTemplate;
+    private final RedisConnectionFactory connectionFactory;
+    private final RedisTemplate<K, V> redisTemplate;
 
     /**
      * 初始化Redis连接
@@ -140,7 +140,7 @@ public class RedisCache<K, V> implements ICache<K, V> {
     @Override
     public boolean delete(K key) {
         try {
-            return Boolean.TRUE.equals(redisTemplate.delete(key));
+            return redisTemplate.delete(key);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -161,7 +161,7 @@ public class RedisCache<K, V> implements ICache<K, V> {
     @Override
     public boolean exists(K key) {
         try {
-            return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+            return redisTemplate.hasKey(key);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -171,7 +171,7 @@ public class RedisCache<K, V> implements ICache<K, V> {
     @Override
     public boolean expire(K key, long expireSeconds) {
         try {
-            return Boolean.TRUE.equals(redisTemplate.expire(key, expireSeconds, TimeUnit.SECONDS));
+            return redisTemplate.expire(key, expireSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

@@ -82,8 +82,7 @@ public class BaseProcessor implements IProcessor {
     }
 
     protected Object getInputValue(Object obj) {
-        if (obj instanceof ProcessTask) {
-            ProcessTask task = (ProcessTask) obj;
+        if (obj instanceof ProcessTask task) {
             return task.getTaskObject();
         } else {
             return obj;

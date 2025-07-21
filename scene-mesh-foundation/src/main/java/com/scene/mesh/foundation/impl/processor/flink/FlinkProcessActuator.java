@@ -29,9 +29,9 @@ public class FlinkProcessActuator implements IProcessActuator {
     private ProcessorGraph processorGraph;
     private String[] processorArgs;
     private boolean launched;
-    private Map<String, FlinkProcessorChainNode> chainNodeMap;
-    private IComponentProvider componentProvider;
-    private Configuration configuration;
+    private final Map<String, FlinkProcessorChainNode> chainNodeMap;
+    private final IComponentProvider componentProvider;
+    private final Configuration configuration;
 
     public FlinkProcessActuator(IComponentProvider componentProvider, Configuration configuration) {
         this.componentProvider = componentProvider;

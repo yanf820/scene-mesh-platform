@@ -15,7 +15,7 @@ import java.io.IOException;
 @Service
 public class WebSocketProtocolService implements IProtocolService {
 
-    private TerminalSessionManager terminalSessionManager;
+    private final TerminalSessionManager terminalSessionManager;
 
     public WebSocketProtocolService(TerminalSessionManager terminalSessionManager) {
         this.terminalSessionManager = terminalSessionManager;

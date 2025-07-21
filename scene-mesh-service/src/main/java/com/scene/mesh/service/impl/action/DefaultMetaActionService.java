@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DefaultMetaActionService implements IMetaActionService {
 
-    private MutableCacheService mutableCacheService;
+    private final MutableCacheService mutableCacheService;
 
     public DefaultMetaActionService(MutableCacheService mutableCacheService) {
         this.mutableCacheService = mutableCacheService;

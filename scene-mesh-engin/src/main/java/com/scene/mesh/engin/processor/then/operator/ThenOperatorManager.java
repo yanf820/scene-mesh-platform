@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ThenOperatorManager {
 
-    private Map<String, IThenOperator> operators;
+    private final Map<String, IThenOperator> operators;
 
     public ThenOperatorManager(List<IThenOperator> operators) {
         this.operators = new ConcurrentHashMap<>();

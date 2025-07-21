@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DefaultProtocolServiceManager implements IProtocolServiceManager {
 
-    private Map<ProtocolType, IProtocolService> protocolServiceMap;
+    private final Map<ProtocolType, IProtocolService> protocolServiceMap;
 
     public DefaultProtocolServiceManager(List<IProtocolService> protocolServiceList) {
         this.protocolServiceMap = new ConcurrentHashMap<>();

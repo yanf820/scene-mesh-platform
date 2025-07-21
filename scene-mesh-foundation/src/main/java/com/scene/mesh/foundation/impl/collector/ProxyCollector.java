@@ -6,7 +6,7 @@ import com.scene.mesh.foundation.spec.collector.ICollector;
  */
 public class ProxyCollector implements ICollector {
 
-    private ICollector delegateCollector;
+    private final ICollector delegateCollector;
     private int counter;
 
     public ProxyCollector(ICollector delegateCollector) {

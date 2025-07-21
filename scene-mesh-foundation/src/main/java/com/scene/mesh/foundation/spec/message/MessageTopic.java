@@ -9,7 +9,7 @@ import lombok.Getter;
 public class MessageTopic {
 
     @Getter
-    private String topicName;
+    private final String topicName;
 
     public MessageTopic(String topicName) {
         this.topicName = topicName;

@@ -37,11 +37,10 @@ public class OriginalProduct {
             if (settingsObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.settings = new ArrayList<>();
-            } else if (settingsObj instanceof List) {
+            } else if (settingsObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) settingsObj;
                     this.settings = new ArrayList<>();
                     for (Object item : rawList) {
                         Setting setting = mapper.convertValue(item, Setting.class);
@@ -61,11 +60,10 @@ public class OriginalProduct {
             if (rootSceneObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.rootScene = new ArrayList<>();
-            } else if (rootSceneObj instanceof List) {
+            } else if (rootSceneObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) rootSceneObj;
                     this.rootScene = new ArrayList<>();
                     for (Object item : rawList) {
                         Scene scene = mapper.convertValue(item, Scene.class);
@@ -85,11 +83,10 @@ public class OriginalProduct {
             if (actionsObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.actions = new ArrayList<>();
-            } else if (actionsObj instanceof List) {
+            } else if (actionsObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) actionsObj;
                     this.actions = new ArrayList<>();
                     for (Object item : rawList) {
                         Action action = mapper.convertValue(item, Action.class);
@@ -109,11 +106,10 @@ public class OriginalProduct {
             if (eventsObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.events = new ArrayList<>();
-            } else if (eventsObj instanceof List) {
+            } else if (eventsObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) eventsObj;
                     this.events = new ArrayList<>();
                     for (Object item : rawList) {
                         Event event = mapper.convertValue(item, Event.class);
@@ -178,8 +174,7 @@ public class OriginalProduct {
 
         @JsonSetter("flowData")
         public void setFlowDataFromString(Object flowDataObj) {
-            if (flowDataObj instanceof String) {
-                String flowDataStr = (String) flowDataObj;
+            if (flowDataObj instanceof String flowDataStr) {
                 if (flowDataStr == null || flowDataStr.trim().isEmpty()) {
                     this.flowData = new ArrayList<>();
                     return;
@@ -191,11 +186,10 @@ public class OriginalProduct {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            } else if (flowDataObj instanceof List) {
+            } else if (flowDataObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) flowDataObj;
                     this.flowData = new ArrayList<>();
                     for (Object item : rawList) {
                         WhenThen whenThen = mapper.convertValue(item, WhenThen.class);
@@ -215,11 +209,10 @@ public class OriginalProduct {
             if (childrenObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.children = new ArrayList<>();
-            } else if (childrenObj instanceof List) {
+            } else if (childrenObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) childrenObj;
                     this.children = new ArrayList<>();
                     for (Object item : rawList) {
                         Scene scene = mapper.convertValue(item, Scene.class);
@@ -278,11 +271,10 @@ public class OriginalProduct {
             if (fieldsObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.fields = new ArrayList<>();
-            } else if (fieldsObj instanceof List) {
+            } else if (fieldsObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) fieldsObj;
                     this.fields = new ArrayList<>();
                     for (Object item : rawList) {
                         ActionField field = mapper.convertValue(item, ActionField.class);
@@ -340,11 +332,10 @@ public class OriginalProduct {
             if (fieldsObj instanceof String) {
                 // 如果是字符串（通常是空字符串），设置为空列表
                 this.fields = new ArrayList<>();
-            } else if (fieldsObj instanceof List) {
+            } else if (fieldsObj instanceof List<?> rawList) {
                 // 如果是列表，使用ObjectMapper转换每个元素
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    List<?> rawList = (List<?>) fieldsObj;
                     this.fields = new ArrayList<>();
                     for (Object item : rawList) {
                         EventField field = mapper.convertValue(item, EventField.class);

@@ -14,7 +14,7 @@ public abstract class BaseInboundMessageInterceptor implements InboundMessageInt
         if (!response.isSuccess()){
             return;
         }
-        log.debug("Intercept {} response - {}", getName(), response.toString());
+        log.debug("Intercept {} response - {}", getName(), response);
     }
 
     protected abstract void doIntercept(InboundMessageRequest request, InboundMessageResponse response);

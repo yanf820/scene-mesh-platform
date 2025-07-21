@@ -12,8 +12,8 @@ public class ProcessorGraphBuilder {
         return gb;
     }
 
-    private ProcessorGraph graph;
-    private List<ProcessorNodeBuilder> nodeBuilders;
+    private final ProcessorGraph graph;
+    private final List<ProcessorNodeBuilder> nodeBuilders;
 
     public ProcessorGraphBuilder(String graphId) {
         this.graph = new ProcessorGraph();

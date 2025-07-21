@@ -59,8 +59,7 @@ public class CEPUtils {
         TypeHint<EventRecord<T>> typeHint = new TypeHint<EventRecord<T>>() {
         };
         TypeInformation<EventRecord<T>> eventTypeInformation = TypeInformation.of(typeHint);
-        if (input instanceof KeyedStream) {
-            KeyedStream<T, ?> keyedStream = (KeyedStream<T, ?>) input;
+        if (input instanceof KeyedStream<T, ?> keyedStream) {
             KeySelector<T, ?> keySelector = keyedStream.getKeySelector();
             return keyedStream.transform("RuleDistributorOperator", eventTypeInformation, distributorOperatorFactory)
                     .keyBy(ruleKeySelector(keySelector)).transform("UdfRuleProcessorOperator", outTypeInfo, processorDiscovererFactory);
@@ -102,8 +101,7 @@ public class CEPUtils {
         TypeHint<EventRecord<T>> typeHint = new TypeHint<EventRecord<T>>() {
         };
         TypeInformation<EventRecord<T>> eventTypeInformation = TypeInformation.of(typeHint);
-        if (input instanceof KeyedStream) {
-            KeyedStream<T, ?> keyedStream = (KeyedStream<T, ?>) input;
+        if (input instanceof KeyedStream<T, ?> keyedStream) {
             KeySelector<T, ?> keySelector = keyedStream.getKeySelector();
             return keyedStream.transform("RuleDistributorOperator", eventTypeInformation, distributorOperatorFactory)
                     .setParallelism(parallelism)

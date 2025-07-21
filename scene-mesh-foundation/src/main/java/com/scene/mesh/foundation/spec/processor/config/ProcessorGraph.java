@@ -90,11 +90,10 @@ public class ProcessorGraph implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ProcessorGraph{");
-        sb.append("graphId='").append(graphId).append('\'');
-        sb.append(", nodes=").append(nodes);
-        sb.append(", linkers=").append(linkers);
-        sb.append('}');
-        return sb.toString();
+        String sb = "ProcessorGraph{" + "graphId='" + graphId + '\'' +
+                ", nodes=" + nodes +
+                ", linkers=" + linkers +
+                '}';
+        return sb;
     }
 }

@@ -14,8 +14,8 @@ public class ProcessorNodeBuilder {
         return nb;
     }
 
-    private ProcessorNode node;
-    private List<ProcessorLinker> linkers;
+    private final ProcessorNode node;
+    private final List<ProcessorLinker> linkers;
 
     public ProcessorNodeBuilder() {
         this.node = new ProcessorNode();

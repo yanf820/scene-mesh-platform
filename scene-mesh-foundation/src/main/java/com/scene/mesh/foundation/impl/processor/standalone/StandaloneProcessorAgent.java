@@ -20,20 +20,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class StandaloneProcessorAgent implements ICollector {
 
-    private ProcessorNode processorNode;
-    private List<ProcessorLinker> toLinkers;
+    private final ProcessorNode processorNode;
+    private final List<ProcessorLinker> toLinkers;
     private ExecutorService executorService;
     private IProcessor processor;
-    private boolean asProducer;
-    private StandaloneProcessActuator standaloneProcessActuator;
-    private IComponentProvider componentProvider;
-    private ICollector globalCollector;
+    private final boolean asProducer;
+    private final StandaloneProcessActuator standaloneProcessActuator;
+    private final IComponentProvider componentProvider;
+    private final ICollector globalCollector;
 
-    private LinkedBlockingQueue<ProcessTask> inputTasks;
-    private AtomicBoolean currentOrWillStopped;
-    private int localParallelism;
+    private final LinkedBlockingQueue<ProcessTask> inputTasks;
+    private final AtomicBoolean currentOrWillStopped;
+    private final int localParallelism;
 
-    private List<StandaloneProcessorThread> processorThreads;
+    private final List<StandaloneProcessorThread> processorThreads;
 
     public StandaloneProcessorAgent(ProcessorNode processorNode, List<ProcessorLinker> toLinkers, boolean asProducer,
                                     StandaloneProcessActuator standaloneProcessActuator, ICollector globalCollector,

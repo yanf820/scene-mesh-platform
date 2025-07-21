@@ -21,15 +21,15 @@ public class StandaloneProcessActuator implements IProcessActuator, ICollector, 
     private boolean launched;
     private ProcessorGraph processorGraph;
     private String[] processorArgs;
-    private IComponentProvider componentProvider;
+    private final IComponentProvider componentProvider;
 
     private ConcurrentLinkedQueue<ProcessTask> tasks;
     private ExecutorService executorService;
 
     private int maxPending;
     private int maxParallelism;
-    private Map<String, StandaloneProcessorAgent> agentMap;
-    private AtomicBoolean stopped;
+    private final Map<String, StandaloneProcessorAgent> agentMap;
+    private final AtomicBoolean stopped;
 
     public IComponentProvider getComponentProvider() {
         return componentProvider;
@@ -115,8 +115,7 @@ public class StandaloneProcessActuator implements IProcessActuator, ICollector, 
 
     @Override
     public void collect(Object object) {
-        if (object instanceof ProcessTask) {
-            ProcessTask taskObject = (ProcessTask) object;
+        if (object instanceof ProcessTask taskObject) {
             this.tasks.offer(taskObject);
         }
     }

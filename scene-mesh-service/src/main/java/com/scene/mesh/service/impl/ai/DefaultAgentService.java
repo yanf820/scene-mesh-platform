@@ -25,11 +25,11 @@ import java.util.Map;
 @Slf4j
 public class DefaultAgentService implements IAgentService {
 
-    private IChatClientFactory chatClientFactory;
+    private final IChatClientFactory chatClientFactory;
 
-    private IPromptService promptService;
+    private final IPromptService promptService;
 
-    private IToolsService toolsService;
+    private final IToolsService toolsService;
 
     private final Resource templateResource = new ClassPathResource("user_prompt_template.av");
 

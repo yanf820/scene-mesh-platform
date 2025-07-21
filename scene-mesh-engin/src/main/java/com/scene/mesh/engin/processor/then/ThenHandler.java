@@ -17,9 +17,9 @@ import java.util.List;
 @Slf4j
 public class ThenHandler extends BaseProcessor {
 
-    private ISceneService sceneService;
+    private final ISceneService sceneService;
 
-    private ThenOperatorManager operatorManager;
+    private final ThenOperatorManager operatorManager;
 
     public ThenHandler(ISceneService sceneService, ThenOperatorManager operatorManager) {
         this.sceneService = sceneService;

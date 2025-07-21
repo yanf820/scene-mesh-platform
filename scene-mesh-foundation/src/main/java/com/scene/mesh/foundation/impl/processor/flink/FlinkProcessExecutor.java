@@ -13,7 +13,7 @@ import java.time.Duration;
  */
 public class FlinkProcessExecutor implements IProcessExecutor {
 
-    private IComponentProvider componentProvider;
+    private final IComponentProvider componentProvider;
     private Configuration configuration;
     @Setter
     private String webHost;

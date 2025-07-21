@@ -2,6 +2,7 @@
 package com.scene.mesh.foundation.spec.processor.config;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 public class ProcessorNode implements Serializable {
@@ -51,7 +52,7 @@ public class ProcessorNode implements Serializable {
 
         ProcessorNode that = (ProcessorNode) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
 
     }
 
@@ -62,11 +63,10 @@ public class ProcessorNode implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ProcessorNode{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", componentId='").append(componentId).append('\'');
-        sb.append(", parallelism=").append(parallelism);
-        sb.append('}');
-        return sb.toString();
+        String sb = "ProcessorNode{" + "id='" + id + '\'' +
+                ", componentId='" + componentId + '\'' +
+                ", parallelism=" + parallelism +
+                '}';
+        return sb;
     }
 }

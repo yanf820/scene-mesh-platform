@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class JsonMessageSerializer implements IMessageSerializer {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public JsonMessageSerializer() {
         this.objectMapper = new ObjectMapper();

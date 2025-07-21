@@ -14,8 +14,8 @@ import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 public class FlinkProcessProducer extends RichSourceFunction implements IFlinkProcessorAgent {
 
     private final boolean asProducer;
-    private ProcessorNode processorNode;
-    private IComponentProvider componentProvider;
+    private final ProcessorNode processorNode;
+    private final IComponentProvider componentProvider;
     private IProcessor processor;
     private boolean willCancel;
     private Class outputType;

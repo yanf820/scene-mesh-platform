@@ -12,7 +12,7 @@ import org.springframework.ai.zhipuai.api.ZhiPuAiApi;
 
 public class ZhiPuChatModel extends BaseChatModel {
 
-    private ZhiPuAiChatModel chatModel;
+    private final ZhiPuAiChatModel chatModel;
 
     public ZhiPuChatModel(String apiKey) {
         ZhiPuAiChatOptions options = ZhiPuAiChatOptions.builder().build();

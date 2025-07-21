@@ -16,11 +16,11 @@ import org.apache.flink.util.Collector;
  */
 public class FlinkProcessConsumer extends RichFlatMapFunction implements IFlinkProcessorAgent {
 
-    private boolean asProducer;
-    private ProcessorNode processorNode;
-    private IComponentProvider componentProvider;
+    private final boolean asProducer;
+    private final ProcessorNode processorNode;
+    private final IComponentProvider componentProvider;
     private IProcessor processor;
-    private boolean willCancel;
+    private final boolean willCancel;
     private Class outputType;
 
     public FlinkProcessConsumer(ProcessorNode processorNode, IComponentProvider componentProvider) {

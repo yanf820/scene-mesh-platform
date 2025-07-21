@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
  */
 public class SourceContextProxyCollector implements ICollector {
 
-    private SourceFunction.SourceContext sourceContext;
+    private final SourceFunction.SourceContext sourceContext;
     private int collectCounter;
 
     public SourceContextProxyCollector(SourceFunction.SourceContext sourceContext) {

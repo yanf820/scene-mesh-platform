@@ -23,10 +23,9 @@ public class SttParameterCalculator extends BaseParameterCalculator {
 
     @Override
     public void calculate(String terminalId, Map<String,Object> payload, MetaParameterDescriptor calculatedField) {
-        if (payload.get("audio") == null || !(payload.get("audio") instanceof String)) {
+        if (payload.get("audio") == null || !(payload.get("audio") instanceof String base64Audio)) {
             throw new RuntimeException("Can not find calculate audio parameter in payload.");
         }
-        String base64Audio = (String) payload.get("audio");
 
         String text = this.speechService.stt(terminalId, base64Audio);
 

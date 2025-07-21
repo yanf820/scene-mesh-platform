@@ -14,7 +14,7 @@ public class TimeExpireCacheObjectContainer<T,C> extends CacheObjectContainer<T,
      * 创建时间（毫秒时间戳）
      */
     @Getter
-    private long createTime;
+    private final long createTime;
 
     public TimeExpireCacheObjectContainer(ICacheProvider<T,C> provider, Long timeExpire) {
         super(provider,false);

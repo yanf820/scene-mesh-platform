@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class MetaParameters {
 
-    private String parameters;
+    private final String parameters;
     @Getter
     private Map<String, Object> parameterMap;
 
