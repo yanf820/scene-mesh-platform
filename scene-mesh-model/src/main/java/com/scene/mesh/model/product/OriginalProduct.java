@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.model.scene.WhenThen;
 import lombok.Data;
 

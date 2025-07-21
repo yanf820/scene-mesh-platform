@@ -89,7 +89,7 @@ public class JdbcPeriodicRuleDiscoverer extends PeriodicRuleDiscoverer {
                 return rules;
 
             } catch (Exception e) {
-                log.warn("Rule discoverer checks rule changes error,retry times = {} ", retry + 1, e);
+                log.warn("Rule discoverer checks discover changes error,retry times = {} ", retry + 1, e);
                 try {
                     Thread.sleep(1000L * retry + 1);
                     if (!connectionProvider.isConnectionValid()) {

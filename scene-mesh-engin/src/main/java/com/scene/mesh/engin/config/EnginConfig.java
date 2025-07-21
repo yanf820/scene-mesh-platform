@@ -3,19 +3,17 @@ package com.scene.mesh.engin.config;
 import com.scene.mesh.engin.model.SceneMatchedResult;
 import com.scene.mesh.engin.processor.cache.CacheProcessor;
 import com.scene.mesh.engin.processor.cache.CacheTrigger;
-import com.scene.mesh.foundation.spec.cache.ICache;
+import com.scene.mesh.engin.processor.then.operator.AgentThenOperator;
+import com.scene.mesh.engin.processor.then.operator.NonAgentThenOperator;
+import com.scene.mesh.engin.processor.then.operator.ThenOperatorManager;
 import com.scene.mesh.foundation.spec.message.IMessageConsumer;
 import com.scene.mesh.foundation.spec.message.IMessageProducer;
 import com.scene.mesh.model.event.Event;
-import com.scene.mesh.service.impl.product.DefaultProductService;
-import com.scene.mesh.service.spec.product.IProductService;
+import com.scene.mesh.service.spec.ai.ILLmConfigService;
+import com.scene.mesh.service.spec.ai.IToolsService;
+import com.scene.mesh.service.spec.event.IMetaEventService;
 import com.scene.mesh.service.spec.scene.ISceneService;
-import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
-import io.modelcontextprotocol.spec.McpClientTransport;
-import io.modelcontextprotocol.client.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
-import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +21,6 @@ import com.scene.mesh.foundation.impl.component.SpringComponentProvider;
 import com.scene.mesh.foundation.impl.processor.execute.DefaultProcessManager;
 import com.scene.mesh.foundation.impl.processor.flink.FlinkProcessExecutor;
 import com.scene.mesh.service.spec.cache.MutableCacheService;
-import com.scene.mesh.service.impl.ai.model.zhipu.ZhiPuChatModel;
-import com.scene.mesh.engin.processor.then.operator.AgentOperator;
-import com.scene.mesh.engin.processor.then.operator.NonAgentOperator;
-import com.scene.mesh.engin.processor.then.operator.OperatorManager;
 import com.scene.mesh.engin.processor.when.EventProducer;
 import com.scene.mesh.engin.processor.when.EventSinker;
 import com.scene.mesh.engin.processor.then.*;
@@ -71,6 +65,9 @@ public class EnginConfig {
     @Value("${scene-mesh.topics.matched-result}")
     private String matchedResultTopic;
 
+    @Value("${scene-mesh.topics.outbound-actions}")
+    private String outboundActionsTopic;
+
     // 消息类配置
     @Value("${scene-mesh.message-classes.event}")
     private String eventMessageClass;
@@ -95,18 +92,21 @@ public class EnginConfig {
     }
 
     @Bean
-    public AgentOperator agentOperator(ZhiPuChatModel zhiPuChatModel, ToolCallbackProvider toolCallbackProvider) {
-        return new AgentOperator(List.of(zhiPuChatModel),toolCallbackProvider);
+    public AgentThenOperator agentThenOperator(ILLmConfigService llmConfigService,
+                                               IToolsService toolsService,
+                                               IMetaEventService metaEventService) {
+        return new AgentThenOperator(llmConfigService, toolsService, metaEventService);
     }
 
     @Bean
-    public NonAgentOperator nonAgentOperator() {
-        return new NonAgentOperator();
+    public NonAgentThenOperator nonAgentThenOperator() {
+        return new NonAgentThenOperator();
     }
 
     @Bean
-    public OperatorManager operatorManager(AgentOperator agentOperator, NonAgentOperator nonAgentOperator) {
-        return new OperatorManager(List.of(agentOperator, nonAgentOperator));
+    public ThenOperatorManager thenOperatorManager(AgentThenOperator agentThenOperator,
+                                                   NonAgentThenOperator nonAgentThenOperator) {
+        return new ThenOperatorManager(List.of(agentThenOperator, nonAgentThenOperator));
     }
 
     // ===== When Graph 组件 =====
@@ -150,15 +150,23 @@ public class EnginConfig {
         return selector;
     }
 
-    @Bean(name = "operation-handler")
-    public OperationHandler operationHandler(MutableCacheService mutableCacheService,OperatorManager operatorManager) {
-        return new OperationHandler(mutableCacheService, operatorManager);
+    @Bean(name = "then-handler")
+    public ThenHandler thenHandler(ISceneService sceneService,ThenOperatorManager operatorManager) {
+        return new ThenHandler(sceneService, operatorManager);
+    }
+
+    @Bean(name = "action-sinker")
+    public ActionSinker actionSinker(IMessageProducer messageProducer) {
+        ActionSinker sinker = new ActionSinker();
+        sinker.setTopicName(outboundActionsTopic);
+        sinker.setMessageProducer(messageProducer);
+        return sinker;
     }
 
     // ======== cache scheduler
     @Bean(name = "cron-trigger")
     public CacheTrigger cacheTrigger(){
-        return new CacheTrigger(Duration.ofSeconds(5));
+        return new CacheTrigger(Duration.ofSeconds(20));
     }
 
     @Bean(name = "cache-processor")

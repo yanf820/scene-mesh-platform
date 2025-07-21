@@ -11,6 +11,11 @@ import com.scene.mesh.model.action.DefaultMetaAction;
 import com.scene.mesh.model.action.IMetaAction;
 import com.scene.mesh.model.event.DefaultMetaEvent;
 import com.scene.mesh.model.event.IMetaEvent;
+import com.scene.mesh.model.llm.LanguageModel;
+import com.scene.mesh.model.llm.LanguageModelProvider;
+import com.scene.mesh.model.llm.OriginalLanguageModelProvider;
+import com.scene.mesh.model.mcp.McpServer;
+import com.scene.mesh.model.mcp.OriginalMcpServer;
 import com.scene.mesh.model.product.OriginalProduct;
 import com.scene.mesh.model.product.Product;
 import com.scene.mesh.model.product.ProductSetting;
@@ -23,6 +28,10 @@ import com.scene.mesh.service.impl.cache.action.MetaActionCache;
 import com.scene.mesh.service.impl.cache.action.MetaActionCacheProvider;
 import com.scene.mesh.service.impl.cache.event.MetaEventCache;
 import com.scene.mesh.service.impl.cache.event.MetaEventCacheProvider;
+import com.scene.mesh.service.impl.cache.llm.LlmCache;
+import com.scene.mesh.service.impl.cache.llm.LlmCacheProvider;
+import com.scene.mesh.service.impl.cache.mcp.McpServerCache;
+import com.scene.mesh.service.impl.cache.mcp.McpServerCacheProvider;
 import com.scene.mesh.service.impl.cache.product.ProductCache;
 import com.scene.mesh.service.impl.cache.product.ProductCacheProvider;
 import com.scene.mesh.service.impl.cache.scene.SceneCache;
@@ -30,6 +39,7 @@ import com.scene.mesh.service.impl.cache.scene.SceneCacheProvider;
 import com.scene.mesh.service.impl.cache.terminal.TerminalSessionCache;
 import com.scene.mesh.service.impl.cache.terminal.TerminalSessionCacheProvider;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +59,10 @@ public class MutableCacheService {
     private final CacheObjectContainer<SceneCache, Scene> sceneCacheContainer;
 
     private final CacheObjectContainer<MetaActionCache, IMetaAction> metaActionCacheContainer;
+
+    private final CacheObjectContainer<LlmCache,LanguageModelProvider> llmCacheContainerProvider;
+
+    private final CacheObjectContainer<McpServerCache, McpServer> mcpServerCacheContainerProvider;
 
     private final ApiClient apiClient;
 
@@ -70,6 +84,12 @@ public class MutableCacheService {
 
         metaActionCacheContainer =
                 new NonExpiringCacheObjectContainer<>(new MetaActionCacheProvider(cache),true);
+
+        llmCacheContainerProvider =
+                new NonExpiringCacheObjectContainer<>(new LlmCacheProvider(cache),true);
+
+        mcpServerCacheContainerProvider =
+                new NonExpiringCacheObjectContainer<>(new McpServerCacheProvider(cache), true);
     }
 
     public TerminalSession getTerminalSessionByTerminalId(String terminalId) {
@@ -87,6 +107,7 @@ public class MutableCacheService {
     }
 
     public boolean refreshAll(){
+        // refresh product related
         List<OriginalProduct> originalProducts = this.getAllOriginalProducts();
         List<Product> products = this.extractProducts(originalProducts);
         List<IMetaEvent> metaEvents = this.extractMetaEvents(originalProducts);
@@ -96,7 +117,165 @@ public class MutableCacheService {
         this.metaEventCacheContainer.refresh(metaEvents);
         this.sceneCacheContainer.refresh(scenes);
         this.metaActionCacheContainer.refresh(metaActions);
+
+        // refresh llm related
+        List<OriginalLanguageModelProvider> originalLanguageModelProviders =
+                this.getAllOriginalLanguageModelProviders();
+        List<LanguageModelProvider> languageModelProviders = this.extractLanguageModelProviders(originalLanguageModelProviders);
+        this.llmCacheContainerProvider.refresh(languageModelProviders);
+
+        // refresh mcp servers related
+        List<OriginalMcpServer> originalMcpServers =
+                this.getAllOriginalMcpServers();
+        List<McpServer> mcpServers = this.extractMcpServers(originalMcpServers);
+        this.mcpServerCacheContainerProvider.refresh(mcpServers);
+
         return true;
+    }
+
+    private List<OriginalMcpServer> getAllOriginalMcpServers() {
+        Map<String, String> params = new HashMap<>();
+        params.put("withReference", "true");
+        Object responseObj = this.apiClient.get(ApiClient.ServiceType.mcpserver.name(), "", Object.class, params);
+        if (responseObj == null) {
+            throw new RuntimeException("invoke mcp-server list api,but not found any object.");
+        }
+        Map<String, Object> responseObjMap = SimpleObjectHelper.obj2Map(responseObj);
+        Object result = responseObjMap.get("result");
+        Map<String, Object> resultMap = SimpleObjectHelper.obj2Map(result);
+        List<Object> mcpObjects = (List<Object>) resultMap.get("data");
+
+        List<OriginalMcpServer> mcpServers = new ArrayList<>();
+
+        for (Object mcpObj : mcpObjects) {
+            OriginalMcpServer originalMcpServer = SimpleObjectHelper.obj2SpecificObj(mcpObj, new TypeReference<>() {
+            });
+            mcpServers.add(originalMcpServer);
+        }
+        return mcpServers;
+    }
+
+    private List<McpServer> extractMcpServers(List<OriginalMcpServer> originalMcpServers) {
+
+        List<McpServer> mcpServers = new ArrayList<>();
+
+        for (OriginalMcpServer originalMcpServer : originalMcpServers) {
+
+            McpServer mcpServer = new McpServer();
+
+            String mcpId = originalMcpServer.getId();
+            String mcpName = originalMcpServer.getValues().getName();
+            String mcpDesc = originalMcpServer.getValues().getDescription();
+            String mcpHeader = originalMcpServer.getValues().getHeader();
+            String baseUrl = originalMcpServer.getValues().getBaseUrl();
+            String endpoint = originalMcpServer.getValues().getEndpoint();
+            String type = originalMcpServer.getValues().getType();
+            Boolean enable = originalMcpServer.getValues().isEnable();
+            int timeout = originalMcpServer.getValues().getTimeout();
+
+            mcpServer.setId(mcpId);
+            mcpServer.setName(mcpName);
+            mcpServer.setDescription(mcpDesc);
+            mcpServer.setHeader(mcpHeader);
+            mcpServer.setBaseUrl(baseUrl);
+            mcpServer.setEndpoint(endpoint);
+            mcpServer.setType(type);
+            mcpServer.setEnabled(enable);
+            mcpServer.setTimeout(timeout);
+
+            mcpServers.add(mcpServer);
+        }
+        return mcpServers;
+    }
+
+    private List<OriginalLanguageModelProvider> getAllOriginalLanguageModelProviders() {
+        Map<String, String> params = new HashMap<>();
+        params.put("withReference", "true");
+        Object responseObj = this.apiClient.get(ApiClient.ServiceType.llm.name(), "", Object.class, params);
+        if (responseObj == null) {
+            throw new RuntimeException("invoke llm list api,but not found any object.");
+        }
+        Map<String, Object> responseObjMap = SimpleObjectHelper.obj2Map(responseObj);
+        Object result = responseObjMap.get("result");
+        Map<String, Object> resultMap = SimpleObjectHelper.obj2Map(result);
+        List<Object> llmObjs = (List<Object>) resultMap.get("data");
+
+        List<OriginalLanguageModelProvider> llms = new ArrayList<>();
+        for (Object llmObj : llmObjs) {
+            OriginalLanguageModelProvider originalLlm = SimpleObjectHelper.obj2SpecificObj(llmObj, new TypeReference<>() {
+            });
+            llms.add(originalLlm);
+        }
+        return llms;
+    }
+
+    private List<LanguageModelProvider> extractLanguageModelProviders(List<OriginalLanguageModelProvider> originalLanguageModelProviders) {
+
+        List<LanguageModelProvider> lmps = new ArrayList<>();
+
+        for (OriginalLanguageModelProvider originalLmp : originalLanguageModelProviders) {
+            String providerId = originalLmp.getId();
+            String providerName = originalLmp.getValues().getName();
+            String providerDes = originalLmp.getValues().getDescription();
+            String apiHost = originalLmp.getValues().getApiHost();
+            String apiPath = originalLmp.getValues().getApiPath();
+            String apiKey = originalLmp.getValues().getApiKey();
+            String apiMode = originalLmp.getValues().getApiMode();
+            boolean isApiCompatibility = originalLmp.getValues().isApiCompatibility();
+
+            LanguageModelProvider lmp = new LanguageModelProvider();
+            lmp.setId(providerId);
+            lmp.setName(providerName);
+            lmp.setDescription(providerDes);
+            lmp.setApiHost(apiHost);
+            lmp.setApiPath(apiPath);
+            lmp.setApiKey(apiKey);
+            lmp.setApiCompatibility(isApiCompatibility);
+            lmp.setApiMode(apiMode);
+
+            List<OriginalLanguageModelProvider.LanguageModel> originalLlms = originalLmp.getValues().getModels();
+            if (originalLlms != null) {
+                List<LanguageModel> llms = new ArrayList<>();
+                for (OriginalLanguageModelProvider.LanguageModel originalLm : originalLlms) {
+                    String modelId = originalLm.getId();
+                    String modelName = originalLm.getValues().getName();
+                    String modelDes = originalLm.getValues().getDescription();
+                    List<String> features = originalLm.getValues().getFeature();
+
+                    LanguageModel llm = new LanguageModel();
+                    llm.setId(modelId);
+                    llm.setName(modelName);
+                    llm.setDescription(modelDes);
+                    llm.setFeature(features);
+
+                    llms.add(llm);
+                }
+                lmp.setModels(llms);
+            }
+            lmps.add(lmp);
+        }
+        return lmps;
+    }
+
+    private List<OriginalProduct> getAllOriginalProducts() {
+        Map<String, String> params = new HashMap<>();
+        params.put("withReference", "true");
+        Object responseObj = this.apiClient.get(ApiClient.ServiceType.product.name(), "", Object.class, params);
+        if (responseObj == null) {
+            throw new RuntimeException("invoke product list api,but not found any object.");
+        }
+        Map<String, Object> responseObjMap = SimpleObjectHelper.obj2Map(responseObj);
+        Object result = responseObjMap.get("result");
+        Map<String, Object> resultMap = SimpleObjectHelper.obj2Map(result);
+        List<Object> productObjs = (List<Object>) resultMap.get("data");
+
+        List<OriginalProduct> products = new ArrayList<>();
+        for (Object productObj : productObjs) {
+            OriginalProduct originalProduct = SimpleObjectHelper.obj2SpecificObj(productObj, new TypeReference<>() {
+            });
+            products.add(originalProduct);
+        }
+        return products;
     }
 
     private List<IMetaAction> extractMetaActions(List<OriginalProduct> originalProducts) {
@@ -284,27 +463,6 @@ public class MutableCacheService {
         return products;
     }
 
-    private List<OriginalProduct> getAllOriginalProducts() {
-        Map<String, String> params = new HashMap<>();
-        params.put("withReference", "true");
-        Object responseObj = this.apiClient.get(ApiClient.ServiceType.product.name(), "", Object.class, params);
-        if (responseObj == null) {
-            throw new RuntimeException("invoke product list api,but not found any object.");
-        }
-        Map<String, Object> responseObjMap = SimpleObjectHelper.obj2Map(responseObj);
-        Object result = responseObjMap.get("result");
-        Map<String, Object> resultMap = SimpleObjectHelper.obj2Map(result);
-        List<Object> productObjs = (List<Object>) resultMap.get("data");
-
-        List<OriginalProduct> products = new ArrayList<>();
-        for (Object productObj : productObjs) {
-            OriginalProduct originalProduct = SimpleObjectHelper.obj2SpecificObj(productObj, new TypeReference<>() {
-            });
-            products.add(originalProduct);
-        }
-        return products;
-    }
-
     public List<IMetaEvent> getAllMetaEvent() {
         return metaEventCacheContainer.read().getMetaEvents();
     }
@@ -331,5 +489,13 @@ public class MutableCacheService {
 
     public List<Scene> getAllScenes() {
         return this.sceneCacheContainer.read().getScenes();
+    }
+
+    public List<LanguageModelProvider> getAllLmp() {
+        return this.llmCacheContainerProvider.read().getAllLanguageModelProviders();
+    }
+
+    public List<McpServer> getAllMcpServers() {
+        return this.mcpServerCacheContainerProvider.read().getAllMcpServers();
     }
 }

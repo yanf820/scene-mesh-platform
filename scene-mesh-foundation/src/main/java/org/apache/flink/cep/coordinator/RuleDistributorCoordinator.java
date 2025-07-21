@@ -56,7 +56,7 @@ public class RuleDistributorCoordinator
         this.discovererFactory = discovererFactory;
         this.context = coordinatorContext;
         this.ruleUpdatedQueueId = ruleUpdatedQueueId;
-        updatedEventQueue = getRuleUpdatedEventQueue();
+        this.updatedEventQueue = getRuleUpdatedEventQueue();
     }
 
 
@@ -92,7 +92,7 @@ public class RuleDistributorCoordinator
             }
         }
 
-        // The rule discovery is the first task in the coordinator executor.
+        // The discover discovery is the first task in the coordinator executor.
         // We rely on the single-threaded coordinator executor to guarantee
         // the other methods are invoked after the discoverer has discovered.
         runInEventLoop(
@@ -103,12 +103,12 @@ public class RuleDistributorCoordinator
 
     @Override
     public void close() throws Exception {
-        log.info("Closing RuleDistributorCoordinator for rule distributor {}.", operatorName);
+        log.info("Closing RuleDistributorCoordinator for discover distributor {}.", operatorName);
         if (started) {
             closeAll(context, discoverer);
         }
         started = false;
-        log.info("RuleDistributorCoordinator for rule distributor {} closed.", operatorName);
+        log.info("RuleDistributorCoordinator for discover distributor {} closed.", operatorName);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class RuleDistributorCoordinator
                         resultFuture.completeExceptionally(
                                 new CompletionException(
                                         String.format(
-                                                "Failed to checkpoint the RuleBindingEvent for rule distributor %s",
+                                                "Failed to checkpoint the RuleBindingEvent for discover distributor %s",
                                                 operatorName),
                                         e));
                     }
@@ -159,7 +159,7 @@ public class RuleDistributorCoordinator
         }
 
         log.info(
-                "Restoring RuleDiscoverer of rule distributor {} from checkpoint.",
+                "Restoring RuleDiscoverer of discover distributor {} from checkpoint.",
                 operatorName);
         try (ByteArrayInputStream bais = new ByteArrayInputStream(checkpointData);
              ObjectInputStream in = new ObjectInputStream(bais)) {
@@ -172,7 +172,7 @@ public class RuleDistributorCoordinator
     @Override
     public void subtaskReset(int subtask, long checkpointId) {
         log.info(
-                "Recovering subtask {} to checkpoint {} for rule distributor {} to checkpoint.",
+                "Recovering subtask {} to checkpoint {} for discover distributor {} to checkpoint.",
                 subtask,
                 checkpointId,
                 operatorName);
@@ -192,7 +192,7 @@ public class RuleDistributorCoordinator
         runInEventLoop(
                 () -> {
                     log.info(
-                            "Removing itself after failure for subtask {} of rule distributor {}.",
+                            "Removing itself after failure for subtask {} of discover distributor {}.",
                             subtask,
                             operatorName);
                     context.subtaskNotReady(subtask);
@@ -204,7 +204,7 @@ public class RuleDistributorCoordinator
     @Override
     public void executionAttemptReady(int subtask, int attemptNumber, SubtaskGateway gateway) {
         assert subtask == gateway.getSubtask();
-        log.debug("Subtask {} of rule distributor {} is ready.", subtask, operatorName);
+        log.debug("Subtask {} of discover distributor {} is ready.", subtask, operatorName);
         runInEventLoop(
                 () -> {
                     context.subtaskReady(gateway);
@@ -221,7 +221,7 @@ public class RuleDistributorCoordinator
     @Override
     public void notifyCheckpointAborted(long checkpointId) {
         log.info(
-                "Marking checkpoint {} as aborted for rule distributor {}.",
+                "Marking checkpoint {} as aborted for discover distributor {}.",
                 checkpointId,
                 operatorName);
     }
@@ -287,7 +287,7 @@ public class RuleDistributorCoordinator
         try {
             updatedEventQueue.put(new RuleUpdatedEvent(updates));
         } catch (InterruptedException e) {
-            log.error("Failed to send RuleUpdatedEvent to rule processor coordinator.", e);
+            log.error("Failed to send RuleUpdatedEvent to discover processor coordinator.", e);
             context.failJob(e);
             return;
         }
@@ -298,7 +298,7 @@ public class RuleDistributorCoordinator
                 context.sendEventToOperator(subtask, currentRuleBindingEvent);
             } catch (Exception e) {
                 log.error(
-                        "Failed to send RuleBindingEvent to rule distributor operator {}",
+                        "Failed to send RuleBindingEvent to discover distributor operator {}",
                         operatorName,
                         e);
                 context.failJob(e);

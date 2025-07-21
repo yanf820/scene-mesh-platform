@@ -6,12 +6,14 @@ import com.scene.mesh.foundation.spec.message.MessageTopic;
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.foundation.impl.helper.StringHelper;
 import com.scene.mesh.model.action.Action;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 
 import java.util.Map;
 
+@Slf4j
 public class ActionToolCallback implements ToolCallback {
 
     private final ToolCallback delegate;
@@ -23,7 +25,7 @@ public class ActionToolCallback implements ToolCallback {
         this.delegate = delegate;
         this.toolName = toolName;
         this.messageProducer = messageProducer;
-        this.messageTopic = new MessageTopic("actions");
+        this.messageTopic = new MessageTopic("outbound_actions");
     }
 
     @Override
@@ -33,7 +35,7 @@ public class ActionToolCallback implements ToolCallback {
 
     @Override
     public String call(String toolInput) {
-
+        log.info("ActionToolCallback call toolInput:{}",toolInput);
         Action action = assembleAction(toolInput);
 
         try {

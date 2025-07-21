@@ -665,7 +665,7 @@ public class CepRuleProcessorOperator<IN, OUT> extends AbstractStreamOperator<OU
                     FunctionUtils.closeFunction(function);
                 }
             } catch (Exception e) {
-                throw new FlinkRuntimeException("Failed to close old cep rule processor.", e);
+                throw new FlinkRuntimeException("Failed to close old cep discover processor.", e);
             }
 
             nfa = null;

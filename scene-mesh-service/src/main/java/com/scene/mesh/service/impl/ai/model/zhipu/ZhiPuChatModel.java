@@ -1,5 +1,6 @@
 package com.scene.mesh.service.impl.ai.model.zhipu;
 
+import com.scene.mesh.service.impl.ai.model.BaseChatModel;
 import com.scene.mesh.service.spec.ai.IChatModel;
 import com.scene.mesh.service.impl.ai.model.ChatModelD;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -9,7 +10,7 @@ import org.springframework.ai.zhipuai.ZhiPuAiChatModel;
 import org.springframework.ai.zhipuai.ZhiPuAiChatOptions;
 import org.springframework.ai.zhipuai.api.ZhiPuAiApi;
 
-public class ZhiPuChatModel implements IChatModel {
+public class ZhiPuChatModel extends BaseChatModel {
 
     private ZhiPuAiChatModel chatModel;
 
@@ -41,11 +42,11 @@ public class ZhiPuChatModel implements IChatModel {
         return this.chatModel.call(prompt);
     }
 
-    @Override
-    public ChatOptions getDefaultOptions() {
-        ChatOptions superOptions = this.chatModel.getDefaultOptions();
-        ZhiPuAiChatOptions defaultOptions = ZhiPuAiChatOptions.fromOptions((ZhiPuAiChatOptions) superOptions);
-        defaultOptions.setModel(ZhiPuAiApi.ChatModel.GLM_4_Flash.getValue());
-        return defaultOptions;
-    }
+//    @Override
+//    public ChatOptions getDefaultOptions() {
+//        ChatOptions superOptions = this.chatModel.getDefaultOptions();
+//        ZhiPuAiChatOptions defaultOptions = ZhiPuAiChatOptions.fromOptions((ZhiPuAiChatOptions) superOptions);
+//        defaultOptions.setModel(ZhiPuAiApi.ChatModel.GLM_4_Flash.getValue());
+//        return defaultOptions;
+//    }
 }

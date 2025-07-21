@@ -5,19 +5,20 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @Data
-public class Event {
-    //事件 ID
+public class Event implements Serializable {
+    //event ID
     @Setter(AccessLevel.NONE)
     private String id;
-    //事件元模型 ID
+    //meta event ID
     @Setter(AccessLevel.NONE)
     private String type;
-    //终端 ID
+    //terminal ID
     private String terminalId;
     //payload
     private Map<String, Object> payload;

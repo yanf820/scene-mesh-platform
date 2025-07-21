@@ -1,6 +1,5 @@
 package com.scene.mesh.model.scene;
 
-import com.scene.mesh.model.operation.Operation;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,6 +16,5 @@ public class Scene implements Serializable {
     private List<WhenThen> whenThenList;
     private String flowDataPublishTime;
     private String prompt;
-    private Operation operation;
 
 }

@@ -24,19 +24,19 @@ spring:
           prompt: false
           completion: false
         stdio: false
-      # MCP Client
-      client:
-        type: SYNC
-        request-timeout: 30s
-        stdio:
-          connections:
-            bingcn:
-              command: npx
-              args: [
-                "bing-cn-mcp"
-              ]
-        toolcallback:
-          enabled: true
+#      # MCP Client
+#      client:
+#        type: SYNC
+#        request-timeout: 30s
+#        stdio:
+#          connections:
+#            bingcn:
+#              command: npx
+#              args: [
+#                "bing-cn-mcp"
+#              ]
+#        toolcallback:
+#          enabled: true
 
 logging:
   level:

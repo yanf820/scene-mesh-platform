@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.scene.mesh</groupId>
-            <artifactId>scene-mesh-model</artifactId>
+            <artifactId>scene-mesh-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

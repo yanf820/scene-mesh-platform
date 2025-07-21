@@ -1,7 +1,7 @@
 package com.scene.mesh.engin.processor.then;
 
-import com.scene.mesh.engin.model.OperationRequest;
 import com.scene.mesh.engin.model.SceneMatchedResult;
+import com.scene.mesh.engin.model.ThenRequest;
 import com.scene.mesh.foundation.spec.processor.IProcessInput;
 import com.scene.mesh.foundation.spec.processor.IProcessOutput;
 import com.scene.mesh.foundation.impl.processor.BaseProcessor;
@@ -39,13 +39,12 @@ public class SceneSelector extends BaseProcessor {
         //更新终端 session
         boolean isSuccess = updateTerminalSession(terminalId, scene);
         if (isSuccess) {
-            // TODO 封装真实 OperationRequest
-            OperationRequest operationRequest = new OperationRequest();
-            operationRequest.setTerminalId(terminalId);
-            operationRequest.setSceneId(scene.getId());
-            operationRequest.setOperation(scene.getOperation());
-            operationRequest.setEventsInScene(sceneMatchedResult.getMatchedEvents());
-            output.getCollector().collect(operationRequest);
+            ThenRequest thenRequest = new ThenRequest();
+            thenRequest.setTerminalId(terminalId);
+            thenRequest.setThenId(sceneMatchedResult.getThenId());
+            thenRequest.setSceneId(scene.getId());
+            thenRequest.setEventsInScene(sceneMatchedResult.getMatchedEvents());
+            output.getCollector().collect(thenRequest);
             return true;
         }
         return false;

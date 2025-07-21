@@ -1,5 +1,7 @@
 package com.scene.mesh.foundation.impl.processor.flink;
 
+import com.scene.mesh.foundation.impl.processor.flink.cep.discover.IRuleDiscoverer;
+import com.scene.mesh.foundation.impl.processor.flink.cep.discover.ScenePeriodicWhenDiscovererFactory;
 import com.scene.mesh.foundation.spec.component.IComponentProvider;
 import com.scene.mesh.foundation.spec.processor.IProcessActuator;
 import com.scene.mesh.foundation.spec.processor.config.CepModeDescriptor;
@@ -48,7 +50,6 @@ public class FlinkProcessActuator implements IProcessActuator {
     public void launch() throws Exception {
         this.launched = false;
         if (this.processorGraph == null) return;
-
 
 
         List<ProcessorNode> producerNodes = this.processorGraph.getProducerNodes();
@@ -104,7 +105,7 @@ public class FlinkProcessActuator implements IProcessActuator {
                 }
 
                 // source stream 分区处理
-                KeyedStream keyedStream = dataStreamSource.keyBy(new KeySelector<Object, String>()  {
+                KeyedStream keyedStream = dataStreamSource.keyBy(new KeySelector<Object, String>() {
                     @Override
                     public String getKey(Object obj) throws Exception {
                         Map<String, Object> objectMap = SimpleObjectHelper.obj2Map(obj);
@@ -113,21 +114,34 @@ public class FlinkProcessActuator implements IProcessActuator {
                     }
                 });
 
-
                 //设置定时 cep 规则
+//                SingleOutputStreamOperator<Object> cepResultStream = CEPUtils.dynamicCepRules(keyedStream,
+//                        new JdbcPeriodicRuleDiscovererFactory(
+//                                JdbcConnectorOptions.builder()
+//                                        .setTableName(descriptor.getRuleSource())
+//                                        .setDriverName(descriptor.getDriverName())
+//                                        .setDBUrl(descriptor.getDatabaseUrl())
+//                                        .setUsername(descriptor.getUsername())
+//                                        .setPassword(descriptor.getPassword())
+//                                        .build(),
+//                                3,
+//                                "cep",
+//                                Collections.emptyList(),
+//                                descriptor.getPeriod().toMillis()),
+//                        TimeBehaviour.ProcessingTime,
+//                        descriptor.getCepMatchedResultType(),
+//                        "event-cep",
+//                        "/",
+//                        descriptor.getParallelism(),
+//                        false
+//                );
+
                 SingleOutputStreamOperator<Object> cepResultStream = CEPUtils.dynamicCepRules(keyedStream,
-                        new JdbcPeriodicRuleDiscovererFactory(
-                                JdbcConnectorOptions.builder()
-                                        .setTableName(descriptor.getRuleSource())
-                                        .setDriverName(descriptor.getDriverName())
-                                        .setDBUrl(descriptor.getDatabaseUrl())
-                                        .setUsername(descriptor.getUsername())
-                                        .setPassword(descriptor.getPassword())
-                                        .build(),
-                                3,
-                                "cep",
+                        new ScenePeriodicWhenDiscovererFactory(
                                 Collections.emptyList(),
-                                descriptor.getPeriod().toMillis()),
+                                descriptor.getPeriod().toMillis(),
+                                descriptor.getDiscoverComponent(),
+                                componentProvider),
                         TimeBehaviour.ProcessingTime,
                         descriptor.getCepMatchedResultType(),
                         "event-cep",

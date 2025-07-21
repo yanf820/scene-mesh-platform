@@ -33,6 +33,12 @@ public class FoundationConfig {
     @Value("${scene-mesh.api-client.urls.product}")
     private String productUrl;
 
+    @Value("${scene-mesh.api-client.urls.llm}")
+    private String llmUrl;
+
+    @Value("${scene-mesh.api-client.urls.mcpserver}")
+    private String mcpServerUrl;
+
     @Bean
     public SpringComponentProvider componentProvider() {
         return new SpringComponentProvider();
@@ -50,6 +56,7 @@ public class FoundationConfig {
         consumer.setHost(redisHost);
         consumer.setPort(Integer.parseInt(redisPort));
         consumer.setTimeoutSeconds(Integer.parseInt(timeoutSeconds));
+        consumer.setSerializer(new JsonMessageSerializer());
         consumer.__init__();
         return consumer;
     }
@@ -68,6 +75,8 @@ public class FoundationConfig {
     public ApiClient apiClient(){
         Map<String,String> urls = new HashMap<>();
         urls.put(ApiClient.ServiceType.product.name(),productUrl);
+        urls.put(ApiClient.ServiceType.llm.name(),llmUrl);
+        urls.put(ApiClient.ServiceType.mcpserver.name(),mcpServerUrl);
         ApiClient apiClient = new ApiClient(urls);
         apiClient.__init__();
         return apiClient;

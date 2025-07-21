@@ -22,7 +22,7 @@ public class PatternRuleGenerator {
     public static void main(String[] args) throws Exception {
 
         // 或 模式测试
-//        generateOrPattern();
+        generateOrPattern();
 
 //        // 原有的Pattern示例
 //        generateSimplePattern();
@@ -31,7 +31,7 @@ public class PatternRuleGenerator {
 //
 //        // 新增的GroupPattern示例
 //        generateGroupPattern();
-        generateNestedGroupPattern();
+//        generateNestedGroupPattern();
 //        generateNestedGroupPatternWithName();
 //        json2Pattern();
 //        generateJson();
@@ -67,6 +67,7 @@ public class PatternRuleGenerator {
                 .where(new AviatorCondition<>("metaEventId == 'wakeup_word' && payload.word == '能'"))
                 .optional()
                 .followedBy("followed2")
+                .within(Time.seconds(20))
                 .where(new AviatorCondition<>("metaEventId == 'wakeup_word' && payload.word == '不能'"))
                 .optional()
                 .within(Time.seconds(10));

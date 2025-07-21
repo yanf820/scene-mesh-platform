@@ -19,23 +19,30 @@ import java.util.Map;
 @Slf4j
 public class SceneMatchedProcessor extends AbstractPatternProcessFunction<Event, SceneMatchedResult> {
 
-    // 匹配的规则 ID
-    private String ruleId;
+    private String thenId;
+
+    private String sceneId;
 
     @Override
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
-        // 从Configuration中获取ruleId
-        if (parameters != null && parameters.containsKey("ruleId")) {
-            this.ruleId = parameters.getString("ruleId", "unknown");
+
+        if (parameters != null && parameters.containsKey("thenId")) {
+            this.thenId = parameters.getString("thenId", "unknown");
         } else {
-            this.ruleId = "unknown";
+            this.thenId = "unknown";
+        }
+
+        if (parameters != null && parameters.containsKey("sceneId")) {
+            this.sceneId = parameters.getString("sceneId", "unknown");
+        } else {
+            this.sceneId = "unknown";
         }
     }
 
     @Override
     public void processMatch(Map<String, List<Event>> match, Context ctx, Collector<SceneMatchedResult> out) throws Exception {
-        log.info("匹配规则成功 - 规则 ID：{}", ruleId);
+        log.info("匹配规则成功 - scene id: {} , then id：{}", sceneId, thenId);
 
         List<Event> events = new ArrayList<>();
         for (Map.Entry<String, List<Event>> entry : match.entrySet()) {
@@ -43,8 +50,8 @@ public class SceneMatchedProcessor extends AbstractPatternProcessFunction<Event,
         }
 
         SceneMatchedResult result = new SceneMatchedResult();
-        result.setSceneId("1");//TODO 获取规则关联的场景 ID
-        result.setRuleId(ruleId);
+        result.setSceneId(sceneId);
+        result.setThenId(thenId);
         result.setTerminalId(events.get(0).getTerminalId());
         result.setMatchedEvents(events);
         result.setMatchedTime(System.currentTimeMillis());

@@ -16,6 +16,7 @@ scene-mesh:
   topics:
     inbound-events: inbound_events
     matched-result: matched_result
+    outbound-actions: outbound_actions
   # AI配置
   ai:
     provider:
@@ -34,3 +35,5 @@ scene-mesh:
   api-client:
     urls:
       product: http://localhost:8082/api/entities/objects/product/?withReference=true
+      llm: http://localhost:8082/api/entities/objects/languageModelProvider/?withReference=true
+      mcpserver: http://localhost:8082/api/entities/objects/mcpService/?withReference=true

@@ -1,6 +1,10 @@
 package com.scene.mesh.service.impl.ai;
 
+import com.scene.mesh.service.impl.ai.mcp.ToolCallbackProviderManager;
 import com.scene.mesh.service.spec.ai.IToolsService;
+import io.modelcontextprotocol.client.McpAsyncClient;
+import io.modelcontextprotocol.client.McpSyncClient;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 
@@ -9,25 +13,35 @@ import java.util.List;
 
 public class DefaultIToolsService implements IToolsService {
 
-    private ToolCallbackProvider toolCallbackProvider;
+    private final ToolCallbackProviderManager toolCallbackProviderManager;
 
-    public DefaultIToolsService(ToolCallbackProvider toolCallbackProvider) {
-        this.toolCallbackProvider = toolCallbackProvider;
+    public DefaultIToolsService(ToolCallbackProviderManager toolCallbackProviderManager) {
+        this.toolCallbackProviderManager = toolCallbackProviderManager;
     }
 
     @Override
-    public List<ToolCallback> findToolCallbacks(List<String> toolNames) {
-        if (toolNames == null || toolNames.isEmpty()) {
-            return null;
-        }
+    public List<ToolCallback> findToolCallbacks(List<String> actionIds, List<String> mcps) {
 
         List<ToolCallback> discoveredToolCallbacks = new ArrayList<>();
 
-        ToolCallback[] toolCallbacks = toolCallbackProvider.getToolCallbacks();
-        for (ToolCallback toolCallback : toolCallbacks) {
-            for (String toolName : toolNames) {
-                if (toolCallback.getToolDefinition().name().contains(toolName))
-                    discoveredToolCallbacks.add(toolCallback);
+        if (actionIds != null) {
+            ToolCallbackProvider actionTcp = this.toolCallbackProviderManager.getToolCallbackProvider("action");
+            ToolCallback[] toolCallbacks = actionTcp.getToolCallbacks();
+            for (ToolCallback toolCallback : toolCallbacks) {
+                for (String actionId : actionIds) {
+                    if (toolCallback.getToolDefinition().name().contains(actionId))
+                        discoveredToolCallbacks.add(toolCallback);
+                }
+            }
+        }
+
+        if (mcps != null) {
+            for (String mcp : mcps) {
+                ToolCallbackProvider mcpTcp = this.toolCallbackProviderManager.getToolCallbackProvider(mcp);
+                if (mcpTcp != null) {
+                    ToolCallback[] toolCallbacks = mcpTcp.getToolCallbacks();
+                    discoveredToolCallbacks.addAll(List.of(toolCallbacks));
+                }
             }
         }
 

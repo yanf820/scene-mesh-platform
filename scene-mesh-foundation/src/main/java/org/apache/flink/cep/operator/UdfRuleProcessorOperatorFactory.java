@@ -51,7 +51,7 @@ public class UdfRuleProcessorOperatorFactory<IN, OUT> extends AbstractStreamOper
             return (T) processorOperator;
         } catch (Exception e) {
             throw new IllegalStateException(
-                    "Cannot create udf rule processor operator for "
+                    "Cannot create udf discover processor operator for "
                             + parameters.getStreamConfig().getOperatorName(),
                     e);
         }

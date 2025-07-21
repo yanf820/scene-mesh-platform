@@ -62,7 +62,7 @@ public class RuleProcessorCoordinator
         // wasn't called and where 'start()' failed.
         started = true;
 
-        // The rule discovery is the first task in the coordinator executor.
+        // The discover discovery is the first task in the coordinator executor.
         // We rely on the single-threaded coordinator executor to guarantee
         // the other methods are invoked after the discoverer has discovered.
         runInEventLoop(
@@ -72,12 +72,12 @@ public class RuleProcessorCoordinator
 
     @Override
     public void close() throws Exception {
-        log.info("Closing RuleProcessorCoordinator for rule processor {}.", operatorName);
+        log.info("Closing RuleProcessorCoordinator for discover processor {}.", operatorName);
         if (started) {
             closeAll(context);
         }
         started = false;
-        log.info("RuleProcessorCoordinator for rule processor {} closed.", operatorName);
+        log.info("RuleProcessorCoordinator for discover processor {} closed.", operatorName);
 
     }
 
@@ -105,7 +105,7 @@ public class RuleProcessorCoordinator
                         resultFuture.completeExceptionally(
                                 new CompletionException(
                                         String.format(
-                                                "Failed to checkpoint the RuleUpdatedEvent for rule distributor %s",
+                                                "Failed to checkpoint the RuleUpdatedEvent for discover distributor %s",
                                                 operatorName),
                                         e));
                     }
@@ -129,7 +129,7 @@ public class RuleProcessorCoordinator
         }
 
         log.info(
-                "Restoring RuleUpdatedEvent of rule processor {} from checkpoint.",
+                "Restoring RuleUpdatedEvent of discover processor {} from checkpoint.",
                 operatorName);
         try (ByteArrayInputStream bais = new ByteArrayInputStream(checkpointData);
              ObjectInputStream in = new ObjectInputStream(bais)) {
@@ -140,7 +140,7 @@ public class RuleProcessorCoordinator
     @Override
     public void subtaskReset(int subtask, long checkpointId) {
         log.info(
-                "Recovering subtask {} to checkpoint {} for rule processor {} to checkpoint.",
+                "Recovering subtask {} to checkpoint {} for discover processor {} to checkpoint.",
                 subtask,
                 checkpointId,
                 operatorName);
@@ -160,7 +160,7 @@ public class RuleProcessorCoordinator
         runInEventLoop(
                 () -> {
                     log.info(
-                            "Removing itself after failure for subtask {} of rule processor {}.",
+                            "Removing itself after failure for subtask {} of discover processor {}.",
                             subtask,
                             operatorName);
                     context.subtaskNotReady(subtask);
@@ -172,7 +172,7 @@ public class RuleProcessorCoordinator
     @Override
     public void executionAttemptReady(int subtask, int attemptNumber, SubtaskGateway gateway) {
         assert subtask == gateway.getSubtask();
-        log.debug("Subtask {} of rule processor {} is ready.", subtask, operatorName);
+        log.debug("Subtask {} of discover processor {} is ready.", subtask, operatorName);
         runInEventLoop(
                 () -> {
                     context.subtaskReady(gateway);
@@ -190,7 +190,7 @@ public class RuleProcessorCoordinator
     @Override
     public void notifyCheckpointAborted(long checkpointId) {
         log.info(
-                "Marking checkpoint {} as aborted for rule processor {}.",
+                "Marking checkpoint {} as aborted for discover processor {}.",
                 checkpointId,
                 operatorName);
     }
@@ -240,7 +240,7 @@ public class RuleProcessorCoordinator
                     }
                 } catch (Exception e) {
                     log.error(
-                            "Failed to send RuleUpdatedEvent to rule processor operator {}",
+                            "Failed to send RuleUpdatedEvent to discover processor operator {}",
                             operatorName,
                             e);
                     context.failJob(e);

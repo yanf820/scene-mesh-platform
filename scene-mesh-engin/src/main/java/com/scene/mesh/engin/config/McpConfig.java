@@ -1,7 +1,13 @@
 package com.scene.mesh.engin.config;
 
+import com.scene.mesh.model.mcp.McpServer;
+import com.scene.mesh.service.impl.ai.mcp.ToolCallbackProviderManager;
+import com.scene.mesh.service.impl.ai.mcp.ToolCallbackProviderWithId;
+import com.scene.mesh.service.spec.ai.IMcpServerService;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
+import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
+import io.modelcontextprotocol.client.transport.WebClientStreamableHttpTransport;
 import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +21,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Configuration
 @Slf4j
 public class McpConfig {
@@ -22,8 +33,7 @@ public class McpConfig {
     @Value("${scene-mesh.ai.mcp.server.url}")
     private String mcpServerUrl;
 
-    @Bean
-    public McpSyncClient sseMcpClient() {
+    private ToolCallbackProviderWithId actionToolCallbackProvider() {
         try {
             // 创建 SSE 传输层
             WebClient.Builder webClientBuilder = WebClient.builder()
@@ -36,8 +46,15 @@ public class McpConfig {
                     .sseEndpoint("/sse")
                     .build();
 
-            McpSyncClient mcpSyncClient = McpClient.sync(transport).build();
-            return mcpSyncClient;
+            McpSyncClient mcpClient = McpClient.sync(transport).build();
+            try {
+                mcpClient.initialize();
+            } catch (Exception e) {
+                log.error("Failed to initialize Scene Mesh MCP client", e);
+                return null;
+            }
+
+            return new ToolCallbackProviderWithId("action", mcpClient);
 
         } catch (Exception e) {
             log.error("Failed to create Scene Mesh MCP client", e);
@@ -45,25 +62,74 @@ public class McpConfig {
         }
     }
 
-    @Bean
-    public ToolCallbackProvider sceneMeshToolCallbackProvider(McpSyncClient mcpSyncClient) {
-        mcpSyncClient.initialize();
+    private List<ToolCallbackProvider> realToolCallbackProviders(IMcpServerService mcpServerService) {
 
-        // 🔍 打印服务器信息
-        log.info("🔍 连接的MCP服务器信息: {}", mcpSyncClient.getServerInfo());
-        log.info("🔍 服务器能力: {}", mcpSyncClient.getServerCapabilities());
+        List<McpServer> mcpServers = mcpServerService.getAllMcpServers();
+        if (mcpServers == null || mcpServers.isEmpty()) return new ArrayList<>();
 
-        SyncMcpToolCallbackProvider provider = new SyncMcpToolCallbackProvider(mcpSyncClient);
+        List<ToolCallbackProvider> toolCallbackProviders = new ArrayList<>();
+        for (McpServer mcpServer : mcpServers) {
 
-        // 🔍 打印工具详情
-        ToolCallback[] callbacks = provider.getToolCallbacks();
-        log.info("🔍 从MCP服务器获取到 {} 个工具:", callbacks.length);
-        for (int i = 0; i < callbacks.length; i++) {
-            log.info("  {}. {} - {}", i + 1,
-                    callbacks[i].getToolDefinition().name(),
-                    callbacks[i].getToolDefinition().description());
+            McpClientTransport transport = null;
+
+            if ("sse".equals(mcpServer.getType())) {
+                WebClient.Builder webClientBuilder = WebClient.builder()
+                        .baseUrl(mcpServer.getBaseUrl())
+                        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .defaultHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
+                transport = WebFluxSseClientTransport
+                        .builder(webClientBuilder)
+                        .sseEndpoint(mcpServer.getEndpoint())
+                        .build();
+            } else if ("streamable".equals(mcpServer.getType())) {
+                WebClient.Builder webClientBuilder = WebClient.builder()
+                        .baseUrl(mcpServer.getBaseUrl())
+                        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .defaultHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
+                transport = WebClientStreamableHttpTransport
+                        .builder(webClientBuilder)
+                        .endpoint(mcpServer.getEndpoint())
+                        .build();
+            } else {
+                throw new RuntimeException("Unsupported MCP server type: " + mcpServer.getType());
+            }
+
+            McpSyncClient mcpSyncClient = McpClient
+                    .sync(transport)
+                    .requestTimeout(Duration.ofSeconds(mcpServer.getTimeout()))
+                    .build();
+            mcpSyncClient.initialize();
+
+            ToolCallbackProvider toolCallbackProvider = new ToolCallbackProviderWithId(mcpServer.getId(), mcpSyncClient);
+            toolCallbackProviders.add(toolCallbackProvider);
         }
 
-        return provider;
+        return toolCallbackProviders;
+    }
+
+    @Bean
+    public ToolCallbackProviderManager sceneMeshToolCallbackProvider(IMcpServerService mcpServerService) {
+
+        ToolCallbackProviderManager toolCallbackProviderManager = new ToolCallbackProviderManager();
+        toolCallbackProviderManager.registerToolCallbackProvider(actionToolCallbackProvider());
+
+        List<ToolCallbackProvider> realToolCallbackProviders = realToolCallbackProviders(mcpServerService);
+
+        for (ToolCallbackProvider toolCallbackProvider : realToolCallbackProviders) {
+            toolCallbackProviderManager.registerToolCallbackProvider((ToolCallbackProviderWithId) toolCallbackProvider);
+        }
+
+        // 打印工具详情
+        Collection<ToolCallbackProvider> toolCallbackProviders = toolCallbackProviderManager.getAllToolCallbackProvider();
+        for (ToolCallbackProvider provider : toolCallbackProviders) {
+            ToolCallback[] callbacks = provider.getToolCallbacks();
+            log.info("🔍 从MCP服务器获取到 {} 个工具:", callbacks.length);
+            for (int i = 0; i < callbacks.length; i++) {
+                log.info("  {}. {} - {}", i + 1,
+                        callbacks[i].getToolDefinition().name(),
+                        callbacks[i].getToolDefinition().description());
+            }
+        }
+        return toolCallbackProviderManager;
     }
 }

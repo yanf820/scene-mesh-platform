@@ -52,7 +52,7 @@ public class RuleDistributorOperatorFactory<IN> extends AbstractStreamOperatorFa
             return (T) distributorOperator;
         } catch (Exception e) {
             throw new IllegalStateException(
-                    "Cannot create rule distributor operator for "
+                    "Cannot create discover distributor operator for "
                             + parameters.getStreamConfig().getOperatorName(),
                     e);
         }

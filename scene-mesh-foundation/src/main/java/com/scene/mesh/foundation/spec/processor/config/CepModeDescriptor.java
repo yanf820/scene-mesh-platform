@@ -1,5 +1,6 @@
 package com.scene.mesh.foundation.spec.processor.config;
 
+import com.scene.mesh.foundation.impl.processor.flink.cep.discover.IRuleDiscoverer;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -33,5 +34,6 @@ public class CepModeDescriptor implements Serializable {
     private TypeInformation cepMatchedResultType;
     //cep 处理并行度
     private int parallelism;
-
+    //cep discoverer
+    private String discoverComponent;
 }

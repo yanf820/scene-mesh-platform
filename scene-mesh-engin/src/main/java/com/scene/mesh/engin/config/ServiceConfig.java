@@ -2,11 +2,18 @@ package com.scene.mesh.engin.config;
 
 import com.scene.mesh.foundation.spec.api.ApiClient;
 import com.scene.mesh.foundation.spec.cache.ICache;
+import com.scene.mesh.service.impl.ai.DefaultIToolsService;
+import com.scene.mesh.service.impl.ai.DefaultLLmConfigService;
+import com.scene.mesh.service.impl.ai.DefaultMcpServerService;
+import com.scene.mesh.service.impl.ai.mcp.ToolCallbackProviderManager;
 import com.scene.mesh.service.impl.ai.model.zhipu.ZhiPuChatModel;
 import com.scene.mesh.service.impl.event.DefaultMetaEventService;
 import com.scene.mesh.service.impl.product.DefaultProductService;
 import com.scene.mesh.service.impl.scene.DefaultSceneService;
 import com.scene.mesh.service.impl.speech.DefaultSpeechService;
+import com.scene.mesh.service.spec.ai.ILLmConfigService;
+import com.scene.mesh.service.spec.ai.IMcpServerService;
+import com.scene.mesh.service.spec.ai.IToolsService;
 import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.spec.event.IMetaEventService;
 import com.scene.mesh.service.spec.product.IProductService;
@@ -43,10 +50,23 @@ public class ServiceConfig {
         return new DefaultSceneService(mutableCacheService);
     }
 
+//    @Bean
+//    public ZhiPuChatModel zhiPuChatModel() {
+//        return new ZhiPuChatModel(zhipuApiKey);
+//    }
+//
     @Bean
-    public ZhiPuChatModel zhiPuChatModel() {
-        return new ZhiPuChatModel(zhipuApiKey);
+    public IMcpServerService mcpServerService(MutableCacheService mutableCacheService) {
+        return new DefaultMcpServerService(mutableCacheService);
     }
 
+    @Bean
+    public ILLmConfigService lLmConfigService(MutableCacheService mutableCacheService) {
+        return new DefaultLLmConfigService(mutableCacheService);
+    }
 
+    @Bean
+    public IToolsService toolsService(ToolCallbackProviderManager toolCallbackProviderManager) {
+        return new DefaultIToolsService(toolCallbackProviderManager);
+    }
 }

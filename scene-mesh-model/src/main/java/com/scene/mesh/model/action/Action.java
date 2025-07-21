@@ -1,5 +1,6 @@
 package com.scene.mesh.model.action;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scene.mesh.model.event.Event;
 import lombok.AccessLevel;
 import lombok.Data;

@@ -7,7 +7,9 @@ import com.scene.mesh.foundation.spec.parameter.MetaParameterDescriptorCollectio
 import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import com.scene.mesh.mcp.server.loader.ActionToolCallback;
 import com.scene.mesh.mcp.server.loader.IToolDrawingLoader;
+import com.scene.mesh.model.action.IMetaAction;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.mcp.SyncMcpToolCallback;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.definition.DefaultToolDefinition;
@@ -53,7 +55,7 @@ public class DynamicToolProvider implements ToolCallbackProvider {
      * 初始化工具回调
      */
     private void initializeToolCallbacks() {
-        List<IMetaParameterized> toolDrawings = toolDrawingLoader.loadToolDrawings();
+        List<IMetaAction> toolDrawings = toolDrawingLoader.loadToolDrawings();
         
         for (IMetaParameterized toolDrawing : toolDrawings) {
             try {

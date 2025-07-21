@@ -7,9 +7,11 @@ import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.connection.stream.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StreamOperations;
@@ -51,11 +53,26 @@ public class RedisMessageConsumer implements IMessageConsumer {
     private boolean isShutdown = false;
 
     public void __init__() {
+
+        // 配置连接池
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(20);          // 最大连接数
+        poolConfig.setMaxIdle(10);           // 最大空闲连接
+        poolConfig.setMinIdle(5);            // 最小空闲连接
+        poolConfig.setMaxWaitMillis(2000);   // 获取连接最大等待时间
+
+        // 创建Lettuce客户端配置
+        LettucePoolingClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
+                .poolConfig(poolConfig)
+                .commandTimeout(Duration.ofSeconds(3))  // 命令超时
+                .shutdownTimeout(Duration.ofSeconds(2)) // 关闭超时
+                .build();
+
         // create redis factory
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
-        this.connectionFactory = new LettuceConnectionFactory(config);
+        this.connectionFactory = new LettuceConnectionFactory(config,clientConfig);
         ((LettuceConnectionFactory) this.connectionFactory).afterPropertiesSet();
 
         // create redis template

@@ -4,16 +4,17 @@ import com.scene.mesh.engin.config.EnginConfig;
 import com.scene.mesh.engin.config.FoundationConfig;
 import com.scene.mesh.engin.config.McpConfig;
 import com.scene.mesh.engin.config.ServiceConfig;
-import com.scene.mesh.engin.model.OperationRequest;
-import com.scene.mesh.engin.model.OperationResponse;
 import com.scene.mesh.engin.model.SceneMatchedResult;
+import com.scene.mesh.engin.model.ThenRequest;
 import com.scene.mesh.foundation.spec.processor.config.CepModeDescriptor;
 import com.scene.mesh.foundation.spec.processor.config.ProcessorGraph;
 import com.scene.mesh.foundation.spec.processor.config.ProcessorGraphBuilder;
 import com.scene.mesh.foundation.spec.processor.config.ProcessorNodeBuilder;
 import com.scene.mesh.foundation.spec.processor.execute.IProcessManager;
 import com.scene.mesh.foundation.impl.component.SpringApplicationContextUtils;
+import com.scene.mesh.model.action.Action;
 import com.scene.mesh.model.event.Event;
+import com.scene.mesh.service.impl.scene.DefaultSceneService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 
@@ -71,14 +72,21 @@ public class SceneMeshEnginApplication {
                         .withComponentId("scene-event-producer")
                         .withParallelism(1)
                         .withOutputType(Event.class))
+//                .enableCepMode(CepModeDescriptor.builder()
+//                        .enabled(true)
+//                        .databaseUrl("jdbc:postgresql://127.0.0.1:5432/postgres")
+//                        .driverName("org.postgresql.Driver")
+//                        .ruleSource("cep_rules")
+//                        .username("postgres")
+//                        .password("scene_mesh")
+//                        .period(Duration.ofSeconds(10))
+//                        .keyed(new String[]{"terminalId"})
+//                        .parallelism(1)
+//                        .cepMatchedResultType(new GenericTypeInfo<>(SceneMatchedResult.class)))
                 .enableCepMode(CepModeDescriptor.builder()
                         .enabled(true)
-                        .databaseUrl("jdbc:postgresql://127.0.0.1:5432/postgres")
-                        .driverName("org.postgresql.Driver")
-                        .ruleSource("cep_rules")
-                        .username("postgres")
-                        .password("scene_mesh")
-                        .period(Duration.ofSeconds(10))
+                        .discoverComponent("sceneService")
+                        .period(Duration.ofSeconds(60))
                         .keyed(new String[]{"terminalId"})
                         .parallelism(1)
                         .cepMatchedResultType(new GenericTypeInfo<>(SceneMatchedResult.class)))
@@ -101,14 +109,20 @@ public class SceneMeshEnginApplication {
                 .addNode(ProcessorNodeBuilder.createWithId("scene-handler")
                         .withComponentId("scene-selector")
                         .withParallelism(1)
-                        .withOutputType(OperationRequest.class)
+                        .withOutputType(ThenRequest.class)
                         .from("matched-scene-source")
                 )
-                .addNode(ProcessorNodeBuilder.createWithId("operation-handler")
-                        .withComponentId("operation-handler")
+                .addNode(ProcessorNodeBuilder.createWithId("then-handler")
+                        .withComponentId("then-handler")
                         .withParallelism(1)
-                        .withOutputType(OperationResponse.class)
+                        .withOutputType(Action.class)
                         .from("scene-handler")
+                )
+                .addNode(ProcessorNodeBuilder.createWithId("action-sink")
+                        .withComponentId("action-sinker")
+                        .withParallelism(1)
+                        .withOutputType(Action.class)
+                        .from("then-handler")
                 )
                 .build();
     }

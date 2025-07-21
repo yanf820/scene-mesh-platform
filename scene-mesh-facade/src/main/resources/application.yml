@@ -46,7 +46,7 @@ redis:
 
 topic:
     inbound-event: inbound_events
-    outbound-action: actions
+    outbound-action: outbound_actions
 
 audio:
   model:

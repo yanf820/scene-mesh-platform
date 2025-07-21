@@ -1,20 +1,17 @@
 package com.scene.mesh.service.impl.scene;
 
-import com.scene.mesh.model.llm.LanguageModel;
-import com.scene.mesh.model.llm.LanguageModelProvider;
-import com.scene.mesh.model.operation.Agent;
-import com.scene.mesh.model.operation.Operation;
-import com.scene.mesh.model.product.OriginalProduct;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scene.mesh.foundation.impl.helper.SimpleObjectHelper;
+import com.scene.mesh.foundation.impl.processor.flink.cep.discover.IRuleDiscoverer;
 import com.scene.mesh.model.scene.Scene;
 import com.scene.mesh.model.scene.WhenThen;
 import com.scene.mesh.service.spec.cache.MutableCacheService;
 import com.scene.mesh.service.spec.scene.ISceneService;
+import org.apache.flink.cep.event.Rule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class DefaultSceneService implements ISceneService {
+public class DefaultSceneService implements ISceneService, IRuleDiscoverer {
 
     private final MutableCacheService mutableCacheService;
 
@@ -23,12 +20,63 @@ public class DefaultSceneService implements ISceneService {
     }
 
     @Override
-    public Scene getSceneById(String sceneId) { //TODO 补充
+    public Scene getSceneById(String sceneId) {
         return mutableCacheService.getSceneById(sceneId);
     }
 
     public List<Scene> getAllScenes(){
         return mutableCacheService.getAllScenes();
+    }
+
+    @Override
+    public List<Rule> getRules() throws Exception {
+        List<Scene> scenes = this.getAllScenes();
+        if (scenes == null || scenes.isEmpty()) {
+            return List.of();
+        }
+
+        List<Rule> rules = new ArrayList<>();
+
+        for (Scene scene : scenes) {
+            List<WhenThen> whenThens = scene.getWhenThenList();
+            if (whenThens == null || whenThens.isEmpty()) {
+                continue;
+            }
+            for (WhenThen whenThen : whenThens){
+                String when = whenThen.getWhen();
+                when = extractCleanJson(when);
+                WhenThen.Then then = whenThen.getThen();
+
+                Rule rule = new Rule();
+                rule.setId(UUID.randomUUID().toString());
+                rule.setFunction("com.scene.mesh.engin.processor.when.SceneMatchedProcessor");
+                Map<String, Object> params = new HashMap<>();
+                params.put("thenId", then.getId());
+                params.put("sceneId", scene.getId());
+                rule.setParameters(SimpleObjectHelper.map2json(params));
+                rule.setPattern(when);
+                rule.setBindingKeys(new HashSet<>());
+                rule.setVersion(1);
+                rule.setLibs(new HashSet<>());
+
+                rules.add(rule);
+            }
+        }
+        return rules;
+    }
+
+    private String extractCleanJson(String escapedJson) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.readValue(escapedJson, String.class);
+            Object jsonObject = mapper.readValue(jsonString, Object.class);
+
+            // 重新序列化为干净的JSON
+            return mapper.writeValueAsString(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return escapedJson;
+        }
     }
 
 //    @Override

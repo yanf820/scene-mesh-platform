@@ -8,8 +8,7 @@ import java.util.List;
 @Data
 public class SceneMatchedResult {
     private String sceneId;
-    private String ruleId;
-    private String productId;
+    private String thenId;
     private String terminalId;
     private List<Event> matchedEvents;
     private long matchedTime;

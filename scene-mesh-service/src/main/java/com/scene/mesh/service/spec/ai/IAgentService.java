@@ -1,7 +1,7 @@
 package com.scene.mesh.service.spec.ai;
 
 import com.scene.mesh.model.event.Event;
-import com.scene.mesh.model.operation.Agent;
+import com.scene.mesh.model.scene.WhenThen;
 import org.springframework.ai.chat.model.ChatResponse;
 
 import java.util.List;
@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface IAgentService {
 
-    ChatResponse callAgent(Agent agent, List<Event> eventsInScene);
+    boolean callAgent(WhenThen.Then agent, List<Event> inputEvents);
 
 }

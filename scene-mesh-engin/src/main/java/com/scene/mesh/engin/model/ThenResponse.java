@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class OperationResponse {
+public class ThenResponse {
 
     private String productId;
 
@@ -17,7 +17,7 @@ public class OperationResponse {
 
     private List<Event> events;
 
-    public OperationResponse() {
+    public ThenResponse() {
         this.events = new ArrayList<>();
     }
 

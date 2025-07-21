@@ -1,12 +1,18 @@
 package com.scene.mesh.foundation.impl.cache;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.scene.mesh.foundation.spec.cache.ICache;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
 
@@ -14,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -43,11 +50,25 @@ public class RedisCache<K, V> implements ICache<K, V> {
         this.host = host;
         this.port = port;
 
+        // 配置连接池
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(20);          // 最大连接数
+        poolConfig.setMaxIdle(10);           // 最大空闲连接
+        poolConfig.setMinIdle(5);            // 最小空闲连接
+        poolConfig.setMaxWaitMillis(2000);   // 获取连接最大等待时间
+
+        // 创建Lettuce客户端配置
+        LettucePoolingClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
+                .poolConfig(poolConfig)
+                .commandTimeout(Duration.ofSeconds(3))  // 命令超时
+                .shutdownTimeout(Duration.ofSeconds(2)) // 关闭超时
+                .build();
+
         // 创建Redis连接工厂
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
-        this.connectionFactory = new LettuceConnectionFactory(config);
+        this.connectionFactory = new LettuceConnectionFactory(config,clientConfig);
         ((LettuceConnectionFactory) this.connectionFactory).afterPropertiesSet();
 
         // 创建RedisTemplate

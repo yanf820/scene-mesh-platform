@@ -27,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Implementation of the {@link RuleDiscoverer} that periodically discovers the rule
+ * Implementation of the {@link RuleDiscoverer} that periodically discovers the discover
  * processor updates.
  */
 @Slf4j
@@ -42,7 +42,7 @@ public abstract class PeriodicRuleDiscoverer
 
     /**
      * Creates a new {@link RuleDiscoverer} using the given initial {@link
-     * Rule} and the time interval how often to check the rule processor updates.
+     * Rule} and the time interval how often to check the discover processor updates.
      *
      * @param intervalMillis Time interval in milliseconds how often to check updates.
      */
@@ -53,7 +53,7 @@ public abstract class PeriodicRuleDiscoverer
 
 
     /**
-     * Returns the latest rule processors.
+     * Returns the latest discover processors.
      *
      * @return The list of {@link Rule}.
      */
@@ -62,7 +62,7 @@ public abstract class PeriodicRuleDiscoverer
     @Override
     public void discoverRuleUpdates(
             RuleManager ruleManager) {
-        // Periodically discovers the rule updates.
+        // Periodically discovers the discover updates.
         timer.schedule(
                 new TimerTask() {
                     @Override
@@ -76,7 +76,7 @@ public abstract class PeriodicRuleDiscoverer
                                 log.info("最新的规则已更新.");
                             }
                         } catch (Exception e) {
-                            log.error("Get latest rule error", e);
+                            log.error("Get latest discover error", e);
                         }
 
                     }

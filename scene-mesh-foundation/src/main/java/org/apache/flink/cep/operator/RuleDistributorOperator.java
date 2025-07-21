@@ -96,7 +96,7 @@ public class RuleDistributorOperator<IN> extends AbstractStreamOperator<EventRec
         bindings = bindingEvent.getBindings();
         // 清空之前的绑定映射
         keyBindings.clear();
-        log.info("Update rule bindings: {}", bindings);
+        log.info("Update discover bindings: {}", bindings);
         for (RuleBinding binding : bindings) {
             Tuple2<String, Integer> ruleVersion = Tuple2.of(binding.getId(), binding.getVersion());
             for (String bindingKey : binding.getBindingKeys()) {

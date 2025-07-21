@@ -59,5 +59,7 @@ public class ApiClient {
 
     public enum ServiceType {
         product,
+        llm,
+        mcpserver,
     }
 }

@@ -9,12 +9,7 @@ import org.springframework.ai.chat.prompt.ChatOptions;
  */
 public interface IChatClientFactory {
 
-    /**
-     * 根据 languageModel 获取 chat client
-     * @param languageModel
-     * @return
-     */
-    ChatClient getChatClient(LanguageModel languageModel);
+    ChatClient getChatClient(String providerName, String modelName);
 
-    ChatOptions getDefaultChatOptions(LanguageModel llm);
+//    ChatOptions getDefaultChatOptions(String providerName, String modelName);
 }

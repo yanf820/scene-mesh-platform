@@ -141,7 +141,7 @@ public class WildcardMatchUtils {
 
     /**
      * Checks if one string contains another starting at a specific index using the
-     * case-sensitivity rule.
+     * case-sensitivity discover.
      * <p>
      * This method mimics parts of {@link String#indexOf(String, int)}
      * but takes case-sensitivity into account.
@@ -168,7 +168,7 @@ public class WildcardMatchUtils {
     }
 
     /**
-     * Checks if one string contains another at a specific index using the case-sensitivity rule.
+     * Checks if one string contains another at a specific index using the case-sensitivity discover.
      * <p>
      * This method mimics parts of {@link String#regionMatches(boolean, int, String, int, int)}
      * but takes case-sensitivity into account.
