@@ -41,9 +41,14 @@ public class EnginConfig {
     // 添加这个Bean来处理占位符
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+        String env = System.getProperty("execute.env");
+        if (Objects.isNull(env)) {
+            throw new RuntimeException("execute.env is null. Please set execute.env property.");
+        }
+        String ymlPath = "application-"+env+".yml";
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-        yaml.setResources(new ClassPathResource("application.yml"));
+        yaml.setResources(new ClassPathResource(ymlPath));
         configurer.setProperties(Objects.requireNonNull(yaml.getObject()));
         return configurer;
     }

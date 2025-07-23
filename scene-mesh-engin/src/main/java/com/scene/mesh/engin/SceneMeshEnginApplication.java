@@ -19,12 +19,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class SceneMeshEnginApplication {
 
     public static void main(String[] args) {
+
+        if (args.length != 2) {
+            throw new RuntimeException("arguments error. Must enter the 'env' and 'graphId'.");
+        }
+        String env = args[0];
+        String graphId = args[1];
+        log.info("execute params - env:{}, graphId:{}", env, graphId);
+
+        List<String> envs = Arrays.asList("dev", "test", "staging", "prod");
+        if (!envs.contains(env)) throw new RuntimeException("env is illegal.");
+        List<String> graphs = Arrays.asList("when", "then", "scheduler");
+        if (!graphs.contains(graphId)) throw new RuntimeException("graphId is illegal.");
+
+        System.setProperty("execute.env", env);
 
         Class[] configClasses = new Class[]{
                 EnginConfig.class,
@@ -58,8 +74,8 @@ public class SceneMeshEnginApplication {
 
         //startup
         try {
-//            processManager.executeProcesses(graphId,new String[0]);
-            processManager.executeAllProcesses();
+            processManager.executeProcesses(graphId,args);
+//            processManager.executeAllProcesses();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,7 +144,7 @@ public class SceneMeshEnginApplication {
     }
 
     private static ProcessorGraph cacheScheduler(){
-        return ProcessorGraphBuilder.createWithId("cache-scheduler")
+        return ProcessorGraphBuilder.createWithId("scheduler")
                 .addNode(ProcessorNodeBuilder.createWithId("trigger-source")
                         .withComponentId("cron-trigger")
                         .withParallelism(1)

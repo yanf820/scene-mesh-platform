@@ -20,6 +20,9 @@
         <json_path.version>2.9.0</json_path.version>
         <flink-connector-jdbc.version>3.1.0-1.17</flink-connector-jdbc.version>
         <spring-ai.version>1.1.0-SNAPSHOT</spring-ai.version>
+        <postgresql.version>42.7.5</postgresql.version>
+        <vosk.version>0.3.38</vosk.version>
+        <concentus.version>1.0.2</concentus.version>
         <!-- maven plugin -->
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
@@ -108,7 +111,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.5</version>
+                <version>${postgresql.version}</version>
             </dependency>
 
             <!-- spring boot -->
@@ -131,13 +134,13 @@
             <dependency>
                 <groupId>com.alphacephei</groupId>
                 <artifactId>vosk</artifactId>
-                <version>0.3.38</version>
+                <version>${vosk.version}</version>
             </dependency>
             <!--Opus-->
             <dependency>
                 <groupId>io.github.jaredmdobson</groupId>
                 <artifactId>concentus</artifactId>
-                <version>1.0.2</version>
+                <version>${concentus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

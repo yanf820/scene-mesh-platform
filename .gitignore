@@ -186,3 +186,4 @@ files/
 # vosk model
 /scene-mesh-service/models
 
+qodana.yaml
