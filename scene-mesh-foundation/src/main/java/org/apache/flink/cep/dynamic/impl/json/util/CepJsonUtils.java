@@ -33,8 +33,6 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessin
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utils for translating a PatternWrapper to JSON string and vice versa.

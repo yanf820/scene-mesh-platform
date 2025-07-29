@@ -17,7 +17,7 @@ docker run \
   --publish 8081:8081 \
   --network flink-network \
   --env FLINK_PROPERTIES="jobmanager.rpc.address: jobmanager" \
-  flink:1.17.1-scala_2.12-java8 jobmanager 
+  flink:1.20.2-scala_2.12-java17 jobmanager 
 ```
 
 ### TaskManager 启动
@@ -28,7 +28,7 @@ docker run \
   --name=taskmanager \
   --network flink-network \
   --env FLINK_PROPERTIES="jobmanager.rpc.address: jobmanager" \
-  flink:1.17.1-scala_2.12-java8 taskmanager 
+  flink:1.20.2-scala_2.12-java17 taskmanager 
 ```
 
 ## 拷贝jobManager和taskManager配置文件
@@ -67,7 +67,7 @@ docker run \
 --name=jobmanager \
 --publish 18081:18081 \
 --env FLINK_PROPERTIES="jobmanager.rpc.address: jobmanager" \
---network flink-network flink:1.17.1-scala_2.12-java8 jobmanager
+--network flink-network flink:1.20.2-scala_2.12-java17 jobmanager
 ```
 
 ### TaskManager 启动
@@ -78,6 +78,6 @@ docker run \
 -v ~/docker-data/flink/TaskManager/:/opt/flink/conf/ \
 --name=taskmanager --network flink-network \
 --env FLINK_PROPERTIES="jobmanager.rpc.address: jobmanager"  \
-flink:1.17.1-scala_2.12-java8 taskmanager
+flink:1.20.2-scala_2.12-java17 taskmanager
 ```
 
