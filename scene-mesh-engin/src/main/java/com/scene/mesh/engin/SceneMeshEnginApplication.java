@@ -75,7 +75,7 @@ public class SceneMeshEnginApplication {
         //startup
         try {
             processManager.executeProcesses(graphId,args);
-            System.out.println("merger test2");
+            System.out.println("merger test3");
 //            processManager.executeAllProcesses();
         } catch (Exception e) {
             e.printStackTrace();
